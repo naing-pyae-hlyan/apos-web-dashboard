@@ -2,13 +2,11 @@ import 'package:apos/lib_exp.dart';
 
 class MyHeader extends StatelessWidget {
   final String title;
-  final String addBtnTitle;
-  final Function() onTapAdd;
+  final List<Widget>? actions;
   const MyHeader({
     super.key,
     required this.title,
-    this.addBtnTitle = "Add",
-    required this.onTapAdd,
+    this.actions,
   });
 
   @override
@@ -20,10 +18,14 @@ class MyHeader extends StatelessWidget {
       children: <Widget>[
         myTitle(title),
         horizontalWidth8,
-        MyButton(
-          label: addBtnTitle,
-          onPressed: onTapAdd,
-        ),
+        if (actions != null)
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: actions!,
+            ),
+          ),
       ],
     );
   }

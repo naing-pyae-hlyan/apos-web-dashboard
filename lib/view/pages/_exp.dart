@@ -1,3 +1,4 @@
+export 'customers/_exp.dart';
 export 'dashboard/_exp.dart';
 export 'orders/_exp.dart';
 export 'products/_exp.dart';

@@ -51,13 +51,28 @@ class _ProductPageState extends State<ProductPage> {
             children: [
               MyHeader(
                 title: "Products",
-                addBtnTitle: "New Product",
-                onTapAdd: () => showProductDialog(context),
+                actions: [
+                  MyButton(
+                    label: "New Product",
+                    onPressed: () => showProductDialog(context),
+                  ),
+                  horizontalWidth16,
+                  Container(
+                    constraints: BoxConstraints(
+                      maxWidth: context.screenWidth * 0.3,
+                    ),
+                    child: MyInputField(
+                      controller: TextEditingController(),
+                      hintText: "Search",
+                    ),
+                  ),
+                ],
               ),
               verticalHeight32,
               Expanded(
                 child: SingleChildScrollView(
                   scrollDirection: Axis.vertical,
+                  physics: const BouncingScrollPhysics(),
                   child: BlocBuilder<ProductBloc, ProductState>(
                     builder: (_, state) {
                       if (state is ProductStateLoading) {

@@ -1,7 +1,7 @@
 import 'package:apos/lib_exp.dart';
 
 class Consts {
-  static const primaryColor = Colors.indigo;
+  static const primaryColor = Color(0xff5346B2);
   static const primaryColorOpa = Color(0xffedf8fc);
   static const primaryFontColor = Color(0xff012d3b);
   static const secondaryColor = Color(0xff240101);

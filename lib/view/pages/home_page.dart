@@ -15,12 +15,14 @@ class _HomePageState extends State<HomePage> {
   final int _indexCategory = 1;
   final int _indexProduct = 2;
   final int _indexOrder = 3;
+  final int _indexCustomer = 4;
 
   final pages = const [
     DashboardPage(),
     CategoryPage(),
     ProductPage(),
     OrdersPage(),
+    CustomerPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -34,7 +36,10 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Consts.secondaryColor2,
       appBar: AppBar(
+        backgroundColor: Consts.secondaryColor2,
+        surfaceTintColor: Consts.secondaryColor2,
         leading: Builder(builder: (ctx) {
           return IconButton(
             onPressed: () {
@@ -79,7 +84,7 @@ class _HomePageState extends State<HomePage> {
                 childrenPadding: const EdgeInsets.symmetric(horizontal: 16),
                 title: ListTile(
                   leading: const Icon(Icons.category),
-                  title: myText("Product Management"),
+                  title: myText("Product Manage"),
                 ),
                 children: [
                   ListTile(
@@ -114,6 +119,17 @@ class _HomePageState extends State<HomePage> {
               onTap: () {
                 // Update the state of the app
                 _onItemTapped(_indexOrder);
+                // Then close the drawer
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.people),
+              title: myText("Customers"),
+              selected: _selectedIndex == _indexCustomer,
+              onTap: () {
+                // Update the state of the app
+                _onItemTapped(_indexCustomer);
                 // Then close the drawer
                 Navigator.pop(context);
               },

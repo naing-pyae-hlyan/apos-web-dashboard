@@ -51,13 +51,28 @@ class _CategoryPageState extends State<CategoryPage> {
             children: [
               MyHeader(
                 title: "Categories",
-                addBtnTitle: "New Category",
-                onTapAdd: () => showCategoryDialog(context),
+                actions: [
+                  Container(
+                    constraints: BoxConstraints(
+                      maxWidth: context.screenWidth * 0.3,
+                    ),
+                    child: MyInputField(
+                      controller: TextEditingController(),
+                      hintText: "Search",
+                    ),
+                  ),
+                  horizontalWidth8,
+                  MyButton(
+                    label: "New Category",
+                    onPressed: () => showCategoryDialog(context),
+                  ),
+                ],
               ),
               verticalHeight32,
               Expanded(
                 child: SingleChildScrollView(
                   scrollDirection: Axis.vertical,
+                  physics: const BouncingScrollPhysics(),
                   child: BlocBuilder<CategoryBloc, CategoryState>(
                     builder: (_, state) {
                       if (state is CategoryStateLoading) {

@@ -1,4 +1,5 @@
 import 'package:apos/lib_exp.dart';
+import 'package:apos/view/pages/products/category_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,7 +26,7 @@ class MainApp extends StatelessWidget {
         primaryColor: Consts.primaryColor,
       ),
       home: const SafeArea(
-        child: HomePage(),
+        child: SplashPage(),
       ),
     );
   }

@@ -3,7 +3,7 @@ import 'package:apos/lib_exp.dart';
 void showCategoryDialog(BuildContext context, {Category? category}) =>
     showAdaptiveDialog(
       context: context,
-      builder: (context) => CategoryDialog(category: category),
+      builder: (_) => CategoryDialog(category: category),
     );
 
 class CategoryDialog extends StatefulWidget {
@@ -73,17 +73,8 @@ class _CategoryDialogState extends State<CategoryDialog> {
           },
           child: myText('Cancel'),
         ),
-        if (widget.category != null)
-          TextButton(
-            onPressed: () {
-              categoryBloc.add(
-                CategoryEventDeleteData(categoryId: widget.category!.id),
-              );
-              Navigator.of(context).pop();
-            },
-            child: myText('Delete', color: Colors.red),
-          ),
-        ElevatedButton(
+        MyButton(
+          label: "Save",
           onPressed: () {
             if (_formKey.currentState!.validate()) {
               _formKey.currentState!.save();
@@ -103,7 +94,6 @@ class _CategoryDialogState extends State<CategoryDialog> {
               Navigator.of(context).pop();
             }
           },
-          child: myText('Save'),
         ),
       ],
     );

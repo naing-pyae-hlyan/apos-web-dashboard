@@ -20,59 +20,121 @@ class _CategoryPageState extends State<CategoryPage> {
     });
   }
 
+  void _deleteCategory(Category category) {
+    showConfirmDialog(
+      context,
+      title: "Delete Category",
+      description: "Are you sure want to delete this ${category.name}?",
+      onTapOk: () {
+        categoryBloc.add(
+          CategoryEventDeleteData(categoryId: category.id),
+        );
+      },
+    );
+  }
+
+  void _updateCategory(Category category) {
+    showCategoryDialog(context, category: category);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MyScaffold(
-      fab: FloatingActionButton(
-        onPressed: () {
-          showCategoryDialog(context);
-        },
-        child: const Icon(Icons.add),
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          verticalHeight16,
-          myTitle("Categories"),
-          verticalHeight16,
-          Expanded(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: BlocBuilder<CategoryBloc, CategoryState>(
-                builder: (_, state) {
-                  if (state is CategoryStateLoading) {
-                    return const CircularProgressIndicator.adaptive();
-                  }
-
-                  final List<Category> categories = state.categories;
-                  return DataTable(
-                    border: TableBorder.all(width: 0.1),
-                    dividerThickness: 0.1,
-                    columns: [
-                      DataColumn(label: myTitle("Id"), numeric: true),
-                      DataColumn(label: myTitle("Name")),
-                      DataColumn(label: myTitle("Description")),
-                    ],
-                    rows: categories.map(
-                      (Category category) {
-                        return DataRow(
-                          onLongPress: () {
-                            showCategoryDialog(context, category: category);
-                          },
-                          cells: [
-                            DataCell(myText(category.id)),
-                            DataCell(myText(category.name)),
-                            DataCell(myText(category.description)),
-                          ],
-                        );
-                      },
-                    ).toList(),
-                  );
-                },
+      padding: const EdgeInsets.all(32),
+      body: Card(
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              MyHeader(
+                title: "Categories",
+                addBtnTitle: "New Category",
+                onTapAdd: () => showCategoryDialog(context),
               ),
-            ),
+              verticalHeight32,
+              Expanded(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: BlocBuilder<CategoryBloc, CategoryState>(
+                    builder: (_, state) {
+                      if (state is CategoryStateLoading) {
+                        return const CircularProgressIndicator.adaptive();
+                      }
+
+                      final List<Category> categories = state.categories;
+
+                      return Table(
+                        columnWidths: const {
+                          0: FlexColumnWidth(0.5),
+                          1: FlexColumnWidth(2),
+                          2: FlexColumnWidth(2),
+                          3: FlexColumnWidth(0.5),
+                          4: FlexColumnWidth(0.5),
+                        },
+                        children: <TableRow>[
+                          TableRow(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Consts.primaryColor,
+                                width: 0.3,
+                              ),
+                            ),
+                            children: const [
+                              TableTitleCell("S/N",
+                                  textAlign: TextAlign.center),
+                              TableTitleCell("Name"),
+                              TableTitleCell("Description"),
+                              TableTitleCell("Edit",
+                                  textAlign: TextAlign.center),
+                              TableTitleCell("Delete",
+                                  textAlign: TextAlign.center),
+                            ],
+                          ),
+                          ...List.generate(
+                            categories.length,
+                            (index) {
+                              return TableRow(
+                                decoration: BoxDecoration(
+                                  color: index.isOdd
+                                      ? Consts.primaryColor.withOpacity(0.1)
+                                      : Colors.white,
+                                ),
+                                children: [
+                                  TableTextCell(
+                                    "${index + 1}",
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  TableTextCell(categories[index].name),
+                                  TableTextCell(categories[index].description),
+                                  TableButtonCell(
+                                    icon: Icons.edit_square,
+                                    iconColor: Colors.blueGrey,
+                                    onPressed: () => _updateCategory(
+                                      categories[index],
+                                    ),
+                                  ),
+                                  TableButtonCell(
+                                    icon: Icons.delete,
+                                    iconColor: Colors.red,
+                                    onPressed: () => _deleteCategory(
+                                      categories[index],
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

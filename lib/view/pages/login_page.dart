@@ -12,36 +12,40 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return MyScaffold(
       body: Center(
-        child: SizedBox(
-          width: context.screenWidth * 0.5,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              myText("Welcome", fontSize: 64),
-              verticalHeight64,
-              MyInputField(
-                controller: TextEditingController(),
-                hintText: "Enter your email",
-                keyboardType: TextInputType.emailAddress,
-                textInputAction: TextInputAction.next,
-              ),
-              verticalHeight16,
-              MyPasswordInputField(
-                controller: TextEditingController(),
-                hintText: "Enter your password",
-                keyboardType: TextInputType.emailAddress,
-                textInputAction: TextInputAction.done,
-                onSubmitted: (String str) {},
-              ),
-              verticalHeight32,
-              ElevatedButton(
-                onPressed: () {
-                  context.pushAndRemoveUntil(const HomePage());
-                },
-                child: myText("Login"),
-              ),
-            ],
+        child: Card(
+          child: Container(
+            padding: const EdgeInsets.all(32),
+            width: context.screenWidth * 0.6,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                myText("Welcome", fontSize: 48),
+                verticalHeight64,
+                MyInputField(
+                  controller: TextEditingController(),
+                  hintText: "Enter your email",
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
+                ),
+                verticalHeight16,
+                MyPasswordInputField(
+                  controller: TextEditingController(),
+                  hintText: "Enter your password",
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.done,
+                  onSubmitted: (String str) {},
+                ),
+                verticalHeight32,
+                MyButton(
+                  label: "Login",
+                  onPressed: () {
+                    context.pushAndRemoveUntil(const HomePage());
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

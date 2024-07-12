@@ -4,10 +4,12 @@ class MyScaffold extends StatelessWidget {
   final Widget body;
   final AppBar? appBar;
   final FloatingActionButton? fab;
+  final EdgeInsetsGeometry? padding;
   const MyScaffold({
     super.key,
     required this.body,
     this.appBar,
+    this.padding,
     this.fab,
   });
 
@@ -17,8 +19,9 @@ class MyScaffold extends StatelessWidget {
       onTap: () => context.hideKeyboard(),
       child: Scaffold(
         appBar: appBar,
+        backgroundColor: Consts.secondaryColor2,
         body: Padding(
-          padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+          padding: padding ?? const EdgeInsets.fromLTRB(8, 0, 8, 0),
           child: body,
         ),
         floatingActionButton: fab,

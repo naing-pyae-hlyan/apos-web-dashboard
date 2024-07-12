@@ -1,5 +1,4 @@
 import 'package:apos/lib_exp.dart';
-import 'package:apos/view/pages/products/category_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -8,6 +7,7 @@ void main() {
     MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => CategoryBloc()),
+        BlocProvider(create: (_) => ProductBloc()),
       ],
       child: const MainApp(),
     ),
@@ -26,7 +26,7 @@ class MainApp extends StatelessWidget {
         primaryColor: Consts.primaryColor,
       ),
       home: const SafeArea(
-        child: SplashPage(),
+        child: ProductPage(),
       ),
     );
   }

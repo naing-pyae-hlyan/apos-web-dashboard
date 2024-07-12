@@ -1,21 +1,21 @@
 import 'package:apos/lib_exp.dart';
 
-void showCategoryDialog(BuildContext context, {Category? category}) =>
+void showProductDialog(BuildContext context, {Product? product}) =>
     showAdaptiveDialog(
       context: context,
-      builder: (_) => CategoryDialog(category: category),
+      builder: (_) => ProductDialog(product: product),
     );
 
-class CategoryDialog extends StatefulWidget {
-  final Category? category;
-  const CategoryDialog({super.key, this.category});
+class ProductDialog extends StatefulWidget {
+  final Product? product;
+  const ProductDialog({super.key, this.product});
 
   @override
-  State<CategoryDialog> createState() => _CategoryDialogState();
+  State<ProductDialog> createState() => _ProductDialogState();
 }
 
-class _CategoryDialogState extends State<CategoryDialog> {
-  late CategoryBloc categoryBloc;
+class _ProductDialogState extends State<ProductDialog> {
+  late ProductBloc productBloc;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -24,11 +24,11 @@ class _CategoryDialogState extends State<CategoryDialog> {
 
   @override
   void initState() {
-    categoryBloc = context.read<CategoryBloc>();
+    productBloc = context.read<ProductBloc>();
 
     super.initState();
-    _nameTxtCtrl.text = widget.category?.name ?? '';
-    _descTxtCtrl.text = widget.category?.description ?? '';
+    _nameTxtCtrl.text = widget.product?.name ?? '';
+    _descTxtCtrl.text = widget.product?.description ?? '';
   }
 
   @override
@@ -41,11 +41,11 @@ class _CategoryDialogState extends State<CategoryDialog> {
         child: Column(
           children: [
             myTitle(
-              widget.category == null ? 'Add Category' : 'Edit Category',
+              widget.product == null ? 'Add Product' : 'Edit Product',
             ),
-            if (widget.category?.id != null) ...[
+            if (widget.product?.id != null) ...[
               verticalHeight4,
-              myText(widget.category?.id),
+              myText(widget.product?.id),
             ],
           ],
         ),
@@ -68,6 +68,20 @@ class _CategoryDialogState extends State<CategoryDialog> {
               keyboardType: TextInputType.text,
               textInputAction: TextInputAction.next,
             ),
+            verticalHeight16,
+            MyInputField(
+              controller: _descTxtCtrl,
+              hintText: "Enter Price",
+              keyboardType: TextInputType.text,
+              textInputAction: TextInputAction.next,
+            ),
+            verticalHeight16,
+            MyInputField(
+              controller: _descTxtCtrl,
+              hintText: "Enter Qty",
+              keyboardType: TextInputType.text,
+              textInputAction: TextInputAction.next,
+            ),
           ],
         ),
       ),
@@ -84,17 +98,22 @@ class _CategoryDialogState extends State<CategoryDialog> {
             if (_formKey.currentState!.validate()) {
               _formKey.currentState!.save();
 
-              String? id = widget.category?.id;
+              String? id = widget.product?.id;
 
-              final category = Category(
+              final product = Product(
                 id: id ?? DateTime.now().toIso8601String(),
                 name: _nameTxtCtrl.text,
                 description: _descTxtCtrl.text,
+                price: 1,
+                stockQuantity: 1,
+                image: "",
+                categoryId: "",
+                categoryName: "",
               );
-              if (widget.category == null) {
-                categoryBloc.add(CategoryEventCreateData(category: category));
+              if (widget.product == null) {
+                productBloc.add(ProductEventCreateData(product: product));
               } else {
-                categoryBloc.add(CategoryEventUpdateData(category: category));
+                productBloc.add(ProductEventUpdateData(product: product));
               }
               Navigator.of(context).pop();
             }

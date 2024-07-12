@@ -1,5 +1,9 @@
 flutter 3.22.0
 
+12/07/2024 (0.1.1)
+1. UPDATE: CategoryPage.
+2. UPDATE: ProductPage.
+
 11/07/2024 (0.0.1)
 1. NEW: Project Create.
 2. NEW: CategoryPage.

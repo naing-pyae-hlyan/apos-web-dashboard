@@ -27,9 +27,10 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
     List<Category> categories = List.generate(
       20,
       (index) => Category(
-          id: DateTime.now().toIso8601String(),
-          name: "Name #$index",
-          description: "Exercitation fugiat cillum occaecat laborum et."),
+        id: DateTime.now().toIso8601String(),
+        name: "Name #$index",
+        description: "Exercitation fugiat cillum occaecat laborum et.",
+      ),
     );
 
     //

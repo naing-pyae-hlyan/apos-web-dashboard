@@ -21,7 +21,7 @@ class TableTitleCell extends StatelessWidget {
 }
 
 class TableTextCell extends StatelessWidget {
-  final String label;
+  final String? label;
   final TextAlign textAlign;
   const TableTextCell(
     this.label, {

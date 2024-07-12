@@ -40,11 +40,12 @@ class _CategoryPageState extends State<CategoryPage> {
   @override
   Widget build(BuildContext context) {
     return MyScaffold(
-      padding: const EdgeInsets.all(32),
+      padding: const EdgeInsets.all(32.0),
       body: Card(
         color: Colors.white,
+        surfaceTintColor: Colors.white,
         child: Padding(
-          padding: const EdgeInsets.all(32),
+          padding: const EdgeInsets.all(32.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [

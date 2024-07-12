@@ -8,62 +8,164 @@ class ProductPage extends StatefulWidget {
 }
 
 class _ProductPageState extends State<ProductPage> {
+  late ProductBloc productBloc;
+
+  @override
+  void initState() {
+    productBloc = context.read<ProductBloc>();
+    super.initState();
+
+    doAfterBuild(callback: () {
+      productBloc.add(ProductEventReadData());
+    });
+  }
+
+  void _deleteProduct(Product product) {
+    showConfirmDialog(
+      context,
+      title: "Delete Product",
+      description: "Are you sure want to delete this ${product.name}?",
+      onTapOk: () {
+        productBloc.add(
+          ProductEventDeleteData(productId: product.id),
+        );
+      },
+    );
+  }
+
+  void _updateProduct(Product product) {
+    showProductDialog(context, product: product);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MyScaffold(
-      fab: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.add),
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          verticalHeight16,
-          myTitle("Products"),
-          verticalHeight16,
-          Expanded(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: DataTable(
-                border: TableBorder.all(width: 0.1),
-                dividerThickness: 0.1,
-                columns: [
-                  DataColumn(label: myTitle("Id"), numeric: true),
-                  DataColumn(label: myTitle("Name")),
-                  DataColumn(label: myTitle("Description")),
-                  DataColumn(label: myTitle("Price"), numeric: true),
-                  DataColumn(label: myTitle("Qty"), numeric: true),
-                  DataColumn(label: myTitle("Category")),
-                ],
-                rows: CacheManager.products.map(
-                  (Product product) {
-                    return DataRow(
-                      onLongPress: () {
-                        showCategoryDialog(
-                          context,
-                          category: Category(
-                            id: DateTime.now().toString(),
-                            name: "Apple",
-                            description: "Blah",
-                          ),
-                        );
-                      },
-                      cells: [
-                        DataCell(myText(product.id)),
-                        DataCell(myText(product.name)),
-                        DataCell(myText(product.description)),
-                        DataCell(myText(product.price.toCurrencyFormat())),
-                        DataCell(myText("${product.image}")),
-                        // DataCell(networkImage("url")),
-                        DataCell(myText(product.categoryName)),
-                      ],
-                    );
-                  },
-                ).toList(),
+      padding: const EdgeInsets.all(32.0),
+      body: Card(
+        color: Colors.white,
+        surfaceTintColor: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              MyHeader(
+                title: "Products",
+                addBtnTitle: "New Product",
+                onTapAdd: () => showProductDialog(context),
               ),
-            ),
+              verticalHeight32,
+              Expanded(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: BlocBuilder<ProductBloc, ProductState>(
+                    builder: (_, state) {
+                      if (state is ProductStateLoading) {
+                        return const CircularProgressIndicator.adaptive();
+                      }
+
+                      final List<Product> products = state.products;
+
+                      return Table(
+                        columnWidths: const {
+                          0: FlexColumnWidth(0.5),
+                          1: FlexColumnWidth(1),
+                          2: FlexColumnWidth(1),
+                          3: FlexColumnWidth(2),
+                          4: FlexColumnWidth(1),
+                          5: FlexColumnWidth(0.5),
+                          6: FlexColumnWidth(0.5),
+                          7: FlexColumnWidth(0.5),
+                        },
+                        children: <TableRow>[
+                          TableRow(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Consts.primaryColor,
+                                width: 0.3,
+                              ),
+                            ),
+                            children: const [
+                              TableTitleCell(
+                                "S/N",
+                                textAlign: TextAlign.center,
+                              ),
+                              TableTitleCell("Image"),
+                              TableTitleCell("Name"),
+                              TableTitleCell("Description"),
+                              TableTitleCell(
+                                "Price",
+                                textAlign: TextAlign.end,
+                              ),
+                              TableTitleCell(
+                                "Qty",
+                                textAlign: TextAlign.end,
+                              ),
+                              TableTitleCell(
+                                "Edit",
+                                textAlign: TextAlign.center,
+                              ),
+                              TableTitleCell(
+                                "Delete",
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                          ...List.generate(
+                            products.length,
+                            (index) {
+                              return TableRow(
+                                decoration: BoxDecoration(
+                                  color: index.isOdd
+                                      ? Consts.primaryColor.withOpacity(0.1)
+                                      : Colors.white,
+                                ),
+                                children: [
+                                  TableTextCell(
+                                    "${index + 1}",
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  // const TableCell(
+                                  //   child: Icon(Icons.abc, size: 128),
+                                  // ),
+                                  const TableTextCell(""),
+                                  TableTextCell(products[index].name),
+                                  TableTextCell(products[index].description),
+                                  TableTextCell(
+                                    products[index].price.toCurrencyFormat(),
+                                    textAlign: TextAlign.end,
+                                  ),
+                                  TableTextCell(
+                                    products[index].stockQuantity.toString(),
+                                    textAlign: TextAlign.end,
+                                  ),
+                                  TableButtonCell(
+                                    icon: Icons.edit_square,
+                                    iconColor: Colors.blueGrey,
+                                    onPressed: () {
+                                      _updateProduct(products[index]);
+                                    },
+                                  ),
+                                  TableButtonCell(
+                                    icon: Icons.delete,
+                                    iconColor: Colors.red,
+                                    onPressed: () {
+                                      _deleteProduct(products[index]);
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

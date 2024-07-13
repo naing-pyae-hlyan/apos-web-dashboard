@@ -29,3 +29,41 @@ class MyScaffold extends StatelessWidget {
     );
   }
 }
+
+class MyScaffoldDataGridView extends StatelessWidget {
+  final Widget header;
+  final BlocBuilder blocBuilder;
+  const MyScaffoldDataGridView({
+    super.key,
+    required this.header,
+    required this.blocBuilder,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return MyScaffold(
+      padding: const EdgeInsets.all(32.0),
+      body: Card(
+        color: Colors.white,
+        surfaceTintColor: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              header,
+              verticalHeight32,
+              Expanded(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  physics: const BouncingScrollPhysics(),
+                  child: blocBuilder,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

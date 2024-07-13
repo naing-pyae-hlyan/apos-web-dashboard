@@ -26,9 +26,9 @@ class Product {
       image: json["image"],
       description: json['description'],
       price: json['price'],
-      stockQuantity: json['stockQuantity'],
-      categoryId: json['categoryId'],
-      categoryName: json["categoryName"],
+      stockQuantity: json['stock_quantity'],
+      categoryId: json['category_id'],
+      categoryName: json["category_name"],
     );
   }
 
@@ -39,9 +39,9 @@ class Product {
       'image': image,
       'description': description,
       'price': price,
-      'stockQuantity': stockQuantity,
-      'categoryId': categoryId,
-      'categoryName': categoryName,
+      'stock_quantity': stockQuantity,
+      'category_Id': categoryId,
+      'category_Name': categoryName,
     };
   }
 }

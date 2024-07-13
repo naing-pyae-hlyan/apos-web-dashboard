@@ -39,148 +39,116 @@ class _ProductPageState extends State<ProductPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
-      padding: const EdgeInsets.all(32.0),
-      body: Card(
-        color: Colors.white,
-        surfaceTintColor: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.all(32.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              MyHeader(
-                title: "Products",
-                actions: [
-                  MyButton(
-                    label: "New Product",
-                    onPressed: () => showProductDialog(context),
+    return MyScaffoldDataGridView(
+      header: MyHeader(
+        title: "Products",
+        actions: [
+          MyButton(
+            label: "New Product",
+            onPressed: () => showProductDialog(context),
+          ),
+          horizontalWidth16,
+          Container(
+            constraints: BoxConstraints(
+              maxWidth: context.screenWidth * 0.3,
+            ),
+            child: MyInputField(
+              controller: TextEditingController(),
+              hintText: "Search",
+            ),
+          ),
+        ],
+      ),
+      blocBuilder: BlocBuilder<ProductBloc, ProductState>(
+        builder: (_, state) {
+          if (state is ProductStateLoading) {
+            return const CircularProgressIndicator.adaptive();
+          }
+
+          final List<Product> products = state.products;
+
+          return Table(
+            columnWidths: const {
+              0: FlexColumnWidth(0.5),
+              1: FlexColumnWidth(1),
+              2: FlexColumnWidth(1),
+              3: FlexColumnWidth(2),
+              4: FlexColumnWidth(1),
+              5: FlexColumnWidth(0.5),
+              6: FlexColumnWidth(0.5),
+              7: FlexColumnWidth(0.5),
+            },
+            children: <TableRow>[
+              TableRow(
+                decoration: tableTitleDecoration(),
+                children: const [
+                  TableTitleCell(
+                    "S/N",
+                    textAlign: TextAlign.center,
                   ),
-                  horizontalWidth16,
-                  Container(
-                    constraints: BoxConstraints(
-                      maxWidth: context.screenWidth * 0.3,
-                    ),
-                    child: MyInputField(
-                      controller: TextEditingController(),
-                      hintText: "Search",
-                    ),
+                  TableTitleCell("Image"),
+                  TableTitleCell("Name"),
+                  TableTitleCell("Description"),
+                  TableTitleCell(
+                    "Price",
+                    textAlign: TextAlign.end,
+                  ),
+                  TableTitleCell(
+                    "Qty",
+                    textAlign: TextAlign.end,
+                  ),
+                  TableTitleCell(
+                    "Edit",
+                    textAlign: TextAlign.center,
+                  ),
+                  TableTitleCell(
+                    "Delete",
+                    textAlign: TextAlign.center,
                   ),
                 ],
               ),
-              verticalHeight32,
-              Expanded(
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  physics: const BouncingScrollPhysics(),
-                  child: BlocBuilder<ProductBloc, ProductState>(
-                    builder: (_, state) {
-                      if (state is ProductStateLoading) {
-                        return const CircularProgressIndicator.adaptive();
-                      }
-
-                      final List<Product> products = state.products;
-
-                      return Table(
-                        columnWidths: const {
-                          0: FlexColumnWidth(0.5),
-                          1: FlexColumnWidth(1),
-                          2: FlexColumnWidth(1),
-                          3: FlexColumnWidth(2),
-                          4: FlexColumnWidth(1),
-                          5: FlexColumnWidth(0.5),
-                          6: FlexColumnWidth(0.5),
-                          7: FlexColumnWidth(0.5),
+              ...List.generate(
+                products.length,
+                (index) {
+                  return TableRow(
+                    decoration: tableTextDecoration(index),
+                    children: [
+                      TableSNCell(index),
+                      // const TableCell(
+                      //   child: Icon(Icons.abc, size: 128),
+                      // ),
+                      const TableTextCell(""),
+                      TableTextCell(products[index].name),
+                      TableTextCell(products[index].description),
+                      TableTextCell(
+                        products[index].price.toCurrencyFormat(),
+                        textAlign: TextAlign.end,
+                      ),
+                      TableTextCell(
+                        products[index].stockQuantity.toString(),
+                        textAlign: TextAlign.end,
+                      ),
+                      TableButtonCell(
+                        icon: Icons.edit_square,
+                        iconColor: Colors.blueGrey,
+                        onPressed: () {
+                          _updateProduct(products[index]);
                         },
-                        children: <TableRow>[
-                          TableRow(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Consts.primaryColor,
-                                width: 0.3,
-                              ),
-                            ),
-                            children: const [
-                              TableTitleCell(
-                                "S/N",
-                                textAlign: TextAlign.center,
-                              ),
-                              TableTitleCell("Image"),
-                              TableTitleCell("Name"),
-                              TableTitleCell("Description"),
-                              TableTitleCell(
-                                "Price",
-                                textAlign: TextAlign.end,
-                              ),
-                              TableTitleCell(
-                                "Qty",
-                                textAlign: TextAlign.end,
-                              ),
-                              TableTitleCell(
-                                "Edit",
-                                textAlign: TextAlign.center,
-                              ),
-                              TableTitleCell(
-                                "Delete",
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          ),
-                          ...List.generate(
-                            products.length,
-                            (index) {
-                              return TableRow(
-                                decoration: BoxDecoration(
-                                  color: index.isOdd
-                                      ? Consts.primaryColor.withOpacity(0.1)
-                                      : Colors.white,
-                                ),
-                                children: [
-                                  TableTextCell(
-                                    "${index + 1}",
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  // const TableCell(
-                                  //   child: Icon(Icons.abc, size: 128),
-                                  // ),
-                                  const TableTextCell(""),
-                                  TableTextCell(products[index].name),
-                                  TableTextCell(products[index].description),
-                                  TableTextCell(
-                                    products[index].price.toCurrencyFormat(),
-                                    textAlign: TextAlign.end,
-                                  ),
-                                  TableTextCell(
-                                    products[index].stockQuantity.toString(),
-                                    textAlign: TextAlign.end,
-                                  ),
-                                  TableButtonCell(
-                                    icon: Icons.edit_square,
-                                    iconColor: Colors.blueGrey,
-                                    onPressed: () {
-                                      _updateProduct(products[index]);
-                                    },
-                                  ),
-                                  TableButtonCell(
-                                    icon: Icons.delete,
-                                    iconColor: Colors.red,
-                                    onPressed: () {
-                                      _deleteProduct(products[index]);
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                ),
+                      ),
+                      TableButtonCell(
+                        icon: Icons.delete,
+                        iconColor: Colors.red,
+                        onPressed: () {
+                          _deleteProduct(products[index]);
+                        },
+                      ),
+                    ],
+                  );
+                },
               ),
             ],
-          ),
-        ),
+          );
+        },
       ),
     );
   }

@@ -45,8 +45,8 @@ class Order {
 }
 
 Order tempOrder = Order(
-  id: "",
-  customerId: "",
+  id: "12312",
+  customerId: "1111",
   customerName: "Customer A",
   items: [],
   orderDate: DateTime.now(),

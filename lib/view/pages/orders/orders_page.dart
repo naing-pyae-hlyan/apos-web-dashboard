@@ -10,6 +10,16 @@ class OrdersPage extends StatefulWidget {
 }
 
 class _OrdersPageState extends State<OrdersPage> {
+  void _onPressedStatus(Order order) {
+    if (parseToOrderStatus(order.statusId) == OrderStatus.delivered) return;
+
+    showOrderStatusChangeDialog(
+      context,
+      order: order,
+      onStatusIdChanged: (int id) {},
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MyScaffoldDataGridView(
@@ -20,6 +30,7 @@ class _OrdersPageState extends State<OrdersPage> {
         children: [
           myTitle("Orders"),
           horizontalWidth8,
+          // TODO add status filter
           Container(
             constraints: BoxConstraints(
               maxWidth: context.screenWidth * 0.3,
@@ -56,7 +67,7 @@ class _OrdersPageState extends State<OrdersPage> {
                   TableTitleCell("Items"),
                   // TableTitleItemsCell(),
                   TableTitleCell("Total Amount", textAlign: TextAlign.end),
-                  TableTitleCell("Order Date", textAlign: TextAlign.center),
+                  TableTitleCell("Order Date", textAlign: TextAlign.end),
                   TableTitleCell("Customer", textAlign: TextAlign.end),
                   TableTitleCell("Status", textAlign: TextAlign.center),
                 ],
@@ -64,6 +75,7 @@ class _OrdersPageState extends State<OrdersPage> {
               ...List.generate(
                 20,
                 (index) {
+                  final int statusId = Random().nextInt(4);
                   return TableRow(
                     decoration: tableTextDecoration(index),
                     children: [
@@ -91,7 +103,18 @@ class _OrdersPageState extends State<OrdersPage> {
                         id: "12312312321",
                         name: "Mg Mg",
                       ),
-                      TableStatusCell(statusId: Random().nextInt(3)),
+                      TableStatusCell(
+                        statusId: statusId,
+                        onPressed: () => _onPressedStatus(Order(
+                          id: "123",
+                          customerId: "456",
+                          customerName: "Customer A",
+                          items: [],
+                          orderDate: DateTime.now(),
+                          totalAmount: 9999,
+                          statusId: statusId,
+                        )),
+                      ),
                     ],
                   );
                 },

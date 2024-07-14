@@ -1,27 +1,33 @@
 import 'package:apos/lib_exp.dart';
 
 enum OrderStatus {
-  cancelled(code: 0, name: "Cancelled"),
-  processing(code: 1, name: "Processing"),
-  finished(code: 2, name: "Finished");
+  orderNew(code: 0, name: "New Order", value: ""),
+  cancelled(code: 1, name: "Cancelled", value: "Cancel"),
+  processing(code: 2, name: "Processing", value: "Process"),
+  delivered(code: 3, name: "Delivered", value: "Finish");
 
   final int code;
   final String name;
-  const OrderStatus({required this.code, required this.name});
+  final String value;
+  const OrderStatus({
+    required this.code,
+    required this.name,
+    required this.value,
+  });
 }
 
 OrderStatus parseToOrderStatus(int code) => code == 0
-    ? OrderStatus.cancelled
+    ? OrderStatus.orderNew
     : code == 1
-        ? OrderStatus.processing
+        ? OrderStatus.cancelled
         : code == 2
-            ? OrderStatus.finished
-            : OrderStatus.processing;
+            ? OrderStatus.processing
+            : OrderStatus.delivered;
 
 Color parseOrderStatusToColor(int code) => code == 0
-    ? Colors.grey
+    ? Colors.indigo
     : code == 1
-        ? Colors.amber
+        ? Colors.grey
         : code == 2
-            ? Colors.green
-            : Colors.transparent;
+            ? Colors.amber
+            : Colors.green;

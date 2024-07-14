@@ -63,9 +63,11 @@ class TableTextCell extends StatelessWidget {
 
 class TableStatusCell extends StatelessWidget {
   final int statusId;
+  final Function() onPressed;
   const TableStatusCell({
     super.key,
     required this.statusId,
+    required this.onPressed,
   });
 
   @override
@@ -73,13 +75,11 @@ class TableStatusCell extends StatelessWidget {
     return TableCell(
       verticalAlignment: TableCellVerticalAlignment.middle,
       child: Clickable(
-        onTap: () {
-          print("object");
-        },
+        onTap: onPressed,
         radius: 32,
         child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 16),
-          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 24),
+          margin: const EdgeInsets.symmetric(horizontal: 24),
+          padding: const EdgeInsets.symmetric(vertical: 4),
           decoration: BoxDecoration(
             color: parseOrderStatusToColor(statusId),
             borderRadius: BorderRadius.circular(32),

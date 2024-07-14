@@ -1,5 +1,4 @@
 import 'package:apos/lib_exp.dart';
-import 'package:apos/models/_exp.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -85,6 +84,8 @@ class _DashboardPageState extends State<DashboardPage> {
                   ),
                 ],
               ),
+              verticalHeight16,
+              const DailyChartCard(),
             ],
           );
         },

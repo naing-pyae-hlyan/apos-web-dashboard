@@ -45,34 +45,3 @@ extension CurrencyExt on dynamic {
     }
   }
 }
-
-extension StringExt on String {
-  // Color get getCurrencyColor =>
-  //     contains('-') || startsWith('(') ? currencyRed : currencyGreen;
-
-  // Color getCurrencyColor2({
-  //   bool darker = false,
-  // }) =>
-  //     contains('-') || startsWith('(')
-  //         ? currencyRed
-  //         : darker
-  //             ? currencyGreenDark
-  //             : currencyGreen;
-
-  String toPhoneNumberFormat({String? dialCode}) {
-    if (isEmpty) return '';
-    String data = replaceAll(' ', '').replaceAll('-', '');
-    if (dialCode != null) {
-      data = data.replaceAll(dialCode, '');
-    }
-    if (data.length > 4) {
-      data = '${data.substring(0, 3)} ${data.substring(3, data.length)}';
-    }
-    if (data.length > 7) {
-      data = data.replaceAll(' ', '');
-      data =
-          '${data.substring(0, 3)} ${data.substring(3, 6)} ${data.substring(6, data.length)}';
-    }
-    return data;
-  }
-}

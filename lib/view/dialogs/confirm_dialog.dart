@@ -9,6 +9,7 @@ void showConfirmDialog(
 }) =>
     showAdaptiveDialog(
       context: context,
+      barrierDismissible: true,
       builder: (_) => ConfirmDialog(
         title: title,
         description: description,

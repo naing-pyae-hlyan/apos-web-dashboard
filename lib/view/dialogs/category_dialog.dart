@@ -3,6 +3,7 @@ import 'package:apos/lib_exp.dart';
 void showCategoryDialog(BuildContext context, {Category? category}) =>
     showAdaptiveDialog(
       context: context,
+      barrierDismissible: true,
       builder: (_) => CategoryDialog(category: category),
     );
 

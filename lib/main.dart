@@ -27,7 +27,7 @@ class MainApp extends StatelessWidget {
         primaryColor: Consts.primaryColor,
       ),
       home: const SafeArea(
-        child: HomePage(),
+        child: OrdersPage(),
       ),
     );
   }

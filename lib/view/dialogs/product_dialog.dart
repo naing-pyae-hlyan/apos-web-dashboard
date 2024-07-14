@@ -1,8 +1,12 @@
 import 'package:apos/lib_exp.dart';
 
-void showProductDialog(BuildContext context, {Product? product}) =>
+void showProductDialog(
+  BuildContext context, {
+  Product? product,
+}) =>
     showAdaptiveDialog(
       context: context,
+      barrierDismissible: true,
       builder: (_) => ProductDialog(product: product),
     );
 

@@ -4,7 +4,7 @@ extension CurrencyExt on dynamic {
   String toCurrencyFormat({
     String? countryIso,
     bool needPlusSign = false,
-    bool useDecimal = true,
+    bool useDecimal = false,
   }) {
     if (this == null) return '';
     final balance = toString().replaceAll(',', '');

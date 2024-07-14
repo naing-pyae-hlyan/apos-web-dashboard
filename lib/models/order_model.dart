@@ -43,3 +43,13 @@ class Order {
     };
   }
 }
+
+Order tempOrder = Order(
+  id: "",
+  customerId: "",
+  customerName: "Customer A",
+  items: [],
+  orderDate: DateTime.now(),
+  totalAmount: 1000.00,
+  statusId: 1,
+);

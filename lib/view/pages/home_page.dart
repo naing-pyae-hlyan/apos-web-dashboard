@@ -1,5 +1,4 @@
 import 'package:apos/lib_exp.dart';
-import 'package:apos/view/pages/products/category_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -48,6 +47,15 @@ class _HomePageState extends State<HomePage> {
             icon: const Icon(Icons.menu),
           );
         }),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(
+              Icons.notifications_on,
+              color: Colors.red,
+            ),
+          ),
+        ],
       ),
       body: Center(child: pages[_selectedIndex]),
       drawer: Drawer(
@@ -59,7 +67,7 @@ class _HomePageState extends State<HomePage> {
                 color: Consts.primaryColor,
               ),
               child: myText(
-                "Header",
+                "Admin",
                 fontSize: 32,
                 color: Colors.white,
               ),
@@ -124,7 +132,7 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.people),
+              leading: const Icon(Icons.groups_2_outlined),
               title: myText("Customers"),
               selected: _selectedIndex == _indexCustomer,
               onTap: () {

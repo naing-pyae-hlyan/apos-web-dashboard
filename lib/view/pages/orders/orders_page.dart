@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:apos/lib_exp.dart';
 
 class OrdersPage extends StatefulWidget {
@@ -54,9 +56,9 @@ class _OrdersPageState extends State<OrdersPage> {
                   TableTitleCell("Items"),
                   // TableTitleItemsCell(),
                   TableTitleCell("Total Amount", textAlign: TextAlign.end),
-                  TableTitleCell("Order Date", textAlign: TextAlign.end),
+                  TableTitleCell("Order Date", textAlign: TextAlign.center),
                   TableTitleCell("Customer", textAlign: TextAlign.end),
-                  TableTitleCell("Status", textAlign: TextAlign.end),
+                  TableTitleCell("Status", textAlign: TextAlign.center),
                 ],
               ),
               ...List.generate(
@@ -89,7 +91,7 @@ class _OrdersPageState extends State<OrdersPage> {
                         id: "12312312321",
                         name: "Mg Mg",
                       ),
-                      const TableStatusCell(statusId: 2),
+                      TableStatusCell(statusId: Random().nextInt(3)),
                     ],
                   );
                 },

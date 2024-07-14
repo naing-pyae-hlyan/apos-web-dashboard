@@ -3,9 +3,11 @@ import 'package:apos/lib_exp.dart';
 class TableTitleCell extends StatelessWidget {
   final String label;
   final TextAlign textAlign;
+  final EdgeInsetsGeometry? padding;
   const TableTitleCell(
     this.label, {
     super.key,
+    this.padding,
     this.textAlign = TextAlign.start,
   });
 
@@ -14,7 +16,7 @@ class TableTitleCell extends StatelessWidget {
     return TableCell(
       verticalAlignment: TableCellVerticalAlignment.middle,
       child: Padding(
-        padding: const EdgeInsets.all(8),
+        padding: padding ?? const EdgeInsets.all(8),
         child: myTitle(label, textAlign: textAlign),
       ),
     );
@@ -38,9 +40,11 @@ class TableTextCell extends StatelessWidget {
   final String? label;
   final TextAlign textAlign;
   final FontWeight fontWeight;
+  final EdgeInsetsGeometry? padding;
   const TableTextCell(
     this.label, {
     super.key,
+    this.padding,
     this.fontWeight = FontWeight.normal,
     this.textAlign = TextAlign.start,
   });
@@ -50,7 +54,7 @@ class TableTextCell extends StatelessWidget {
     return TableCell(
       verticalAlignment: TableCellVerticalAlignment.middle,
       child: Padding(
-        padding: const EdgeInsets.all(8),
+        padding: padding ?? const EdgeInsets.all(8),
         child: myText(label, textAlign: textAlign, fontWeight: fontWeight),
       ),
     );

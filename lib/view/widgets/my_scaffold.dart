@@ -42,17 +42,17 @@ class MyScaffoldDataGridView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MyScaffold(
-      padding: const EdgeInsets.all(32.0),
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       body: Card(
         color: Colors.white,
         surfaceTintColor: Colors.white,
         child: Padding(
-          padding: const EdgeInsets.all(32.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               header,
-              verticalHeight32,
+              verticalHeight16,
               Expanded(
                 child: SingleChildScrollView(
                   scrollDirection: Axis.vertical,

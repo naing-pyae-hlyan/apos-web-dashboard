@@ -45,3 +45,14 @@ class Product {
     };
   }
 }
+
+Product tempProduct = Product(
+  id: "",
+  name: "Product X",
+  image: "",
+  description: "",
+  price: 123,
+  stockQuantity: 1000,
+  categoryId: "",
+  categoryName: "",
+);

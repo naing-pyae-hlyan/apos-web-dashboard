@@ -8,28 +8,21 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
+  late HomeBloc homeBloc;
 
-  final int _indexDashboard = 0;
-  final int _indexCategory = 1;
-  final int _indexProduct = 2;
-  final int _indexOrder = 3;
-  final int _indexCustomer = 4;
+  void _onItemTapped(SelectedHome selected) {
+    if (homeBloc.selectedHomeItems == selected) return;
+    homeBloc.add(HomeEventDrawerChanged(selectedPage: selected));
+  }
 
-  final pages = const [
-    DashboardPage(),
-    CategoryPage(),
-    ProductPage(),
-    OrdersPage(),
-    CustomerPage(),
-  ];
+  bool _isSelected(SelectedHome selected) {
+    return selected == homeBloc.selectedHomeItems;
+  }
 
-  void _onItemTapped(int index) {
-    if (index == _selectedIndex) return;
-
-    setState(() {
-      _selectedIndex = index;
-    });
+  @override
+  void initState() {
+    homeBloc = context.read<HomeBloc>();
+    super.initState();
   }
 
   @override
@@ -39,14 +32,16 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         backgroundColor: Consts.secondaryColor2,
         surfaceTintColor: Consts.secondaryColor2,
-        leading: Builder(builder: (ctx) {
-          return IconButton(
-            onPressed: () {
-              Scaffold.of(ctx).openDrawer();
-            },
-            icon: const Icon(Icons.menu),
-          );
-        }),
+        leading: Builder(
+          builder: (ctx) {
+            return IconButton(
+              onPressed: () {
+                Scaffold.of(ctx).openDrawer();
+              },
+              icon: const Icon(Icons.menu),
+            );
+          },
+        ),
         actions: [
           IconButton(
             onPressed: () {},
@@ -55,9 +50,20 @@ class _HomePageState extends State<HomePage> {
               color: Colors.red,
             ),
           ),
+          horizontalWidth12,
         ],
       ),
-      body: Center(child: pages[_selectedIndex]),
+      body: BlocBuilder<HomeBloc, HomeState>(
+        builder: (_, state) {
+          return switch (state.selectedPage) {
+            SelectedHome.dashboard => const DashboardPage(),
+            SelectedHome.category => const CategoryPage(),
+            SelectedHome.product => const ProductPage(),
+            SelectedHome.order => const OrdersPage(),
+            SelectedHome.customer => const CustomerPage(),
+          };
+        },
+      ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -75,10 +81,10 @@ class _HomePageState extends State<HomePage> {
             ListTile(
               leading: const Icon(Icons.dashboard),
               title: myText("Dashboard"),
-              selected: _selectedIndex == _indexDashboard,
+              selected: _isSelected(SelectedHome.dashboard),
               onTap: () {
                 // Update the state of the app
-                _onItemTapped(_indexDashboard);
+                _onItemTapped(SelectedHome.dashboard);
                 // Then close the drawer
                 Navigator.pop(context);
               },
@@ -98,10 +104,10 @@ class _HomePageState extends State<HomePage> {
                   ListTile(
                     leading: const Icon(Icons.settings),
                     title: myText("Categories"),
-                    selected: _selectedIndex == _indexCategory,
+                    selected: _isSelected(SelectedHome.category),
                     onTap: () {
                       // Update the state of the app
-                      _onItemTapped(_indexCategory);
+                      _onItemTapped(SelectedHome.category);
                       // Then close the drawer
                       Navigator.pop(context);
                     },
@@ -109,10 +115,10 @@ class _HomePageState extends State<HomePage> {
                   ListTile(
                     leading: const Icon(Icons.settings),
                     title: myText("Products"),
-                    selected: _selectedIndex == _indexProduct,
+                    selected: _isSelected(SelectedHome.product),
                     onTap: () {
                       // Update the state of the app
-                      _onItemTapped(_indexProduct);
+                      _onItemTapped(SelectedHome.product);
                       // Then close the drawer
                       Navigator.pop(context);
                     },
@@ -123,10 +129,10 @@ class _HomePageState extends State<HomePage> {
             ListTile(
               leading: const Icon(Icons.receipt),
               title: myText("Orders"),
-              selected: _selectedIndex == _indexOrder,
+              selected: _isSelected(SelectedHome.order),
               onTap: () {
                 // Update the state of the app
-                _onItemTapped(_indexOrder);
+                _onItemTapped(SelectedHome.order);
                 // Then close the drawer
                 Navigator.pop(context);
               },
@@ -134,10 +140,10 @@ class _HomePageState extends State<HomePage> {
             ListTile(
               leading: const Icon(Icons.groups_2_outlined),
               title: myText("Customers"),
-              selected: _selectedIndex == _indexCustomer,
+              selected: _isSelected(SelectedHome.customer),
               onTap: () {
                 // Update the state of the app
-                _onItemTapped(_indexCustomer);
+                _onItemTapped(SelectedHome.customer);
                 // Then close the drawer
                 Navigator.pop(context);
               },

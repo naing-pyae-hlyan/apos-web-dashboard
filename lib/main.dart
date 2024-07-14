@@ -6,6 +6,7 @@ void main() {
   runApp(
     MultiBlocProvider(
       providers: [
+        BlocProvider(create: (_) => HomeBloc()),
         BlocProvider(create: (_) => CategoryBloc()),
         BlocProvider(create: (_) => ProductBloc()),
       ],

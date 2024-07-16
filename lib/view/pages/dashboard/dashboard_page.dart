@@ -24,7 +24,7 @@ class _DashboardPageState extends State<DashboardPage> {
       blocBuilder: BlocBuilder<ProductBloc, ProductState>(
         builder: (_, state) {
           if (state is ProductStateLoading) {
-            return const CircularProgressIndicator.adaptive();
+            return const MyCircularIndicator();
           }
 
           return Column(
@@ -52,15 +52,6 @@ class _DashboardPageState extends State<DashboardPage> {
                     monthlyRecord: 320,
                   ),
                   Flexible(child: DailyChartCard()),
-                  // CommerceCard(
-                  //   title: "EARNINGS",
-                  //   amount: 123123.0,
-                  //   icon: Icons.bar_chart_rounded,
-                  //   lblTodayRecord: "TODAY EARNINGS",
-                  //   lblMonthlyRecord: "MONTHLY EARNINGS",
-                  //   todayRecord: 12,
-                  //   monthlyRecord: 320,
-                  // ),
                 ],
               ),
               verticalHeight16,

@@ -1,6 +1,32 @@
-// import 'package:apos/lib_exp.dart';
+import 'package:apos/lib_exp.dart';
 
-class CommonUtils {}
+class CommonUtils {
+  static Widget versionLabel({
+    String? prefix,
+    Color? color,
+  }) =>
+      FutureBuilder(
+        future: appVersion(prefix: prefix),
+        builder: (_, snapshot) => SafeArea(
+          child: myTitle(
+              (snapshot.hasData && snapshot.data != null)
+                  ? snapshot.data as String
+                  : '',
+              fontSize: 13,),
+        ),
+      );
+
+  static Future<String> appVersion({
+    String? prefix,
+  }) async {
+    String v = prefix ?? 'Version : ';
+
+    final packageInfo = await PackageInfoUtils.packageInfo();
+
+    v += packageInfo.version;
+    return v;
+  }
+}
 
 void doAfterBuild({
   Function()? callback,

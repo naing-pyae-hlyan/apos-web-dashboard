@@ -56,7 +56,7 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {},
             icon: const Icon(
               Icons.notifications_on,
-              color: Colors.red,
+              color: Consts.primaryColor,
             ),
           ),
           horizontalWidth12,
@@ -74,60 +74,102 @@ class _HomePageState extends State<HomePage> {
         },
       ),
       drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
           children: [
-            DrawerHeader(
-              decoration: const BoxDecoration(
-                color: Consts.primaryColor,
-              ),
-              child: myText(
-                "Admin",
-                fontSize: 32,
-                color: Colors.white,
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.dashboard),
-              title: myText("Dashboard"),
-              selected: _isSelected(SelectedHome.dashboard),
-              onTap: () {
-                // Update the state of the app
-                _onItemTapped(SelectedHome.dashboard);
-                // Then close the drawer
-                Navigator.pop(context);
-              },
-            ),
-            Theme(
-              data: Theme.of(context).copyWith(
-                dividerColor: Colors.transparent,
-              ),
-              child: ExpansionTile(
-                tilePadding: const EdgeInsets.only(right: 16),
-                childrenPadding: const EdgeInsets.symmetric(horizontal: 16),
-                title: ListTile(
-                  leading: const Icon(Icons.category),
-                  title: myText("Product Manage"),
-                ),
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.zero,
                 children: [
+                  DrawerHeader(
+                    decoration: const BoxDecoration(
+                      color: Consts.primaryColor,
+                    ),
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.account_circle,
+                            size: 64,
+                            color: Colors.white,
+                          ),
+                          myText(
+                            "Admin",
+                            fontSize: 24,
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                   ListTile(
-                    leading: const Icon(Icons.settings),
-                    title: myText("Categories"),
-                    selected: _isSelected(SelectedHome.category),
+                    leading: const Icon(Icons.dashboard),
+                    title: myText("Dashboard"),
+                    selected: _isSelected(SelectedHome.dashboard),
                     onTap: () {
                       // Update the state of the app
-                      _onItemTapped(SelectedHome.category);
+                      _onItemTapped(SelectedHome.dashboard);
+                      // Then close the drawer
+                      Navigator.pop(context);
+                    },
+                  ),
+                  Theme(
+                    data: Theme.of(context).copyWith(
+                      dividerColor: Colors.transparent,
+                    ),
+                    child: ExpansionTile(
+                      tilePadding: const EdgeInsets.only(right: 16),
+                      childrenPadding:
+                          const EdgeInsets.symmetric(horizontal: 16),
+                      title: ListTile(
+                        leading: const Icon(Icons.category),
+                        title: myText("Product Manage"),
+                      ),
+                      children: [
+                        ListTile(
+                          leading: const Icon(Icons.settings),
+                          title: myText("Categories"),
+                          selected: _isSelected(SelectedHome.category),
+                          onTap: () {
+                            // Update the state of the app
+                            _onItemTapped(SelectedHome.category);
+                            // Then close the drawer
+                            Navigator.pop(context);
+                          },
+                        ),
+                        ListTile(
+                          leading: const Icon(Icons.settings),
+                          title: myText("Products"),
+                          selected: _isSelected(SelectedHome.product),
+                          onTap: () {
+                            // Update the state of the app
+                            _onItemTapped(SelectedHome.product);
+                            // Then close the drawer
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.receipt),
+                    title: myText("Orders"),
+                    selected: _isSelected(SelectedHome.order),
+                    onTap: () {
+                      // Update the state of the app
+                      _onItemTapped(SelectedHome.order);
                       // Then close the drawer
                       Navigator.pop(context);
                     },
                   ),
                   ListTile(
-                    leading: const Icon(Icons.settings),
-                    title: myText("Products"),
-                    selected: _isSelected(SelectedHome.product),
+                    leading: const Icon(Icons.groups_2_outlined),
+                    title: myText("Customers"),
+                    selected: _isSelected(SelectedHome.customer),
                     onTap: () {
                       // Update the state of the app
-                      _onItemTapped(SelectedHome.product);
+                      _onItemTapped(SelectedHome.customer);
                       // Then close the drawer
                       Navigator.pop(context);
                     },
@@ -135,28 +177,10 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            ListTile(
-              leading: const Icon(Icons.receipt),
-              title: myText("Orders"),
-              selected: _isSelected(SelectedHome.order),
-              onTap: () {
-                // Update the state of the app
-                _onItemTapped(SelectedHome.order);
-                // Then close the drawer
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.groups_2_outlined),
-              title: myText("Customers"),
-              selected: _isSelected(SelectedHome.customer),
-              onTap: () {
-                // Update the state of the app
-                _onItemTapped(SelectedHome.customer);
-                // Then close the drawer
-                Navigator.pop(context);
-              },
-            ),
+            const Divider(),
+            CommonUtils.versionLabel(),
+            myText("Copyright ©2024 aPOS, All rights reserved."),
+            verticalHeight8,
           ],
         ),
       ),

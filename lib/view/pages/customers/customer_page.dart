@@ -32,7 +32,7 @@ class _CustomerPageState extends State<CustomerPage> {
       blocBuilder: BlocBuilder<ProductBloc, ProductState>(
         builder: (_, state) {
           if (state is ProductStateLoading) {
-            return const CircularProgressIndicator.adaptive();
+            return const MyCircularIndicator();
           }
           return Table(
             columnWidths: const {

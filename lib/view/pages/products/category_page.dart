@@ -62,7 +62,7 @@ class _CategoryPageState extends State<CategoryPage> {
       blocBuilder: BlocBuilder<CategoryBloc, CategoryState>(
         builder: (_, state) {
           if (state is CategoryStateLoading) {
-            return const CircularProgressIndicator.adaptive();
+            return const MyCircularIndicator();
           }
 
           final List<Category> categories = state.categories;

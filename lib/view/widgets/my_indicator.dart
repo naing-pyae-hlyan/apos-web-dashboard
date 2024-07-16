@@ -20,9 +20,10 @@ class MyCircularIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CircularProgressIndicator(
-      backgroundColor: Consts.primaryColor.withOpacity(0.1),
-      color: Consts.primaryColor,
+    return CircularProgressIndicator.adaptive(
+      backgroundColor: Consts.primaryColor.withOpacity(1),
+
+      // color: Consts.primaryColor,
     );
   }
 }

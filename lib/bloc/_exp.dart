@@ -1,3 +1,9 @@
+export 'auth_bloc.dart';
+export 'auth_event.dart';
+export 'auth_service.dart';
+export 'auth_state.dart';
+
+//
 export 'category_bloc.dart';
 export 'category_event.dart';
 export 'category_service.dart';

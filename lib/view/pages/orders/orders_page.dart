@@ -43,7 +43,7 @@ class _OrdersPageState extends State<OrdersPage> {
       blocBuilder: BlocBuilder<ProductBloc, ProductState>(
         builder: (_, state) {
           if (state is ProductStateLoading) {
-            return const CircularProgressIndicator.adaptive();
+            return const MyCircularIndicator();
           }
 
           return Table(

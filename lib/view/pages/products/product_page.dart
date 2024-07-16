@@ -62,7 +62,7 @@ class _ProductPageState extends State<ProductPage> {
       blocBuilder: BlocBuilder<ProductBloc, ProductState>(
         builder: (_, state) {
           if (state is ProductStateLoading) {
-            return const CircularProgressIndicator.adaptive();
+            return const MyCircularIndicator();
           }
 
           final List<Product> products = state.products;

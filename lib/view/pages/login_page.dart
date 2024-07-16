@@ -8,6 +8,39 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  late AuthBloc authBloc;
+  final usernameTxtCtrl = TextEditingController();
+  final passwordTxtCtrl = TextEditingController();
+  final usernameFn = FocusNode();
+  final passwordFn = FocusNode();
+
+  void _login() {
+    authBloc.add(AuthEventLogin(
+      username: usernameTxtCtrl.text,
+      password: passwordTxtCtrl.text,
+    ));
+  }
+
+  @override
+  void initState() {
+    authBloc = context.read<AuthBloc>();
+    super.initState();
+    doAfterBuild(
+      callback: () {
+        usernameFn.requestFocus();
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    usernameTxtCtrl.dispose();
+    passwordTxtCtrl.dispose();
+    usernameFn.dispose();
+    passwordFn.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MyScaffold(
@@ -24,24 +57,66 @@ class _LoginPageState extends State<LoginPage> {
                 myText("Welcome", fontSize: 48),
                 verticalHeight64,
                 MyInputField(
-                  controller: TextEditingController(),
-                  hintText: "Enter your email",
+                  controller: usernameTxtCtrl,
+                  focusNode: usernameFn,
+                  hintText: "Username",
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
                 ),
                 verticalHeight16,
                 MyPasswordInputField(
-                  controller: TextEditingController(),
-                  hintText: "Enter your password",
+                  controller: passwordTxtCtrl,
+                  focusNode: passwordFn,
+                  hintText: "Password",
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.done,
-                  onSubmitted: (String str) {},
+                  onSubmitted: (String str) {
+                    _login();
+                  },
                 ),
-                verticalHeight32,
-                MyButton(
-                  label: "Login",
-                  onPressed: () {
-                    context.pushAndRemoveUntil(const HomePage());
+                BlocBuilder<AuthBloc, AuthState>(
+                  builder: (_, state) {
+                    if (state is AuthStateFail) {
+                      return Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: myText(
+                            "Error: ${state.error}",
+                            color: Consts.errorColor,
+                          ),
+                        ),
+                      );
+                    }
+                    return verticalHeight32;
+                  },
+                ),
+                BlocConsumer<AuthBloc, AuthState>(
+                  listener: (_, AuthState state) {
+                    if (state is AuthStateSuccess) {
+                      context.pushAndRemoveUntil(const HomePage());
+                    }
+                    if (state is AuthStateFail) {
+                      if (state.code == 1) {
+                        usernameFn.requestFocus();
+                        return;
+                      }
+
+                      if (state.code == 2) {
+                        passwordFn.requestFocus();
+                        return;
+                      }
+                    }
+                  },
+                  builder: (_, AuthState state) {
+                    if (state is AuthStateLoading) {
+                      return const MyCircularIndicator();
+                    }
+
+                    return MyButton(
+                      label: "Login",
+                      onPressed: _login,
+                    );
                   },
                 ),
               ],

@@ -6,6 +6,7 @@ void main() {
   runApp(
     MultiBlocProvider(
       providers: [
+        BlocProvider(create: (_) => AuthBloc()),
         BlocProvider(create: (_) => HomeBloc()),
         BlocProvider(create: (_) => CategoryBloc()),
         BlocProvider(create: (_) => ProductBloc()),
@@ -27,7 +28,7 @@ class MainApp extends StatelessWidget {
         primaryColor: Consts.primaryColor,
       ),
       home: const SafeArea(
-        child: HomePage(),
+        child: LoginPage(),
       ),
     );
   }

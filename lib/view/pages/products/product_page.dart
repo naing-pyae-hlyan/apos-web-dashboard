@@ -40,14 +40,9 @@ class _ProductPageState extends State<ProductPage> {
   @override
   Widget build(BuildContext context) {
     return MyScaffoldDataGridView(
-      header: MyHeader(
-        title: "Products",
-        actions: [
-          MyButton(
-            label: "New Product",
-            onPressed: () => showProductDialog(context),
-          ),
-          horizontalWidth16,
+      header: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
           Container(
             constraints: BoxConstraints(
               maxWidth: context.screenWidth * 0.3,
@@ -56,6 +51,11 @@ class _ProductPageState extends State<ProductPage> {
               controller: TextEditingController(),
               hintText: "Search",
             ),
+          ),
+          horizontalWidth16,
+          MyButton(
+            label: "New Product",
+            onPressed: () => showProductDialog(context),
           ),
         ],
       ),

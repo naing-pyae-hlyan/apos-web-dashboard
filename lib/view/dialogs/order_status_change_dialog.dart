@@ -32,7 +32,7 @@ class _OrderStatusChangeDialogState extends State<OrderStatusChangeDialog> {
   List<Widget> _generateTile() {
     final List<Widget> tiles = [];
     switch (parseToOrderStatus(widget.order.statusId)) {
-      case OrderStatus.orderNew:
+      case OrderStatus.newOrder:
         tiles.addAll([
           _getTile(OrderStatus.cancelled),
           _getTile(OrderStatus.processing),
@@ -70,13 +70,9 @@ class _OrderStatusChangeDialogState extends State<OrderStatusChangeDialog> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 myTitle(status.value),
-                Container(
-                  width: 24,
-                  height: 24,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: parseOrderStatusToColor(status.index),
-                  ),
+                Icon(
+                  parseOrderStatusToIcon(status.index),
+                  color: parseOrderStatusToColor(status.index),
                 ),
               ],
             ),
@@ -91,9 +87,9 @@ class _OrderStatusChangeDialogState extends State<OrderStatusChangeDialog> {
       surfaceTintColor: Colors.white,
       title: Column(
         children: [
-          myTitle("Order ID: ${widget.order.id}"),
+          myTitle("Order ID : ${widget.order.id}"),
           verticalHeight4,
-          myText(widget.order.orderDate.toDDmmYYYYHHmm()),
+          myText("(${parseToOrderStatus(widget.order.statusId).name})"),
         ],
       ),
       contentPadding: const EdgeInsets.all(16),

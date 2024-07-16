@@ -1,6 +1,6 @@
 export 'common_input_form.dart';
 export 'my_buttons.dart';
-export 'my_header.dart';
+export 'my_card.dart';
 export 'my_indicator.dart';
 export 'my_scaffold.dart';
 export 'my_seperator.dart';

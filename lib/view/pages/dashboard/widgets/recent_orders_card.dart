@@ -2,16 +2,18 @@ import 'package:apos/lib_exp.dart';
 
 class DashboardRecentOrdersCard extends StatelessWidget {
   final List<Order> orders;
+  final Function() onPressedViewAll;
   const DashboardRecentOrdersCard({
     super.key,
     required this.orders,
+    required this.onPressedViewAll,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Consts.secondaryColor2,
-      surfaceTintColor: Consts.secondaryColor2,
+    return MyCard(
+      cardColor: Consts.secondaryColor,
+      padding: EdgeInsets.zero,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -21,9 +23,9 @@ class DashboardRecentOrdersCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                myTitle("RECENT ORDERS"),
+                Flexible(child: myTitle("RECENT ORDERS")),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: onPressedViewAll,
                   child: myText(
                     "View All",
                     fontWeight: FontWeight.bold,
@@ -59,7 +61,7 @@ class DashboardRecentOrdersCard extends StatelessWidget {
               ...orders.map(
                 (Order order) {
                   return TableRow(
-                decoration: const BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Colors.white,
                     ),
                     children: [

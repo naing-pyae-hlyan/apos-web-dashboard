@@ -25,7 +25,7 @@ class MyButton extends StatelessWidget {
         fontWeight: FontWeight.bold,
       ),
       style: ElevatedButton.styleFrom(
-        backgroundColor: backgroundColor ?? Consts.scaffoldBackgroundColor,
+        backgroundColor: backgroundColor ?? Consts.secondaryColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(4),
           side: BorderSide(

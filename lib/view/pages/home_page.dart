@@ -28,10 +28,19 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Consts.secondaryColor2,
+      backgroundColor: Consts.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Consts.secondaryColor2,
-        surfaceTintColor: Consts.secondaryColor2,
+        backgroundColor: Consts.scaffoldBackgroundColor,
+        surfaceTintColor: Consts.scaffoldBackgroundColor,
+        title: BlocBuilder<HomeBloc, HomeState>(
+          builder: (_, state) => switch (state.selectedPage) {
+            SelectedHome.dashboard => myTitle(SelectedHome.dashboard.title),
+            SelectedHome.category => myTitle(SelectedHome.category.title),
+            SelectedHome.product => myTitle(SelectedHome.product.title),
+            SelectedHome.order => myTitle(SelectedHome.order.title),
+            SelectedHome.customer => myTitle(SelectedHome.customer.title),
+          },
+        ),
         leading: Builder(
           builder: (ctx) {
             return IconButton(

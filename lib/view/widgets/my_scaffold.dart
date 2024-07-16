@@ -19,7 +19,7 @@ class MyScaffold extends StatelessWidget {
       onTap: () => context.hideKeyboard(),
       child: Scaffold(
         appBar: appBar,
-        backgroundColor: Consts.secondaryColor2,
+        backgroundColor: Consts.scaffoldBackgroundColor,
         body: Padding(
           padding: padding ?? const EdgeInsets.fromLTRB(8, 0, 8, 0),
           child: body,
@@ -31,11 +31,11 @@ class MyScaffold extends StatelessWidget {
 }
 
 class MyScaffoldDataGridView extends StatelessWidget {
-  final Widget header;
+  final Widget? header;
   final BlocBuilder blocBuilder;
   const MyScaffoldDataGridView({
     super.key,
-    required this.header,
+    this.header,
     required this.blocBuilder,
   });
 
@@ -43,25 +43,22 @@ class MyScaffoldDataGridView extends StatelessWidget {
   Widget build(BuildContext context) {
     return MyScaffold(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-      body: Card(
-        color: Colors.white,
-        surfaceTintColor: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              header,
+      body: MyCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (header != null) ...[
+              header!,
               verticalHeight16,
-              Expanded(
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  physics: const BouncingScrollPhysics(),
-                  child: blocBuilder,
-                ),
-              ),
             ],
-          ),
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                physics: const BouncingScrollPhysics(),
+                child: blocBuilder,
+              ),
+            ),
+          ],
         ),
       ),
     );

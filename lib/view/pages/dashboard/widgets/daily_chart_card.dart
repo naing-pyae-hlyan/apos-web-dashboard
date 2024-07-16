@@ -11,17 +11,66 @@ class DailyChartCard extends StatefulWidget {
 class _DailyChartCardState extends State<DailyChartCard> {
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Consts.secondaryColor2,
-      surfaceTintColor: Consts.secondaryColor2,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: AspectRatio(
-          aspectRatio: 16 / 9,
+    return SizedBox(
+      // width: context.screenWidth * 0.3 + 80,
+      width: double.maxFinite,
+      height: dashboardCardHeight,
+      child: AspectRatio(
+        aspectRatio: 16 / 7,
+        child: MyCard(
+          cardColor: Consts.primaryColor,
           child: LineChart(
-            LineChartData(),
+            LineChartData(
+              minX: 1,
+              minY: 0,
+              gridData: const FlGridData(show: false),
+              titlesData: FlTitlesData(
+                show: true,
+                rightTitles: const AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                topTitles: const AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                leftTitles: const AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                bottomTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    interval: 1,
+                    getTitlesWidget: _bottomTitleWidget,
+                  ),
+                ),
+              ),
+              lineTouchData: LineTouchData(
+                enabled: true,
+                handleBuiltInTouches: false,
+                touchCallback: (event, LineTouchResponse? response) {},
+                touchTooltipData: LineTouchTooltipData(
+                  getTooltipItems: (touchSpots) =>
+                      touchSpots.map((e) => null).toList(),
+                ),
+                touchSpotThreshold: 100,
+              ),
+            ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _bottomTitleWidget(double value, TitleMeta meta) {
+    // if (value.toInt() > (widget.summaryData.weekEarnings ?? []).length) {
+    //   return emptyUI;
+    // }
+
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      child: myText(
+        "Hello", // (widget.summaryData.weekEarnings ?? [])[value.toInt() - 1].weekDay,
+
+        color: Consts.descriptionColor,
       ),
     );
   }

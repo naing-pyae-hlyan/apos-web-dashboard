@@ -21,89 +21,91 @@ class DashboardCommerceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Consts.primaryColor.withOpacity(1),
-      surfaceTintColor: Consts.primaryColor.withOpacity(1),
-      child: Container(
-        width: context.screenWidth * 0.3,
-        padding: const EdgeInsets.all(16),
-        child: Stack(
-          alignment: Alignment.topRight,
-          children: [
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                myText(
-                  title,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  maxLines: 1,
-                ),
-                verticalHeight4,
-                myTitle(
-                  amount.toCurrencyFormat(),
-                  color: Colors.white,
-                  fontSize: 21,
-                  maxLines: 1,
-                ),
-                verticalHeight16,
-                const Divider(thickness: 0.5),
-                verticalHeight16,
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Flexible(
-                      child: myText(
-                        lblTodayRecord,
-                        color: Colors.white,
-                        maxLines: 1,
+    return SizedBox(
+      width: context.screenWidth * 0.3,
+      height: dashboardCardHeight,
+      child: AspectRatio(
+        aspectRatio: 16 / 7,
+        child: MyCard(
+          cardColor: Consts.primaryColor,
+          child: Stack(
+            alignment: Alignment.topRight,
+            children: [
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  myText(
+                    title,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    maxLines: 1,
+                  ),
+                  verticalHeight4,
+                  myTitle(
+                    amount.toCurrencyFormat(),
+                    color: Colors.white,
+                    fontSize: 21,
+                    maxLines: 1,
+                  ),
+                  verticalHeight16,
+                  const Divider(thickness: 0.5),
+                  verticalHeight16,
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        child: myText(
+                          lblTodayRecord,
+                          color: Colors.white,
+                          maxLines: 1,
+                        ),
                       ),
-                    ),
-                    horizontalWidth16,
-                    Flexible(
-                      child: myText(
-                        lblMonthlyRecord,
-                        color: Colors.white,
-                        maxLines: 1,
+                      horizontalWidth16,
+                      Flexible(
+                        child: myText(
+                          lblMonthlyRecord,
+                          color: Colors.white,
+                          maxLines: 1,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                verticalHeight4,
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Flexible(
-                      child: myTitle(
-                        todayRecord.toCurrencyFormat(),
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        maxLines: 1,
+                    ],
+                  ),
+                  verticalHeight4,
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        child: myTitle(
+                          todayRecord.toCurrencyFormat(),
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          maxLines: 1,
+                        ),
                       ),
-                    ),
-                    horizontalWidth16,
-                    Flexible(
-                      child: myTitle(
-                        monthlyRecord.toCurrencyFormat(),
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        maxLines: 1,
+                      horizontalWidth16,
+                      Flexible(
+                        child: myTitle(
+                          monthlyRecord.toCurrencyFormat(),
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          maxLines: 1,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            Icon(
-              icon,
-              size: 48,
-              color: Colors.white,
-            ),
-          ],
+                    ],
+                  ),
+                ],
+              ),
+              Icon(
+                icon,
+                size: 48,
+                color: Colors.white,
+              ),
+            ],
+          ),
         ),
       ),
     );

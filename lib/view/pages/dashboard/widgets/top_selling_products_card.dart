@@ -9,9 +9,9 @@ class DashboardTopSellingProductsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Consts.secondaryColor2,
-      surfaceTintColor: Consts.secondaryColor2,
+    return MyCard(
+      cardColor: Consts.secondaryColor,
+      padding: EdgeInsets.zero,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

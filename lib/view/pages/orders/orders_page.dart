@@ -24,12 +24,10 @@ class _OrdersPageState extends State<OrdersPage> {
   Widget build(BuildContext context) {
     return MyScaffoldDataGridView(
       header: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          myTitle("Orders"),
-          horizontalWidth8,
           // TODO add status filter
           Container(
             constraints: BoxConstraints(

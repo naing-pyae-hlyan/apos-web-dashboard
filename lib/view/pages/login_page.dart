@@ -12,9 +12,9 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return MyScaffold(
       body: Center(
-        child: Card(
-          child: Container(
-            padding: const EdgeInsets.all(32),
+        child: MyCard(
+          padding: const EdgeInsets.all(64),
+          child: SizedBox(
             width: context.screenWidth * 0.6,
             child: Column(
               mainAxisSize: MainAxisSize.min,

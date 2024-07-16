@@ -14,12 +14,10 @@ class _CustomerPageState extends State<CustomerPage> {
   Widget build(BuildContext context) {
     return MyScaffoldDataGridView(
       header: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          myTitle("Customers"),
-          horizontalWidth8,
           Container(
             constraints: BoxConstraints(
               maxWidth: context.screenWidth * 0.3,

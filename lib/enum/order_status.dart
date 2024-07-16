@@ -1,7 +1,7 @@
 import 'package:apos/lib_exp.dart';
 
 enum OrderStatus {
-  orderNew(code: 0, name: "New Order", value: ""),
+  newOrder(code: 0, name: "New Order", value: ""),
   cancelled(code: 1, name: "Cancelled", value: "Cancel"),
   processing(code: 2, name: "Processing", value: "Process"),
   delivered(code: 3, name: "Delivered", value: "Finish");
@@ -17,7 +17,7 @@ enum OrderStatus {
 }
 
 OrderStatus parseToOrderStatus(int code) => code == 0
-    ? OrderStatus.orderNew
+    ? OrderStatus.newOrder
     : code == 1
         ? OrderStatus.cancelled
         : code == 2
@@ -31,3 +31,11 @@ Color parseOrderStatusToColor(int code) => code == 0
         : code == 2
             ? Colors.amber
             : Colors.green;
+
+IconData parseOrderStatusToIcon(int code) => code == 0
+    ? Icons.add
+    : code == 1
+        ? Icons.cancel_rounded
+        : code == 2
+            ? Icons.rocket_launch_rounded
+            : Icons.done_all;

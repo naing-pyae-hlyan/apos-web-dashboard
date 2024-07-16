@@ -40,14 +40,9 @@ class _CategoryPageState extends State<CategoryPage> {
   @override
   Widget build(BuildContext context) {
     return MyScaffoldDataGridView(
-      header: MyHeader(
-        title: "Categories",
-        actions: [
-          MyButton(
-            label: "New Category",
-            onPressed: () => showCategoryDialog(context),
-          ),
-          horizontalWidth16,
+      header: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
           Container(
             constraints: BoxConstraints(
               maxWidth: context.screenWidth * 0.3,
@@ -56,6 +51,11 @@ class _CategoryPageState extends State<CategoryPage> {
               controller: TextEditingController(),
               hintText: "Search",
             ),
+          ),
+          horizontalWidth16,
+          MyButton(
+            label: "New Category",
+            onPressed: () => showCategoryDialog(context),
           ),
         ],
       ),

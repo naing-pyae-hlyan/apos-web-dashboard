@@ -1,5 +1,7 @@
 import 'package:apos/lib_exp.dart';
 
+const dashboardCardHeight = 192.0;
+
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
 
@@ -8,10 +10,17 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
+  late HomeBloc homeBloc;
+
+  @override
+  void initState() {
+    homeBloc = context.read<HomeBloc>();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MyScaffoldDataGridView(
-      header: myTitle("Dashboard"),
       blocBuilder: BlocBuilder<ProductBloc, ProductState>(
         builder: (_, state) {
           if (state is ProductStateLoading) {
@@ -42,6 +51,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     todayRecord: 12,
                     monthlyRecord: 320,
                   ),
+                  Flexible(child: DailyChartCard()),
                   // CommerceCard(
                   //   title: "EARNINGS",
                   //   amount: 123123.0,
@@ -59,7 +69,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   SizedBox(
-                    width: context.screenWidth * 0.6 + 16,
+                    width: context.screenWidth * 0.6,
                     child: DashboardTopSellingProductsCard(
                       products: [
                         tempProduct,
@@ -70,8 +80,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       ],
                     ),
                   ),
-                  horizontalWidth16,
-                  Expanded(
+                  Flexible(
                     child: DashboardRecentOrdersCard(
                       orders: [
                         tempOrder,
@@ -80,12 +89,15 @@ class _DashboardPageState extends State<DashboardPage> {
                         tempOrder,
                         tempOrder,
                       ],
+                      onPressedViewAll: () {
+                        homeBloc.add(HomeEventDrawerChanged(
+                          selectedPage: SelectedHome.order,
+                        ));
+                      },
                     ),
                   ),
                 ],
               ),
-              verticalHeight16,
-              const DailyChartCard(),
             ],
           );
         },

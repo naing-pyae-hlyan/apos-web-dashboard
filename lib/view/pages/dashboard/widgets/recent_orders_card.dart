@@ -12,24 +12,32 @@ class DashboardRecentOrdersCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MyCard(
-      cardColor: Consts.secondaryColor,
+      // cardColor: Consts.primaryColor,
       padding: EdgeInsets.zero,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
+          Container(
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(12),
+                topRight: Radius.circular(12),
+              ),
+              color: Consts.primaryColor,
+            ),
             padding: const EdgeInsets.fromLTRB(16, 11, 0, 11),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Flexible(child: myTitle("RECENT ORDERS")),
+                Flexible(child: myTitle("RECENT ORDERS", color: Colors.white)),
                 TextButton(
                   onPressed: onPressedViewAll,
                   child: myText(
                     "View All",
                     fontWeight: FontWeight.bold,
-                    color: Consts.primaryColor,
+                    // color: Consts.primaryColor,
+                    color: Colors.white,
                     fontSize: 16,
                   ),
                 ),
@@ -80,7 +88,7 @@ class DashboardRecentOrdersCard extends StatelessWidget {
               ),
             ],
           ),
-          verticalHeight16,
+          verticalHeight8,
         ],
       ),
     );

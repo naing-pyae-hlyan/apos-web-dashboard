@@ -10,14 +10,21 @@ class DashboardTopSellingProductsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MyCard(
-      cardColor: Consts.secondaryColor,
+      // cardColor: Consts.primaryColor,
       padding: EdgeInsets.zero,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Padding(
+          Container(
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(12),
+                topRight: Radius.circular(12),
+              ),
+              color: Consts.primaryColor,
+            ),
             padding: const EdgeInsets.all(16),
-            child: myTitle("TOP SELLING PRODUCTS"),
+            child: myTitle("TOP SELLING PRODUCTS", color: Colors.white),
           ),
           Table(
             columnWidths: const {
@@ -78,7 +85,7 @@ class DashboardTopSellingProductsCard extends StatelessWidget {
               ),
             ],
           ),
-          verticalHeight16,
+          verticalHeight8,
         ],
       ),
     );

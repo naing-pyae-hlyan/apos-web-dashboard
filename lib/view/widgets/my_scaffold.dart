@@ -33,10 +33,12 @@ class MyScaffold extends StatelessWidget {
 class MyScaffoldDataGridView extends StatelessWidget {
   final Widget? header;
   final BlocBuilder blocBuilder;
+  final double elevation;
   const MyScaffoldDataGridView({
     super.key,
     this.header,
     required this.blocBuilder,
+    this.elevation = 16.0,
   });
 
   @override
@@ -44,6 +46,7 @@ class MyScaffoldDataGridView extends StatelessWidget {
     return MyScaffold(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       body: MyCard(
+        elevation: elevation,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [

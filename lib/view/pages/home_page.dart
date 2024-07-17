@@ -53,7 +53,9 @@ class _HomePageState extends State<HomePage> {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              _onItemTapped(SelectedHome.order);
+            },
             icon: const Icon(
               Icons.notifications_on,
               color: Consts.primaryColor,

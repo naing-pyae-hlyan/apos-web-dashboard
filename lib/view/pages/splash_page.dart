@@ -21,8 +21,16 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Consts.primaryColor,
+    return Scaffold(
+      backgroundColor: Consts.secondaryColor,
+      body: Center(
+        child: myTitle(
+          "Hello There",
+          fontWeight: FontWeight.bold,
+          color: Consts.primaryColor,
+          fontSize: 32,
+        ),
+      ),
     );
   }
 }

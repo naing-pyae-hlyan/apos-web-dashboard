@@ -37,7 +37,7 @@ class _OrderDetailsDialogState extends State<OrderDetailsDialog> {
           ),
         ],
       ),
-      actions: [],
+      // actions: [],
       content: SizedBox(
         width: context.screenWidth * 0.5,
         child: SingleChildScrollView(

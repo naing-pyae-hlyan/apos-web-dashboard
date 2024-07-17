@@ -5,12 +5,14 @@ class MyCard extends StatelessWidget {
   final Color? cardColor;
   final Color? shadowColor;
   final EdgeInsetsGeometry? padding;
+  final double elevation;
   const MyCard({
     super.key,
     required this.child,
     this.cardColor,
     this.shadowColor,
     this.padding,
+    this.elevation = 16.0,
   });
 
   @override
@@ -19,7 +21,7 @@ class MyCard extends StatelessWidget {
       color: cardColor ?? Colors.white,
       surfaceTintColor: cardColor ?? Colors.white,
       shadowColor: shadowColor ?? Consts.secondaryColor,
-      elevation: 16,
+      elevation: elevation,
       child: Padding(
         padding: padding ?? const EdgeInsets.all(16.0),
         child: child,

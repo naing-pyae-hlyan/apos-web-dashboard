@@ -1,6 +1,6 @@
 import 'package:apos/lib_exp.dart';
 
-const dashboardCardHeight = 192.0;
+const dashboardCardHeight = 224.0;
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -51,7 +51,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     todayRecord: 35,
                     monthlyRecord: 900,
                   ),
-                  Flexible(child: DailyChartCard()),
+                  Flexible(child: SalesReportCard()),
                 ],
               ),
               verticalHeight16,

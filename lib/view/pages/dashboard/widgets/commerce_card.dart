@@ -27,7 +27,7 @@ class DashboardCommerceCard extends StatelessWidget {
       child: AspectRatio(
         aspectRatio: 16 / 7,
         child: MyCard(
-          cardColor: Consts.primaryColor,
+          // cardColor: Consts.primaryColor,
           child: Stack(
             alignment: Alignment.topRight,
             children: [
@@ -38,14 +38,14 @@ class DashboardCommerceCard extends StatelessWidget {
                 children: [
                   myText(
                     title,
-                    color: Colors.white,
+                    color: Consts.primaryColor,
                     fontWeight: FontWeight.bold,
                     maxLines: 1,
                   ),
                   verticalHeight4,
                   myTitle(
                     amount.toCurrencyFormat(),
-                    color: Colors.white,
+                    color: Consts.primaryColor,
                     fontSize: 21,
                     maxLines: 1,
                   ),
@@ -59,7 +59,7 @@ class DashboardCommerceCard extends StatelessWidget {
                       Flexible(
                         child: myText(
                           lblTodayRecord,
-                          color: Colors.white,
+                          color: Consts.primaryColor,
                           maxLines: 1,
                         ),
                       ),
@@ -67,7 +67,7 @@ class DashboardCommerceCard extends StatelessWidget {
                       Flexible(
                         child: myText(
                           lblMonthlyRecord,
-                          color: Colors.white,
+                          color: Consts.primaryColor,
                           maxLines: 1,
                         ),
                       ),
@@ -82,7 +82,7 @@ class DashboardCommerceCard extends StatelessWidget {
                         child: myTitle(
                           todayRecord.toCurrencyFormat(),
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: Consts.primaryColor,
                           maxLines: 1,
                         ),
                       ),
@@ -91,7 +91,7 @@ class DashboardCommerceCard extends StatelessWidget {
                         child: myTitle(
                           monthlyRecord.toCurrencyFormat(),
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: Consts.primaryColor,
                           maxLines: 1,
                         ),
                       ),
@@ -102,7 +102,7 @@ class DashboardCommerceCard extends StatelessWidget {
               Icon(
                 icon,
                 size: 48,
-                color: Colors.white,
+                color: Consts.primaryColor,
               ),
             ],
           ),

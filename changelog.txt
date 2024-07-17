@@ -4,7 +4,7 @@ flutter 3.22.0
 1. UPDATE: CodeRefactored.
 2. NEW: OrderBloc.
 3. UPDATE: OrderPage.
-
+4. UPDATE: SalesReport chart.
 
 16/07/2024 (0.1.4)
 1. UPDATE: Primary color changed and CodeRefactored.

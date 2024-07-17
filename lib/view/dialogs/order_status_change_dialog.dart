@@ -31,7 +31,8 @@ class OrderStatusChangeDialog extends StatefulWidget {
 class _OrderStatusChangeDialogState extends State<OrderStatusChangeDialog> {
   List<Widget> _generateTile() {
     final List<Widget> tiles = [];
-    switch (parseToOrderStatus(widget.order.statusId)) {
+
+    switch (widget.order.status) {
       case OrderStatus.newOrder:
         tiles.addAll([
           _getTile(OrderStatus.cancelled),
@@ -64,16 +65,13 @@ class _OrderStatusChangeDialogState extends State<OrderStatusChangeDialog> {
             side: const BorderSide(width: 0.5),
           ),
           label: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 myTitle(status.value),
-                Icon(
-                  parseOrderStatusToIcon(status.index),
-                  color: parseOrderStatusToColor(status.index),
-                ),
+                Icon(status.icon, color: status.color),
               ],
             ),
           ),
@@ -89,7 +87,7 @@ class _OrderStatusChangeDialogState extends State<OrderStatusChangeDialog> {
         children: [
           myTitle("Order ID : ${widget.order.id}"),
           verticalHeight4,
-          myText("(${parseToOrderStatus(widget.order.statusId).name})"),
+          myText(widget.order.status.name),
         ],
       ),
       contentPadding: const EdgeInsets.all(16),

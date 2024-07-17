@@ -13,8 +13,8 @@ class MySeparator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (_, BoxConstraints __) {
-      final boxWidth = __.constrainWidth();
+    return LayoutBuilder(builder: (_, BoxConstraints constraints) {
+      final boxWidth = constraints.constrainWidth();
       final dashCount = (boxWidth / (2 * dash)).floor();
       return Flex(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -1,4 +1,6 @@
-import 'item_model.dart';
+import 'dart:math';
+
+import 'package:apos/lib_exp.dart';
 
 class Order {
   String id;
@@ -9,6 +11,8 @@ class Order {
   int statusId;
   DateTime orderDate;
 
+  OrderStatus status;
+
   Order({
     required this.id,
     required this.customerId,
@@ -17,6 +21,7 @@ class Order {
     required this.orderDate,
     required this.totalAmount,
     required this.statusId,
+    required this.status,
   });
 
   factory Order.fromJson(Map<String, dynamic> json) {
@@ -27,7 +32,8 @@ class Order {
       items: List.from(json["items"].map((x) => Item.fromJson(x))),
       orderDate: DateTime.parse(json['order_date']),
       totalAmount: json['total_amount'],
-      statusId: json['status_Id'],
+      statusId: json['status_id'],
+      status: parseToOrderStatus(json["status_id"]),
     );
   }
 
@@ -44,12 +50,19 @@ class Order {
   }
 }
 
-Order tempOrder = Order(
-  id: "12312",
-  customerId: "1111",
-  customerName: "Customer A",
-  items: [],
-  orderDate: DateTime.now(),
-  totalAmount: 1000.00,
-  statusId: 1,
-);
+Order tempOrder(int index) {
+  final statusId = Random().nextInt(4);
+  return Order(
+    id: "$index",
+    customerId: "$index$index",
+    customerName: "Customer ${Consts.aToz[index]}",
+    items: List.generate(
+      Random().nextInt(2) + 3,
+      (i) => tempItem(i),
+    ),
+    orderDate: DateTime.now(),
+    totalAmount: Random().nextInt(1000) + 10000,
+    statusId: statusId,
+    status: parseToOrderStatus(statusId),
+  );
+}

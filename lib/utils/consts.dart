@@ -15,6 +15,35 @@ class Consts {
   static const currencyGreen = Color(0xff27be38);
   static const currencyGreenDark = Color(0xff0b5a04);
   static const dividerColor = Color(0xffdbe2e6);
+
+  static const List<String> aToz = [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z"
+  ];
 }
 
 const verticalHeight2 = SizedBox(height: 2.0);

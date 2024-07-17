@@ -63,9 +63,12 @@ class DashboardTopSellingProductsCard extends StatelessWidget {
                         product.price.toCurrencyFormat(),
                         textAlign: TextAlign.end,
                       ),
-                      const TableTextCell("3", textAlign: TextAlign.end),
                       TableTextCell(
-                        "1234".toCurrencyFormat(),
+                        "${product.stockQuantity}",
+                        textAlign: TextAlign.end,
+                      ),
+                      TableTextCell(
+                        product.price.toCurrencyFormat(),
                         textAlign: TextAlign.end,
                         padding: const EdgeInsets.fromLTRB(0, 8, 16, 8),
                       ),

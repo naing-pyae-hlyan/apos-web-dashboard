@@ -1,3 +1,7 @@
+import 'dart:math';
+
+import 'package:apos/lib_exp.dart';
+
 class Product {
   String id;
   String name;
@@ -46,13 +50,13 @@ class Product {
   }
 }
 
-Product tempProduct = Product(
-  id: "",
-  name: "Product X",
-  image: "",
-  description: "",
-  price: 123,
-  stockQuantity: 1000,
-  categoryId: "",
-  categoryName: "",
-);
+Product tempProduct(int index) => Product(
+      id: "$index",
+      name: "Product ${Consts.aToz[index]}",
+      image: "",
+      description: "Lorem Ipsum",
+      price: Random().nextInt(1000) + 10000,
+      stockQuantity: Random().nextInt(1000),
+      categoryId: "",
+      categoryName: "",
+    );

@@ -62,11 +62,11 @@ class TableTextCell extends StatelessWidget {
 }
 
 class TableStatusCell extends StatelessWidget {
-  final int statusId;
+  final OrderStatus status;
   final Function() onPressed;
   const TableStatusCell({
     super.key,
-    required this.statusId,
+    required this.status,
     required this.onPressed,
   });
 
@@ -81,11 +81,11 @@ class TableStatusCell extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: 24),
           padding: const EdgeInsets.symmetric(vertical: 4),
           decoration: BoxDecoration(
-            color: parseOrderStatusToColor(statusId),
+            color: status.color,
             borderRadius: BorderRadius.circular(32),
           ),
           child: myText(
-            parseToOrderStatus(statusId).name,
+            status.name,
             textAlign: TextAlign.center,
             color: Colors.white,
           ),

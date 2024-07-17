@@ -97,12 +97,12 @@ class _LoginPageState extends State<LoginPage> {
                       context.pushAndRemoveUntil(const HomePage());
                     }
                     if (state is AuthStateFail) {
-                      if (state.code == 1) {
+                      if (state.error.code == 1) {
                         usernameFn.requestFocus();
                         return;
                       }
 
-                      if (state.code == 2) {
+                      if (state.error.code == 2) {
                         passwordFn.requestFocus();
                         return;
                       }

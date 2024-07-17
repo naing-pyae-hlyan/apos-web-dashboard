@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:apos/lib_exp.dart';
 
 class OrdersPage extends StatefulWidget {
@@ -10,14 +8,24 @@ class OrdersPage extends StatefulWidget {
 }
 
 class _OrdersPageState extends State<OrdersPage> {
-  void _onPressedStatus(Order order) {
-    if (parseToOrderStatus(order.statusId) == OrderStatus.delivered) return;
+  late OrderBloc orderBloc;
 
+  void _onPressedStatus(Order order) {
     showOrderStatusChangeDialog(
       context,
       order: order,
       onStatusIdChanged: (int id) {},
     );
+  }
+
+  @override
+  void initState() {
+    orderBloc = context.read<OrderBloc>();
+    super.initState();
+
+    doAfterBuild(callback: () {
+      orderBloc.add(OrderEventGetOrders());
+    });
   }
 
   @override
@@ -40,12 +48,13 @@ class _OrdersPageState extends State<OrdersPage> {
           ),
         ],
       ),
-      blocBuilder: BlocBuilder<ProductBloc, ProductState>(
+      blocBuilder: BlocBuilder<OrderBloc, OrderState>(
         builder: (_, state) {
-          if (state is ProductStateLoading) {
+          if (state is OrderStateLoading) {
             return const MyCircularIndicator();
           }
 
+          final List<Order> orders = state.orders;
           return Table(
             columnWidths: const {
               0: FlexColumnWidth(0.5),
@@ -63,7 +72,6 @@ class _OrdersPageState extends State<OrdersPage> {
                   TableTitleCell("S/N", textAlign: TextAlign.center),
                   TableTitleCell("Order Id"),
                   TableTitleCell("Items"),
-                  // TableTitleItemsCell(),
                   TableTitleCell("Total Amount", textAlign: TextAlign.end),
                   TableTitleCell("Order Date", textAlign: TextAlign.end),
                   TableTitleCell("Customer", textAlign: TextAlign.end),
@@ -71,47 +79,32 @@ class _OrdersPageState extends State<OrdersPage> {
                 ],
               ),
               ...List.generate(
-                20,
+                orders.length,
                 (index) {
-                  final int statusId = Random().nextInt(4);
                   return TableRow(
                     decoration: tableTextDecoration(index),
                     children: [
                       TableSNCell(index),
-                      const TableTextCell("12312331"),
+                      TableTextCell(orders[index].id),
                       TableProductItemsCell(
-                        items: [
-                          tempItem,
-                          tempItem,
-                          tempItem,
-                          tempItem,
-                          tempItem,
-                        ],
+                        items: orders[index].items,
                       ),
                       TableTextCell(
-                        "1000".toCurrencyFormat(),
+                        orders[index].totalAmount.toCurrencyFormat(),
                         textAlign: TextAlign.end,
                         fontWeight: FontWeight.bold,
                       ),
                       TableTextCell(
-                        DateTime.now().toString(),
+                        orders[index].orderDate.toDDmmYYYYHHmm(),
                         textAlign: TextAlign.end,
                       ),
-                      const TableCustomerCell(
-                        id: "12312312321",
-                        name: "Mg Mg",
+                      TableCustomerCell(
+                        id: orders[index].customerId,
+                        name: orders[index].customerName,
                       ),
                       TableStatusCell(
-                        statusId: statusId,
-                        onPressed: () => _onPressedStatus(Order(
-                          id: "123",
-                          customerId: "456",
-                          customerName: "Customer A",
-                          items: [],
-                          orderDate: DateTime.now(),
-                          totalAmount: 9999,
-                          statusId: statusId,
-                        )),
+                        status: orders[index].status,
+                        onPressed: () => _onPressedStatus(orders[index]),
                       ),
                     ],
                   );

@@ -24,19 +24,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   ) async {
     emit(ProductStateLoading(products: state.products));
 
-    List<Product> products = List.generate(
-      20,
-      (index) => Product(
-        id: DateTime.now().toIso8601String(),
-        name: "Name #$index",
-        description: "Exercitation fugiat cillum occaecat laborum et.",
-        image: "",
-        price: index * 1000,
-        stockQuantity: index + 800,
-        categoryId: "",
-        categoryName: "",
-      ),
-    );
+    List<Product> products = List.generate(26, (index) => tempProduct(index));
 
     //
     CacheManager.products = products;

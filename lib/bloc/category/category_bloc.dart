@@ -24,14 +24,8 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   ) async {
     emit(CategoryStateLoading(categories: state.categories));
 
-    List<Category> categories = List.generate(
-      20,
-      (index) => Category(
-        id: DateTime.now().toIso8601String(),
-        name: "Name #$index",
-        description: "Exercitation fugiat cillum occaecat laborum et.",
-      ),
-    );
+    List<Category> categories =
+        List.generate(6, (index) => tempCategory(index));
 
     //
     CacheManager.categories = categories;

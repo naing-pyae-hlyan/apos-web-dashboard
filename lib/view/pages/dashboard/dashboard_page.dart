@@ -48,8 +48,8 @@ class _DashboardPageState extends State<DashboardPage> {
                     icon: Icons.shopping_cart_outlined,
                     lblTodayRecord: "TODAY ORDERS",
                     lblMonthlyRecord: "MONTHLY ORDERS",
-                    todayRecord: 12,
-                    monthlyRecord: 320,
+                    todayRecord: 35,
+                    monthlyRecord: 900,
                   ),
                   Flexible(child: DailyChartCard()),
                 ],
@@ -62,24 +62,12 @@ class _DashboardPageState extends State<DashboardPage> {
                   SizedBox(
                     width: context.screenWidth * 0.6,
                     child: DashboardTopSellingProductsCard(
-                      products: [
-                        tempProduct,
-                        tempProduct,
-                        tempProduct,
-                        tempProduct,
-                        tempProduct,
-                      ],
+                      products: List.generate(5, (index) => tempProduct(index)),
                     ),
                   ),
                   Flexible(
                     child: DashboardRecentOrdersCard(
-                      orders: [
-                        tempOrder,
-                        tempOrder,
-                        tempOrder,
-                        tempOrder,
-                        tempOrder,
-                      ],
+                      orders: List.generate(5, (index) => tempOrder(index)),
                       onPressedViewAll: () {
                         homeBloc.add(HomeEventDrawerChanged(
                           selectedPage: SelectedHome.order,

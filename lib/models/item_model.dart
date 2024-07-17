@@ -1,3 +1,7 @@
+import 'dart:math';
+
+import 'package:apos/lib_exp.dart';
+
 class Item {
   final String id;
   final String name;
@@ -30,10 +34,10 @@ class Item {
       };
 }
 
-Item tempItem = Item(
-  id: "123",
-  name: "Item A",
-  amount: 100.0,
-  discount: 0.0,
-  quantity: 2,
-);
+Item tempItem(int index) => Item(
+      id: "$index",
+      name: "Item ${Consts.aToz[index]}",
+      amount: Random().nextInt(1000) + 10000,
+      discount: 0.0,
+      quantity: Random().nextInt(1000),
+    );

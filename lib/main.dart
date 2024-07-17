@@ -10,6 +10,7 @@ void main() {
         BlocProvider(create: (_) => HomeBloc()),
         BlocProvider(create: (_) => CategoryBloc()),
         BlocProvider(create: (_) => ProductBloc()),
+        BlocProvider(create: (_) => OrderBloc()),
       ],
       child: const MainApp(),
     ),
@@ -28,7 +29,7 @@ class MainApp extends StatelessWidget {
         primaryColor: Consts.primaryColor,
       ),
       home: const SafeArea(
-        child: LoginPage(),
+        child: OrdersPage(),
       ),
     );
   }

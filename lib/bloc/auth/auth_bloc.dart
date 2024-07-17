@@ -12,17 +12,23 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthStateLoading());
     if (event.username.isEmpty) {
       await Future.delayed(const Duration(milliseconds: 500));
-      emit(AuthStateFail(error: "Enter username", code: 1));
+      emit(
+        AuthStateFail(error: ErrorModel(message: "Enter username", code: 1)),
+      );
       return;
     }
     if (event.password != "welcome") {
       await Future.delayed(const Duration(milliseconds: 500));
-      emit(AuthStateFail(error: "Invalid password", code: 2));
+      emit(
+        AuthStateFail(error: ErrorModel(message: "Invalid password", code: 2)),
+      );
       return;
     }
     if (event.username != "admin") {
       await Future.delayed(const Duration(milliseconds: 500));
-      emit(AuthStateFail(error: "Username not found", code: 1));
+      emit(
+        AuthStateFail(error: ErrorModel(message: "User not found", code: 1)),
+      );
       return;
     }
     await Future.delayed(const Duration(seconds: 3));

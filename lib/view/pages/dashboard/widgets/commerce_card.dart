@@ -2,7 +2,7 @@ import 'package:apos/lib_exp.dart';
 
 class DashboardCommerceCard extends StatelessWidget {
   final String title;
-  final double amount;
+  final double count;
   final IconData icon;
   final String lblTodayRecord;
   final String lblMonthlyRecord;
@@ -11,7 +11,7 @@ class DashboardCommerceCard extends StatelessWidget {
   const DashboardCommerceCard({
     super.key,
     required this.title,
-    required this.amount,
+    required this.count,
     required this.icon,
     required this.lblTodayRecord,
     required this.lblMonthlyRecord,
@@ -44,7 +44,7 @@ class DashboardCommerceCard extends StatelessWidget {
                   ),
                   verticalHeight4,
                   myTitle(
-                    amount.toCurrencyFormat(),
+                    count.toCurrencyFormat(),
                     color: Consts.primaryColor,
                     fontSize: 21,
                     maxLines: 1,

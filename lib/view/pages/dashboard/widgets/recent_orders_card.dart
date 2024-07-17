@@ -66,7 +66,7 @@ class DashboardRecentOrdersCard extends StatelessWidget {
                     ),
                     children: [
                       TableTextCell(
-                        order.customerName,
+                        order.customer.name,
                         padding: const EdgeInsets.fromLTRB(16, 8, 0, 8),
                       ),
                       TableTextCell(

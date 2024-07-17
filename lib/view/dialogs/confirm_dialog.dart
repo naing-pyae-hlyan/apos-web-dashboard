@@ -33,6 +33,9 @@ class ConfirmDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      backgroundColor: Colors.white,
+      surfaceTintColor: Colors.white,
+      shadowColor: Consts.secondaryColor,
       title: myTitle(title),
       content: myText(description, maxLines: 4),
       actions: [

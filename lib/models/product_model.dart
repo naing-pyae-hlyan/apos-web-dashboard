@@ -51,7 +51,7 @@ class Product {
 }
 
 Product tempProduct(int index) => Product(
-      id: "$index",
+      id: "#$index",
       name: "Product ${Consts.aToz[index]}",
       image: "",
       description: "Lorem Ipsum",

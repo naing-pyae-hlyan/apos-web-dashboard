@@ -1,3 +1,5 @@
+import 'package:apos/lib_exp.dart';
+
 class Customer {
   String id;
   String name;
@@ -34,4 +36,10 @@ class Customer {
   }
 }
 
-
+Customer tempCustomer(int index) => Customer(
+      id: "#$index",
+      name: "Client ${Consts.aToz[index]}",
+      email: "mail@example.com",
+      phone: "09123456789",
+      address: "Enim excepteur anim nostrud consequat.",
+    );

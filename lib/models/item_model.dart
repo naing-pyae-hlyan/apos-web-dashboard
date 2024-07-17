@@ -35,7 +35,7 @@ class Item {
 }
 
 Item tempItem(int index) => Item(
-      id: "$index",
+      id: "#$index",
       name: "Item ${Consts.aToz[index]}",
       amount: Random().nextInt(1000) + 10000,
       discount: 0.0,

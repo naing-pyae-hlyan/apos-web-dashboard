@@ -5,6 +5,7 @@ flutter 3.22.0
 2. NEW: OrderBloc.
 3. UPDATE: OrderPage.
 4. UPDATE: SalesReport chart.
+5. NEW: OrderDetailsDialog.
 
 16/07/2024 (0.1.4)
 1. UPDATE: Primary color changed and CodeRefactored.

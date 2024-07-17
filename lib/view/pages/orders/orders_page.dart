@@ -57,25 +57,26 @@ class _OrdersPageState extends State<OrdersPage> {
           final List<Order> orders = state.orders;
           return Table(
             columnWidths: const {
-              0: FlexColumnWidth(0.5),
-              1: FlexColumnWidth(0.7),
-              2: FlexColumnWidth(2),
+              0: FlexColumnWidth(0.7),
+              1: FlexColumnWidth(2),
+              2: FlexColumnWidth(1),
               3: FlexColumnWidth(1),
               4: FlexColumnWidth(1),
               5: FlexColumnWidth(1),
-              6: FlexColumnWidth(1),
+              6: FlexColumnWidth(0.5),
             },
             children: <TableRow>[
               TableRow(
                 decoration: tableTitleDecoration(),
                 children: const [
-                  TableTitleCell("S/N", textAlign: TextAlign.center),
+                  // TableTitleCell("S/N", textAlign: TextAlign.center),
                   TableTitleCell("Order Id"),
                   TableTitleCell("Items"),
                   TableTitleCell("Total Amount", textAlign: TextAlign.end),
                   TableTitleCell("Order Date", textAlign: TextAlign.end),
                   TableTitleCell("Customer", textAlign: TextAlign.end),
                   TableTitleCell("Status", textAlign: TextAlign.center),
+                  TableTitleCell("Details", textAlign: TextAlign.center),
                 ],
               ),
               ...List.generate(
@@ -84,7 +85,7 @@ class _OrdersPageState extends State<OrdersPage> {
                   return TableRow(
                     decoration: tableTextDecoration(index),
                     children: [
-                      TableSNCell(index),
+                      // TableSNCell(index),
                       TableTextCell(orders[index].id),
                       TableProductItemsCell(
                         items: orders[index].items,
@@ -99,12 +100,19 @@ class _OrdersPageState extends State<OrdersPage> {
                         textAlign: TextAlign.end,
                       ),
                       TableCustomerCell(
-                        id: orders[index].customerId,
-                        name: orders[index].customerName,
+                        id: orders[index].customer.id,
+                        name: orders[index].customer.name,
                       ),
                       TableStatusCell(
                         status: orders[index].status,
                         onPressed: () => _onPressedStatus(orders[index]),
+                      ),
+                      TableButtonCell(
+                        icon: Icons.info_outline_rounded,
+                        iconColor: Consts.primaryColor,
+                        onPressed: () {
+                          showOrderDetailsDialog(context, order: orders[index]);
+                        },
                       ),
                     ],
                   );

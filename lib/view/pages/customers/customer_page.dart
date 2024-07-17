@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:apos/lib_exp.dart';
 
 class CustomerPage extends StatefulWidget {
@@ -61,20 +59,18 @@ class _CustomerPageState extends State<CustomerPage> {
                 ],
               ),
               ...List.generate(
-                20,
+                4,
                 (index) {
+                  final Customer customer = tempCustomer(index);
                   return TableRow(
                     decoration: tableTextDecoration(index),
                     children: [
                       TableSNCell(index),
-                      const TableTextCell("Username"),
-                      const TableTextCell("09123456789"),
-                      const TableTextCell("user@example.com"),
-                      const TableTextCell("Yangon"),
-                      TableTextCell(
-                        "${Random().nextInt(9999)}",
-                        textAlign: TextAlign.end,
-                      ),
+                      TableTextCell(customer.name),
+                      TableTextCell(customer.phone),
+                      TableTextCell(customer.email),
+                      TableTextCell(customer.address),
+                      TableTextCell(customer.id, textAlign: TextAlign.end),
                     ],
                   );
                 },

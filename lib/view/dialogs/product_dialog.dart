@@ -40,6 +40,7 @@ class _ProductDialogState extends State<ProductDialog> {
     return AlertDialog(
       backgroundColor: Colors.white,
       surfaceTintColor: Colors.white,
+      shadowColor: Consts.secondaryColor,
       title: SizedBox(
         width: context.screenWidth * 0.3,
         child: Column(

@@ -41,21 +41,30 @@ class TableTextCell extends StatelessWidget {
   final TextAlign textAlign;
   final FontWeight fontWeight;
   final EdgeInsetsGeometry? padding;
+  final TableCellVerticalAlignment verticalAlignment;
+  final int maxLines;
   const TableTextCell(
     this.label, {
     super.key,
     this.padding,
     this.fontWeight = FontWeight.normal,
     this.textAlign = TextAlign.start,
+    this.verticalAlignment = TableCellVerticalAlignment.middle,
+    this.maxLines = 2,
   });
 
   @override
   Widget build(BuildContext context) {
     return TableCell(
-      verticalAlignment: TableCellVerticalAlignment.middle,
+      verticalAlignment: verticalAlignment,
       child: Padding(
         padding: padding ?? const EdgeInsets.all(8),
-        child: myText(label, textAlign: textAlign, fontWeight: fontWeight),
+        child: myText(
+          label,
+          textAlign: textAlign,
+          fontWeight: fontWeight,
+          maxLines: maxLines,
+        ),
       ),
     );
   }

@@ -25,7 +25,7 @@ class Category {
 }
 
 Category tempCategory(int index) => Category(
-      id: "$index",
+      id: "#$index",
       name: "Category ${Consts.aToz[index]}",
       description: "Lorem Ipsm",
     );

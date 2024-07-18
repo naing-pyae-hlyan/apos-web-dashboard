@@ -8,27 +8,26 @@ void showOrderStatusChangeDialog(
     showAdaptiveDialog(
       context: context,
       barrierDismissible: true,
-      builder: (_) => OrderStatusChangeDialog(
+      builder: (_) => _OrderStatusChangeDialog(
         order: order,
         onStausIdChanged: onStatusIdChanged,
       ),
     );
 
-class OrderStatusChangeDialog extends StatefulWidget {
+class _OrderStatusChangeDialog extends StatefulWidget {
   final Order order;
   final Function(int) onStausIdChanged;
-  const OrderStatusChangeDialog({
-    super.key,
+  const _OrderStatusChangeDialog({
     required this.order,
     required this.onStausIdChanged,
   });
 
   @override
-  State<OrderStatusChangeDialog> createState() =>
+  State<_OrderStatusChangeDialog> createState() =>
       _OrderStatusChangeDialogState();
 }
 
-class _OrderStatusChangeDialogState extends State<OrderStatusChangeDialog> {
+class _OrderStatusChangeDialogState extends State<_OrderStatusChangeDialog> {
   List<Widget> _generateTile() {
     final List<Widget> tiles = [];
 

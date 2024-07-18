@@ -7,18 +7,18 @@ void showProductDialog(
     showAdaptiveDialog(
       context: context,
       barrierDismissible: true,
-      builder: (_) => ProductDialog(product: product),
+      builder: (_) => _ProductDialog(product: product),
     );
 
-class ProductDialog extends StatefulWidget {
+class _ProductDialog extends StatefulWidget {
   final Product? product;
-  const ProductDialog({super.key, this.product});
+  const _ProductDialog({this.product});
 
   @override
-  State<ProductDialog> createState() => _ProductDialogState();
+  State<_ProductDialog> createState() => _ProductDialogState();
 }
 
-class _ProductDialogState extends State<ProductDialog> {
+class _ProductDialogState extends State<_ProductDialog> {
   late ProductBloc productBloc;
 
   final _formKey = GlobalKey<FormState>();

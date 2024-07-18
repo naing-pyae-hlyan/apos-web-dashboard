@@ -1,15 +1,13 @@
-import 'package:apos/lib_exp.dart';
-
 class Category {
-  String id;
+  String? id;
   String name;
   String description;
 
-  Category({required this.id, required this.name, required this.description});
+  Category({this.id, required this.name, required this.description});
 
-  factory Category.fromJson(Map<String, dynamic> json) {
+  factory Category.fromJson(Map<String, dynamic> json, String id) {
     return Category(
-      id: json['id'],
+      id: id,
       name: json['name'],
       description: json['description'],
     );
@@ -17,15 +15,8 @@ class Category {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
       'name': name,
       'description': description,
     };
   }
 }
-
-Category tempCategory(int index) => Category(
-      id: "#$index",
-      name: "Category ${Consts.aToz[index]}",
-      description: "Lorem Ipsm",
-    );

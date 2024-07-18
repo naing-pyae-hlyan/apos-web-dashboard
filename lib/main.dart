@@ -1,14 +1,27 @@
 import 'package:apos/lib_exp.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  // FirebaseFirestore.instance.settings = const Settings(
+  //   persistenceEnabled: true,
+  // );
+  // Ideal time to initialize
+  // FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+
+  final db = FirebaseFirestore.instance;
+  CacheManager.clear();
 
   runApp(
     MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => AuthBloc()),
         BlocProvider(create: (_) => HomeBloc()),
-        BlocProvider(create: (_) => CategoryBloc()),
+        BlocProvider(create: (_) => CategoryBloc(database: db)),
         BlocProvider(create: (_) => ProductBloc()),
         BlocProvider(create: (_) => OrderBloc()),
       ],
@@ -29,7 +42,7 @@ class MainApp extends StatelessWidget {
         primaryColor: Consts.primaryColor,
       ),
       home: const SafeArea(
-        child: SplashPage(),
+        child: CategoryPage(),
       ),
     );
   }

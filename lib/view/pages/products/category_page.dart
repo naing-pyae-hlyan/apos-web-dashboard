@@ -8,33 +8,28 @@ class CategoryPage extends StatefulWidget {
 }
 
 class _CategoryPageState extends State<CategoryPage> {
-  late CategoryBloc categoryBloc;
-
-  @override
-  void initState() {
-    categoryBloc = context.read<CategoryBloc>();
-    super.initState();
-
-    doAfterBuild(callback: () {
-      categoryBloc.add(CategoryEventReadData());
-    });
-  }
+  final categoryCollection =
+      FirebaseFirestore.instance.collection("category").withConverter<Category>(
+            fromFirestore: (snapshot, _) => Category.fromJson(
+              snapshot.data()!,
+              snapshot.id,
+            ),
+            toFirestore: (category, _) => category.toJson(),
+          );
 
   void _deleteCategory(Category category) {
-    showConfirmDialog(
-      context,
-      title: "Delete Category",
-      description: "Are you sure want to delete this ${category.name}?",
-      onTapOk: () {
-        categoryBloc.add(
-          CategoryEventDeleteData(categoryId: category.id),
-        );
-      },
-    );
+    if (category.id != null) {
+      showConfirmDialog(
+        context,
+        title: "Delete Category",
+        description: "Are you sure want to delete this ${category.name}?",
+        onTapOk: () {},
+      );
+    }
   }
 
   void _updateCategory(Category category) {
-    showCategoryDialog(context, category: category);
+    showCategoryBlocDialog(context, category: category);
   }
 
   @override
@@ -55,25 +50,43 @@ class _CategoryPageState extends State<CategoryPage> {
           horizontalWidth16,
           MyButton(
             label: "New Category",
-            onPressed: () => showCategoryDialog(context),
+            onPressed: () => showCategoryBlocDialog(context),
           ),
         ],
       ),
-      blocBuilder: BlocBuilder<CategoryBloc, CategoryState>(
-        builder: (_, state) {
-          if (state is CategoryStateLoading) {
+      blocBuilder: StreamBuilder(
+        stream: categoryCollection.orderBy("name").snapshots(),
+        builder: (_, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return const MyCircularIndicator();
           }
 
-          final List<Category> categories = state.categories;
+          if (snapshot.hasError) {
+            return Center(
+              child: myText(
+                snapshot.error.toString(),
+                color: Consts.errorColor,
+              ),
+            );
+          }
+
+          final List<Category> categories = [];
+          final data = snapshot.requireData;
+
+          for (var doc in data.docs) {
+            categories.add(doc.data());
+          }
+
+          CacheManager.categories = categories;
 
           return Table(
             columnWidths: const {
               0: FlexColumnWidth(0.5),
-              1: FlexColumnWidth(2),
-              2: FlexColumnWidth(2),
-              3: FlexColumnWidth(0.5),
+              1: FlexColumnWidth(1),
+              2: FlexColumnWidth(1),
+              3: FlexColumnWidth(1),
               4: FlexColumnWidth(0.5),
+              5: FlexColumnWidth(0.5),
             },
             children: <TableRow>[
               TableRow(
@@ -82,6 +95,7 @@ class _CategoryPageState extends State<CategoryPage> {
                   TableTitleCell("S/N", textAlign: TextAlign.center),
                   TableTitleCell("Name"),
                   TableTitleCell("Description"),
+                  TableTitleCell("Category Id", textAlign: TextAlign.end),
                   TableTitleCell("Edit", textAlign: TextAlign.center),
                   TableTitleCell("Delete", textAlign: TextAlign.center),
                 ],
@@ -95,6 +109,10 @@ class _CategoryPageState extends State<CategoryPage> {
                       TableSNCell(index),
                       TableTextCell(categories[index].name),
                       TableTextCell(categories[index].description),
+                      TableTextCell(
+                        categories[index].id,
+                        textAlign: TextAlign.end,
+                      ),
                       TableButtonCell(
                         icon: Icons.edit_square,
                         iconColor: Colors.blueGrey,

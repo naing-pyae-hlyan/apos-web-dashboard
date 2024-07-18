@@ -1,39 +1,28 @@
 import 'package:apos/lib_exp.dart';
 
-sealed class CategoryState {
-  final List<Category> categories;
-  CategoryState({required this.categories});
-}
+sealed class CategoryState  {}
 
-class CategoryStateInitial extends CategoryState {
-  CategoryStateInitial({required super.categories});
-}
+class CategoryStateInitial extends CategoryState {}
 
-class CategoryStateLoading extends CategoryState {
-  CategoryStateLoading({required super.categories});
-}
+class CategoryStateLoading extends CategoryState {}
+
+class CategoryDialogStateLoading extends CategoryState {}
 
 class CategoryStateFail extends CategoryState {
-  final String error;
-  CategoryStateFail({required this.error, required super.categories});
+  final ErrorModel error;
+  CategoryStateFail({required this.error});
+}
+
+class CategoryDialogStateFail extends CategoryState {
+  final ErrorModel error;
+  CategoryDialogStateFail({required this.error});
 }
 
 // Create
-class CategoryStateCreateDataSuccess extends CategoryState {
-  CategoryStateCreateDataSuccess({required super.categories});
-}
-
-// Read
-class CategoryStateReadDataSuccess extends CategoryState {
-  CategoryStateReadDataSuccess({required super.categories});
-}
+class CategoryStateCreateDataSuccess extends CategoryState {}
 
 // Update
-class CategoryStateUpdateDataSuccess extends CategoryState {
-  CategoryStateUpdateDataSuccess({required super.categories});
-}
+class CategoryStateUpdateDataSuccess extends CategoryState {}
 
 // Delete
-class CategoryStateDeleteDataSuccess extends CategoryState {
-  CategoryStateDeleteDataSuccess({required super.categories});
-}
+class CategoryStateDeleteDataSuccess extends CategoryState {}

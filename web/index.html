@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <!--
     If you are serving your web app in a path other than the root, change the
@@ -27,12 +28,37 @@
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link rel="icon" type="image/png" href="favicon.png" />
 
   <title>apos</title>
   <link rel="manifest" href="manifest.json">
 </head>
+
 <body>
+
+  <!-- Firebase -->
+  <!-- <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-analytics.js"></script> -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js"></script>
+
+  <!-- Firebase Configuration -->
+  <script>
+    var firebaseConfig = {
+      apiKey: "AIzaSyDdmmH9ACYgW7JXk5A2sdUn-vmdxwriBE8",
+      authDomain: "apos-d1548.firebaseapp.com",
+      databaseURL: "https://apos-d1548-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "apos-d1548",
+      storageBucket: "apos-d1548.appspot.com",
+      messagingSenderId: "195842948453",
+      appId: "1:195842948453:web:8f0c1127ffd4953504b58c",
+      measurementId: "G-2TTB22MG2J"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
+
   <script src="flutter_bootstrap.js" async></script>
 </body>
+
 </html>

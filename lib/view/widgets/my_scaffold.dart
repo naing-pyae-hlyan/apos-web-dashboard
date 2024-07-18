@@ -32,7 +32,7 @@ class MyScaffold extends StatelessWidget {
 
 class MyScaffoldDataGridView extends StatelessWidget {
   final Widget? header;
-  final BlocBuilder blocBuilder;
+  final Widget blocBuilder;
   final double elevation;
   const MyScaffoldDataGridView({
     super.key,

@@ -1,27 +1,43 @@
 import 'package:apos/lib_exp.dart';
 
-void showCategoryDialog(BuildContext context, {Category? category}) =>
+void showCategoryBlocDialog(BuildContext context, {Category? category}) =>
     showAdaptiveDialog(
       context: context,
       barrierDismissible: true,
-      builder: (_) => CategoryDialog(category: category),
+      builder: (_) => _CategoryDialog(category: category),
     );
 
-class CategoryDialog extends StatefulWidget {
+class _CategoryDialog extends StatefulWidget {
   final Category? category;
-  const CategoryDialog({super.key, this.category});
+  const _CategoryDialog({this.category});
 
   @override
-  State<CategoryDialog> createState() => _CategoryDialogState();
+  State<_CategoryDialog> createState() => _CategoryDialogState();
 }
 
-class _CategoryDialogState extends State<CategoryDialog> {
+class _CategoryDialogState extends State<_CategoryDialog> {
   late CategoryBloc categoryBloc;
 
   final _formKey = GlobalKey<FormState>();
 
   final _nameTxtCtrl = TextEditingController();
   final _descTxtCtrl = TextEditingController();
+  final _nameFn = FocusNode();
+  final _descFn = FocusNode();
+
+  void _onSave() {
+    final Category category = Category(
+      name: _nameTxtCtrl.text,
+      description: _descTxtCtrl.text,
+      id: widget.category?.id,
+    );
+
+    if (widget.category == null) {
+      categoryBloc.add(CategoryEventCreateData(category: category));
+    } else {
+      categoryBloc.add(CategoryEventUpdateData(category: category));
+    }
+  }
 
   @override
   void initState() {
@@ -30,6 +46,17 @@ class _CategoryDialogState extends State<CategoryDialog> {
     super.initState();
     _nameTxtCtrl.text = widget.category?.name ?? '';
     _descTxtCtrl.text = widget.category?.description ?? '';
+  }
+
+  @override
+  void dispose() {
+    if (mounted) {
+      _nameTxtCtrl.dispose();
+      _descTxtCtrl.dispose();
+      _nameFn.dispose();
+      _descFn.dispose();
+    }
+    super.dispose();
   }
 
   @override
@@ -45,9 +72,9 @@ class _CategoryDialogState extends State<CategoryDialog> {
             myTitle(
               widget.category == null ? 'Add Category' : 'Edit Category',
             ),
-            if (widget.category?.id != null) ...[
+            if (widget.category?.name != null) ...[
               verticalHeight4,
-              myText(widget.category?.id),
+              myText(widget.category?.name),
             ],
           ],
         ),
@@ -59,6 +86,7 @@ class _CategoryDialogState extends State<CategoryDialog> {
           children: [
             MyInputField(
               controller: _nameTxtCtrl,
+              focusNode: _nameFn,
               hintText: "Enter Name",
               keyboardType: TextInputType.text,
               textInputAction: TextInputAction.next,
@@ -66,39 +94,61 @@ class _CategoryDialogState extends State<CategoryDialog> {
             verticalHeight16,
             MyInputField(
               controller: _descTxtCtrl,
+              focusNode: _descFn,
               hintText: "Enter Description",
               keyboardType: TextInputType.text,
-              textInputAction: TextInputAction.next,
+              textInputAction: TextInputAction.done,
+              onSubmitted: (_) => _onSave(),
+            ),
+            BlocBuilder<CategoryBloc, CategoryState>(
+              builder: (_, state) {
+                if (state is CategoryDialogStateFail) {
+                  return Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: myText(
+                        "Error: ${state.error.message}",
+                        color: Consts.errorColor,
+                      ),
+                    ),
+                  );
+                }
+                return emptyUI;
+              },
             ),
           ],
         ),
       ),
       actions: [
         TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+          onPressed: () => context.pop(),
           child: myText('Cancel'),
         ),
-        MyButton(
-          label: "Save",
-          onPressed: () {
-            if (_formKey.currentState!.validate()) {
-              _formKey.currentState!.save();
+        BlocConsumer<CategoryBloc, CategoryState>(
+          builder: (_, CategoryState state) {
+            if (state is CategoryDialogStateLoading) {
+              return const MyCircularIndicator();
+            }
 
-              String? id = widget.category?.id;
+            return MyButton(label: "Save", onPressed: _onSave);
+          },
+          listener: (_, CategoryState state) {
+            if (state is CategoryStateCreateDataSuccess ||
+                state is CategoryStateUpdateDataSuccess) {
+              context.pop();
+            }
 
-              final category = Category(
-                id: id ?? DateTime.now().toIso8601String(),
-                name: _nameTxtCtrl.text,
-                description: _descTxtCtrl.text,
-              );
-              if (widget.category == null) {
-                categoryBloc.add(CategoryEventCreateData(category: category));
-              } else {
-                categoryBloc.add(CategoryEventUpdateData(category: category));
+            if (state is CategoryDialogStateFail) {
+              if (state.error.code == 1) {
+                _nameFn.requestFocus();
+                return;
               }
-              Navigator.of(context).pop();
+
+              if (state.error.code == 2) {
+                _descFn.requestFocus();
+                return;
+              }
             }
           },
         ),

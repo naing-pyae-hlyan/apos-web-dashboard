@@ -14,7 +14,7 @@ class ProductStateLoading extends ProductState {
 }
 
 class ProductStateFail extends ProductState {
-  final String error;
+  final ErrorModel error;
   ProductStateFail({required this.error, required super.products});
 }
 

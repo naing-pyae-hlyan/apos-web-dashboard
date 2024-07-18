@@ -87,22 +87,21 @@ class _HomePageState extends State<HomePage> {
                     decoration: const BoxDecoration(
                       color: Consts.primaryColor,
                     ),
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            Icons.account_circle,
-                            size: 64,
-                            color: Colors.white,
-                          ),
-                          myText(
-                            "Admin",
-                            fontSize: 24,
-                            color: Colors.white,
-                          ),
-                        ],
-                      ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        const Icon(
+                          Icons.account_circle,
+                          size: 64,
+                          color: Colors.white,
+                        ),
+                        myText(
+                          "Super Admin",
+                          fontSize: 24,
+                          color: Colors.white,
+                        ),
+                      ],
                     ),
                   ),
                   ListTile(

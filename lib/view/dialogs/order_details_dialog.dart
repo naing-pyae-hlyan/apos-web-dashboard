@@ -7,21 +7,20 @@ void showOrderDetailsDialog(
     showAdaptiveDialog(
       context: context,
       barrierDismissible: true,
-      builder: (_) => OrderDetailsDialog(order: order),
+      builder: (_) => _OrderDetailsDialog(order: order),
     );
 
-class OrderDetailsDialog extends StatefulWidget {
+class _OrderDetailsDialog extends StatefulWidget {
   final Order order;
-  const OrderDetailsDialog({
-    super.key,
+  const _OrderDetailsDialog({
     required this.order,
   });
 
   @override
-  State<OrderDetailsDialog> createState() => _OrderDetailsDialogState();
+  State<_OrderDetailsDialog> createState() => _OrderDetailsDialogState();
 }
 
-class _OrderDetailsDialogState extends State<OrderDetailsDialog> {
+class _OrderDetailsDialogState extends State<_OrderDetailsDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(

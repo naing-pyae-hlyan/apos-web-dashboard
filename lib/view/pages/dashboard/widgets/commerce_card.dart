@@ -32,7 +32,7 @@ class DashboardCommerceCard extends StatelessWidget {
             alignment: Alignment.topRight,
             children: [
               Column(
-                mainAxisSize: MainAxisSize.min,
+                mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

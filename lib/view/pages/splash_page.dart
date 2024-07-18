@@ -26,7 +26,7 @@ class _SplashPageState extends State<SplashPage> {
       body: Center(
         child: myTitle(
           "Hello There",
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.bold,  
           color: Consts.primaryColor,
           fontSize: 32,
         ),

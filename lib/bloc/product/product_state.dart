@@ -1,39 +1,48 @@
 import 'package:apos/lib_exp.dart';
 
 sealed class ProductState {
-  final List<Product> products;
-  ProductState({required this.products});
+  ProductState();
 }
 
 class ProductStateInitial extends ProductState {
-  ProductStateInitial({required super.products});
+  ProductStateInitial();
 }
 
 class ProductStateLoading extends ProductState {
-  ProductStateLoading({required super.products});
+  ProductStateLoading();
+}
+
+class ProductDialogStateLoading extends ProductState {
+  ProductDialogStateLoading();
 }
 
 class ProductStateFail extends ProductState {
   final ErrorModel error;
-  ProductStateFail({required this.error, required super.products});
+  ProductStateFail({required this.error});
+}
+
+class ProductDialogStateFail extends ProductState {
+  final ErrorModel error;
+  ProductDialogStateFail({required this.error});
 }
 
 // Create
 class ProductStateCreateDataSuccess extends ProductState {
-  ProductStateCreateDataSuccess({required super.products});
-}
-
-// Read
-class ProductStateReadDataSuccess extends ProductState {
-  ProductStateReadDataSuccess({required super.products});
+  ProductStateCreateDataSuccess();
 }
 
 // Update
 class ProductStateUpdateDataSuccess extends ProductState {
-  ProductStateUpdateDataSuccess({required super.products});
+  ProductStateUpdateDataSuccess();
 }
 
 // Delete
 class ProductStateDeleteDataSuccess extends ProductState {
-  ProductStateDeleteDataSuccess({required super.products});
+  ProductStateDeleteDataSuccess();
+}
+
+// Search
+class ProductStateSearch extends ProductState {
+  final String query;
+  ProductStateSearch({required this.query});
 }

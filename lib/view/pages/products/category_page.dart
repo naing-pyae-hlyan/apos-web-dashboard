@@ -8,6 +8,8 @@ class CategoryPage extends StatefulWidget {
 }
 
 class _CategoryPageState extends State<CategoryPage> {
+  late CategoryBloc categoryBloc;
+
   final categoryCollection =
       FirebaseFirestore.instance.collection("category").withConverter<Category>(
             fromFirestore: (snapshot, _) => Category.fromJson(
@@ -23,7 +25,9 @@ class _CategoryPageState extends State<CategoryPage> {
         context,
         title: "Delete Category",
         description: "Are you sure want to delete this ${category.name}?",
-        onTapOk: () {},
+        onTapOk: () {
+          categoryBloc.add(CategoryEventDeleteData(categoryId: category.id!));
+        },
       );
     }
   }
@@ -33,8 +37,14 @@ class _CategoryPageState extends State<CategoryPage> {
   }
 
   @override
+  void initState() {
+    categoryBloc = context.read<CategoryBloc>();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return MyScaffoldDataGridView(
+    return MyScaffoldDataGridView<QuerySnapshot<Category>>(
       header: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -45,6 +55,9 @@ class _CategoryPageState extends State<CategoryPage> {
             child: MyInputField(
               controller: TextEditingController(),
               hintText: "Search",
+              onChanged: (String query) {
+                categoryBloc.add(CategoryEventSearch(query: query));
+              },
             ),
           ),
           horizontalWidth16,
@@ -54,87 +67,90 @@ class _CategoryPageState extends State<CategoryPage> {
           ),
         ],
       ),
-      blocBuilder: StreamBuilder(
-        stream: categoryCollection.orderBy("name").snapshots(),
-        builder: (_, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const MyCircularIndicator();
-          }
+      // Get data from firebase
+      stream: categoryCollection.orderBy("name").snapshots(),
+      streamBuilder: (QuerySnapshot<Category> data) {
+        final List<Category> categories = [];
+        CacheManager.categories.clear();
 
-          if (snapshot.hasError) {
-            return Center(
-              child: myText(
-                snapshot.error.toString(),
-                color: Consts.errorColor,
-              ),
+        for (var doc in data.docs) {
+          categories.add(doc.data());
+        }
+        // Store to local cache
+        CacheManager.categories = categories;
+
+        return BlocBuilder<CategoryBloc, CategoryState>(
+          builder: (_, state) {
+            if (state is CategoryStateLoading) {
+              return const MyCircularIndicator();
+            }
+
+            List<Category> search = [];
+            if (state is CategoryStateSearch) {
+              search = categories.where((Category category) {
+                return stringCompare(category.name, state.query);
+              }).toList();
+            } else {
+              search = categories;
+            }
+
+            return Table(
+              columnWidths: const {
+                0: FlexColumnWidth(0.5),
+                1: FlexColumnWidth(1),
+                2: FlexColumnWidth(1),
+                3: FlexColumnWidth(1),
+                4: FlexColumnWidth(0.5),
+                5: FlexColumnWidth(0.5),
+              },
+              children: <TableRow>[
+                TableRow(
+                  decoration: tableTitleDecoration(),
+                  children: const [
+                    TableTitleCell("S/N", textAlign: TextAlign.center),
+                    TableTitleCell("Name"),
+                    TableTitleCell("Description"),
+                    TableTitleCell("Category Id", textAlign: TextAlign.end),
+                    TableTitleCell("Edit", textAlign: TextAlign.center),
+                    TableTitleCell("Delete", textAlign: TextAlign.center),
+                  ],
+                ),
+                ..._categoryTableRowView(search),
+              ],
             );
-          }
+          },
+        );
+      },
+    );
+  }
 
-          final List<Category> categories = [];
-          final data = snapshot.requireData;
-
-          for (var doc in data.docs) {
-            categories.add(doc.data());
-          }
-
-          CacheManager.categories = categories;
-
-          return Table(
-            columnWidths: const {
-              0: FlexColumnWidth(0.5),
-              1: FlexColumnWidth(1),
-              2: FlexColumnWidth(1),
-              3: FlexColumnWidth(1),
-              4: FlexColumnWidth(0.5),
-              5: FlexColumnWidth(0.5),
-            },
-            children: <TableRow>[
-              TableRow(
-                decoration: tableTitleDecoration(),
-                children: const [
-                  TableTitleCell("S/N", textAlign: TextAlign.center),
-                  TableTitleCell("Name"),
-                  TableTitleCell("Description"),
-                  TableTitleCell("Category Id", textAlign: TextAlign.end),
-                  TableTitleCell("Edit", textAlign: TextAlign.center),
-                  TableTitleCell("Delete", textAlign: TextAlign.center),
-                ],
+  List<TableRow> _categoryTableRowView(List<Category> categories) =>
+      List.generate(
+        categories.length,
+        (index) {
+          final Category category = categories[index];
+          return TableRow(
+            decoration: tableTextDecoration(index),
+            children: [
+              TableSNCell(index),
+              TableTextCell(category.name),
+              TableTextCell(category.description),
+              TableTextCell(
+                categories[index].id,
+                textAlign: TextAlign.end,
               ),
-              ...List.generate(
-                categories.length,
-                (index) {
-                  return TableRow(
-                    decoration: tableTextDecoration(index),
-                    children: [
-                      TableSNCell(index),
-                      TableTextCell(categories[index].name),
-                      TableTextCell(categories[index].description),
-                      TableTextCell(
-                        categories[index].id,
-                        textAlign: TextAlign.end,
-                      ),
-                      TableButtonCell(
-                        icon: Icons.edit_square,
-                        iconColor: Colors.blueGrey,
-                        onPressed: () => _updateCategory(
-                          categories[index],
-                        ),
-                      ),
-                      TableButtonCell(
-                        icon: Icons.delete,
-                        iconColor: Colors.red,
-                        onPressed: () => _deleteCategory(
-                          categories[index],
-                        ),
-                      ),
-                    ],
-                  );
-                },
+              TableButtonCell(
+                icon: Icons.edit_square,
+                iconColor: Colors.blueGrey,
+                onPressed: () => _updateCategory(category),
+              ),
+              TableButtonCell(
+                icon: Icons.delete,
+                iconColor: Colors.red,
+                onPressed: () => _deleteCategory(category),
               ),
             ],
           );
         },
-      ),
-    );
-  }
+      );
 }

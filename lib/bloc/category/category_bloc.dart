@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:apos/lib_exp.dart';
 
 class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
@@ -16,7 +18,10 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
     on<CategoryEventCreateData>(_onCreate);
     on<CategoryEventUpdateData>(_onUpdate);
     on<CategoryEventDeleteData>(_onDelete);
+    on<CategoryEventSearch>(_onSearch);
   }
+
+  CollectionReference categoryCollection() => _categoryRef;
 
   Future<void> _onCreate(
     CategoryEventCreateData event,
@@ -39,19 +44,12 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
       return;
     }
 
-    await _categoryRef.add(event.category).then(
-      (_) {
-        emit(CategoryStateCreateDataSuccess());
-      },
-    ).catchError(
-      (error) {
-        emit(
-          CategoryDialogStateFail(
-            error: ErrorModel(message: error.toString(), code: 1),
-          ),
+    await _categoryRef
+        .add(event.category)
+        .then((_) => emit(CategoryStateCreateDataSuccess()))
+        .catchError(
+          (error) => emit(_dialogStateFail(message: error.toString())),
         );
-      },
-    );
   }
 
   Future<void> _onUpdate(
@@ -78,15 +76,10 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
     await _categoryRef
         .doc(event.category.id)
         .update(event.category.toJson())
-        .then(
-      (_) {
-        emit(CategoryStateUpdateDataSuccess());
-      },
-    ).catchError(
-      (error) {
-        emit(_dialogStateFail(message: error.toString()));
-      },
-    );
+        .then((_) => emit(CategoryStateUpdateDataSuccess()))
+        .catchError(
+          (error) => emit(_dialogStateFail(message: error.toString())),
+        );
   }
 
   Future<void> _onDelete(
@@ -94,25 +87,23 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
     Emitter<CategoryState> emit,
   ) async {
     emit(CategoryStateLoading());
-
-    _categoryRef.doc(event.categoryId).delete().then(
-      (_) {
-        emit(CategoryStateDeleteDataSuccess());
-      },
-    ).catchError(
-      (error) {
-        emit(_dialogStateFail(message: error.toString()));
-      },
-    );
-
-    emit(CategoryStateDeleteDataSuccess());
+    await _categoryRef
+        .doc(event.categoryId)
+        .delete()
+        .then((_) => emit(CategoryStateDeleteDataSuccess()))
+        .catchError(
+          (error) => emit(_dialogStateFail(message: error.toString())),
+        );
   }
 
-  CategoryDialogStateFail _dialogStateFail({
-    required String message,
-    int code = 1,
-  }) =>
-      CategoryDialogStateFail(
-        error: ErrorModel(message: message, code: code),
-      );
+  Future<void> _onSearch(
+    CategoryEventSearch event,
+    Emitter<CategoryState> emit,
+  ) async {
+    emit(CategoryStateSearch(query: event.query));
+  }
+
+  CategoryDialogStateFail _dialogStateFail(
+          {required String message, int code = 1}) =>
+      CategoryDialogStateFail(error: ErrorModel(message: message, code: code));
 }

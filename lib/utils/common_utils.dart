@@ -9,10 +9,11 @@ class CommonUtils {
         future: appVersion(prefix: prefix),
         builder: (_, snapshot) => SafeArea(
           child: myTitle(
-              (snapshot.hasData && snapshot.data != null)
-                  ? snapshot.data as String
-                  : '',
-              fontSize: 13,),
+            (snapshot.hasData && snapshot.data != null)
+                ? snapshot.data as String
+                : '',
+            fontSize: 13,
+          ),
         ),
       );
 
@@ -33,4 +34,14 @@ void doAfterBuild({
   Duration duration = Duration.zero,
 }) {
   Future.delayed(duration, callback);
+}
+
+bool stringCompare(String? name, String? query) {
+  if (name == null || query == null) return true;
+  if (name.isEmpty || query.isEmpty) return true;
+
+  return name
+      .toUpperCase()
+      .replaceAll(' ', '')
+      .contains(query.toUpperCase().replaceAll(' ', ''));
 }

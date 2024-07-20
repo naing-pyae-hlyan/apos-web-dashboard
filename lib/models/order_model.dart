@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:apos/lib_exp.dart';
 
 class Order {
-  String id;
+  String? id;
   Customer customer;
   List<Item> items;
 
@@ -15,7 +15,7 @@ class Order {
   OrderStatus status;
 
   Order({
-    required this.id,
+    this.id,
     required this.customer,
     required this.items,
     required this.orderDate,
@@ -25,11 +25,11 @@ class Order {
     required this.comment,
   });
 
-  factory Order.fromJson(Map<String, dynamic> json) {
+  factory Order.fromJson(Map<String, dynamic> json, String id) {
     return Order(
-      id: json['id'],
-      customer: Customer.fromJson(json["customer"]),
-      items: List.from(json["items"].map((x) => Item.fromJson(x))),
+      id: id,
+      customer: Customer.fromJson(json["customer"], "TODO"),
+      items: List.from(json["items"].map((x) => Item.fromJson(x, "TODO"))),
       orderDate: DateTime.parse(json['order_date']),
       totalAmount: json['total_amount'],
       statusId: json['status_id'],
@@ -40,7 +40,6 @@ class Order {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
       'customer': customer.toJson(),
       'items': List.from(items.map((x) => x)),
       'order_date': orderDate.toIso8601String(),

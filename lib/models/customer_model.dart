@@ -1,23 +1,23 @@
 import 'package:apos/lib_exp.dart';
 
 class Customer {
-  String id;
+  String? id;
   String name;
   String email;
   String phone;
   String address;
 
   Customer({
-    required this.id,
+    this.id,
     required this.name,
     required this.email,
     required this.phone,
     required this.address,
   });
 
-  factory Customer.fromJson(Map<String, dynamic> json) {
+  factory Customer.fromJson(Map<String, dynamic> json, String id) {
     return Customer(
-      id: json['id'],
+      id: id,
       name: json['name'],
       email: json['email'],
       phone: json['phone'],
@@ -27,7 +27,6 @@ class Customer {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
       'name': name,
       'email': email,
       'phone': phone,

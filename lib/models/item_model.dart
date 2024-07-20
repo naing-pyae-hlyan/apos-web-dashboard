@@ -3,22 +3,22 @@ import 'dart:math';
 import 'package:apos/lib_exp.dart';
 
 class Item {
-  final String id;
+  String? id;
   final String name;
   final double amount;
   final double discount;
   final int quantity;
 
   Item({
-    required this.id,
+    this.id,
     required this.name,
     required this.amount,
     required this.discount,
     required this.quantity,
   });
 
-  factory Item.fromJson(Map<String, dynamic> json) => Item(
-        id: json["id"],
+  factory Item.fromJson(Map<String, dynamic> json, String id) => Item(
+        id: id,
         name: json["name"],
         amount: json["amount"],
         discount: json["discount"],
@@ -26,7 +26,6 @@ class Item {
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
         "name": name,
         "amount": amount,
         "discount": discount,

@@ -30,14 +30,17 @@ class MyScaffold extends StatelessWidget {
   }
 }
 
-class MyScaffoldDataGridView extends StatelessWidget {
+class MyScaffoldDataGridView<M> extends StatelessWidget {
   final Widget? header;
-  final Widget blocBuilder;
+  final Stream<M> stream;
+  final Function(M) streamBuilder;
+  // final MyBlocBuilder<M> blocBuilder;
   final double elevation;
   const MyScaffoldDataGridView({
     super.key,
     this.header,
-    required this.blocBuilder,
+    required this.stream,
+    required this.streamBuilder,
     this.elevation = 16.0,
   });
 
@@ -58,7 +61,25 @@ class MyScaffoldDataGridView extends StatelessWidget {
               child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
                 physics: const BouncingScrollPhysics(),
-                child: blocBuilder,
+                child: StreamBuilder<M>(
+                  stream: stream,
+                  builder: (_, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const MyCircularIndicator();
+                    }
+
+                    if (snapshot.hasError) {
+                      return Center(
+                        child: myText(
+                          snapshot.error.toString(),
+                          color: Consts.errorColor,
+                        ),
+                      );
+                    }
+
+                    return streamBuilder(snapshot.requireData);
+                  },
+                ),
               ),
             ),
           ],

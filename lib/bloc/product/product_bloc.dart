@@ -1,72 +1,106 @@
 import 'package:apos/lib_exp.dart';
 
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
-  ProductBloc() : super(ProductStateInitial(products: [])) {
+  final CollectionReference _productRef;
+  ProductBloc({required FirebaseFirestore database})
+      : _productRef = database.collection("product").withConverter<Product>(
+              fromFirestore: (snapshot, _) => Product.fromJson(
+                snapshot.data()!,
+                snapshot.id,
+              ),
+              toFirestore: (product, _) => product.toJson(),
+            ),
+        super(ProductStateInitial()) {
     on<ProductEventCreateData>(_onCreate);
-    on<ProductEventReadData>(_onRead);
     on<ProductEventUpdateData>(_onUpdate);
     on<ProductEventDeleteData>(_onDelete);
+    on<ProductEventSearch>(_onSearch);
   }
 
   Future<void> _onCreate(
     ProductEventCreateData event,
     Emitter<ProductState> emit,
   ) async {
-    emit(ProductStateLoading(products: state.products));
+    emit(ProductDialogStateLoading());
+    if (event.product.name.isEmpty) {
+      await Future.delayed(const Duration(milliseconds: 500));
+      emit(_dialogStateFail(message: "Enter product name"));
+      return;
+    }
 
-    CacheManager.products.add(event.product);
-    emit(ProductStateCreateDataSuccess(products: CacheManager.products));
-  }
+    // TODO validate
 
-  Future<void> _onRead(
-    ProductEventReadData event,
-    Emitter<ProductState> emit,
-  ) async {
-    emit(ProductStateLoading(products: state.products));
+    var same = CacheManager.products.where(
+      (Product product) => product.name == event.product.name,
+    );
+    if (same.isNotEmpty) {
+      await Future.delayed(const Duration(milliseconds: 500));
+      emit(_dialogStateFail(message: "Name is already taken"));
+      return;
+    }
 
-    List<Product> products = List.generate(26, (index) => tempProduct(index));
-
-    //
-    CacheManager.products = products;
-
-    emit(ProductStateReadDataSuccess(products: products));
+    await _productRef
+        .add(event.product)
+        .then((_) => emit(ProductStateCreateDataSuccess()))
+        .catchError(
+          (error) => emit(_dialogStateFail(message: error.toString())),
+        );
   }
 
   Future<void> _onUpdate(
     ProductEventUpdateData event,
     Emitter<ProductState> emit,
   ) async {
-    emit(ProductStateLoading(products: state.products));
-
-    for (Product product in CacheManager.products) {
-      if (product.id == event.product.id) {
-        product = Product(
-          id: event.product.id,
-          name: event.product.name,
-          description: event.product.description,
-          image: event.product.image,
-          price: event.product.price,
-          stockQuantity: event.product.stockQuantity,
-          categoryId: event.product.categoryId,
-          categoryName: event.product.categoryName,
-        );
-      }
+    emit(ProductDialogStateLoading());
+    if (event.product.name.isEmpty) {
+      await Future.delayed(const Duration(milliseconds: 500));
+      emit(_dialogStateFail(message: "Enter product name"));
+      return;
     }
-    emit(ProductStateUpdateDataSuccess(products: CacheManager.products));
+
+    // TODO validate
+
+    var same = CacheManager.products.where(
+      (Product product) => product.name == event.product.name,
+    );
+    if (same.isNotEmpty) {
+      await Future.delayed(const Duration(milliseconds: 500));
+      emit(_dialogStateFail(message: "Name is already taken"));
+      return;
+    }
+
+    await _productRef
+        .doc(event.product.id)
+        .update(event.product.toJson())
+        .then((_) => emit(ProductStateUpdateDataSuccess()))
+        .catchError(
+          (error) => emit(_dialogStateFail(message: error.toString())),
+        );
   }
 
   Future<void> _onDelete(
     ProductEventDeleteData event,
     Emitter<ProductState> emit,
   ) async {
-    emit(ProductStateLoading(products: state.products));
+    emit(ProductStateLoading());
 
-    List<Product> products = CacheManager.products;
-    products.removeWhere(
-      (Product product) => event.productId == product.id,
-    );
-    CacheManager.products = products;
-
-    emit(ProductStateDeleteDataSuccess(products: products));
+    await _productRef
+        .doc(event.productId)
+        .delete()
+        .then((_) => emit(ProductStateDeleteDataSuccess()))
+        .catchError(
+          (error) => emit(_dialogStateFail(message: error.toString())),
+        );
   }
+
+  Future<void> _onSearch(
+    ProductEventSearch event,
+    Emitter<ProductState> emit,
+  ) async {
+    emit(ProductStateSearch(query: event.query));
+  }
+
+  ProductDialogStateFail _dialogStateFail(
+          {required String message, int code = 1}) =>
+      ProductDialogStateFail(error: ErrorModel(message: message, code: code));
 }

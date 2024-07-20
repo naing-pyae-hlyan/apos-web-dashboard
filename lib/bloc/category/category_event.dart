@@ -16,3 +16,8 @@ class CategoryEventDeleteData extends CategoryEvent {
   final String categoryId;
   CategoryEventDeleteData({required this.categoryId});
 }
+
+class CategoryEventSearch extends CategoryEvent {
+  final String query;
+  CategoryEventSearch({required this.query});
+}

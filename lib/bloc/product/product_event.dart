@@ -18,3 +18,8 @@ class ProductEventDeleteData extends ProductEvent {
   final String productId;
   ProductEventDeleteData({required this.productId});
 }
+
+class ProductEventSearch extends ProductEvent {
+  final String query;
+  ProductEventSearch({required this.query});
+}

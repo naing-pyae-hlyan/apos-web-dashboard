@@ -1,6 +1,6 @@
 import 'package:apos/lib_exp.dart';
 
-sealed class CategoryState  {}
+sealed class CategoryState {}
 
 class CategoryStateInitial extends CategoryState {}
 
@@ -26,3 +26,9 @@ class CategoryStateUpdateDataSuccess extends CategoryState {}
 
 // Delete
 class CategoryStateDeleteDataSuccess extends CategoryState {}
+
+// Search
+class CategoryStateSearch extends CategoryState {
+  final String query;
+  CategoryStateSearch({required this.query});
+}

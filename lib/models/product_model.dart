@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:apos/lib_exp.dart';
 
 class Product {
-  String id;
+  String? id;
   String name;
   String? image;
   String? description;
@@ -13,7 +13,7 @@ class Product {
   String categoryName;
 
   Product({
-    required this.id,
+    this.id,
     required this.name,
     required this.image,
     required this.description,
@@ -23,9 +23,9 @@ class Product {
     required this.categoryName,
   });
 
-  factory Product.fromJson(Map<String, dynamic> json) {
+  factory Product.fromJson(Map<String, dynamic> json, String id) {
     return Product(
-      id: json['id'],
+      id: id,
       name: json['name'],
       image: json["image"],
       description: json['description'],
@@ -38,14 +38,13 @@ class Product {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
       'name': name,
       'image': image,
       'description': description,
       'price': price,
       'stock_quantity': stockQuantity,
-      'category_Id': categoryId,
-      'category_Name': categoryName,
+      'category_id': categoryId,
+      'category_name': categoryName,
     };
   }
 }

@@ -10,36 +10,41 @@ class ProductPage extends StatefulWidget {
 class _ProductPageState extends State<ProductPage> {
   late ProductBloc productBloc;
 
+  final productCollection =
+      FirebaseFirestore.instance.collection("product").withConverter(
+            fromFirestore: (snapshot, _) => Product.fromJson(
+              snapshot.data()!,
+              snapshot.id,
+            ),
+            toFirestore: (product, _) => product.toJson(),
+          );
+
   @override
   void initState() {
     productBloc = context.read<ProductBloc>();
     super.initState();
-
-    doAfterBuild(callback: () {
-      productBloc.add(ProductEventReadData());
-    });
   }
 
   void _deleteProduct(Product product) {
-    showConfirmDialog(
-      context,
-      title: "Delete Product",
-      description: "Are you sure want to delete this ${product.name}?",
-      onTapOk: () {
-        productBloc.add(
-          ProductEventDeleteData(productId: product.id),
-        );
-      },
-    );
+    if (product.id != null) {
+      showConfirmDialog(
+        context,
+        title: "Delete Product",
+        description: "Are you sure want to delete this ${product.name}?",
+        onTapOk: () {
+          productBloc.add(ProductEventDeleteData(productId: product.id!));
+        },
+      );
+    }
   }
 
   void _updateProduct(Product product) {
-    showProductDialog(context, product: product);
+    showProductBlocDialog(context, product: product);
   }
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffoldDataGridView(
+    return MyScaffoldDataGridView<QuerySnapshot<Product>>(
       header: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -50,106 +55,127 @@ class _ProductPageState extends State<ProductPage> {
             child: MyInputField(
               controller: TextEditingController(),
               hintText: "Search",
+              onChanged: (String query) {
+                productBloc.add(ProductEventSearch(query: query));
+              },
             ),
           ),
           horizontalWidth16,
           MyButton(
             label: "New Product",
-            onPressed: () => showProductDialog(context),
+            onPressed: () => showProductBlocDialog(context),
           ),
         ],
       ),
-      blocBuilder: BlocBuilder<ProductBloc, ProductState>(
-        builder: (_, state) {
-          if (state is ProductStateLoading) {
-            return const MyCircularIndicator();
-          }
+      stream: productCollection.orderBy("name").snapshots(),
+      streamBuilder: (QuerySnapshot<Product> data) {
+        final List<Product> products = [];
+        CacheManager.products.clear();
+        for (var doc in data.docs) {
+          products.add(doc.data());
+        }
 
-          final List<Product> products = state.products;
+        // Store to local cache
+        CacheManager.products = products;
 
-          return Table(
-            columnWidths: const {
-              0: FlexColumnWidth(0.5),
-              1: FlexColumnWidth(1),
-              2: FlexColumnWidth(1),
-              3: FlexColumnWidth(2),
-              4: FlexColumnWidth(1),
-              5: FlexColumnWidth(0.5),
-              6: FlexColumnWidth(0.5),
-              7: FlexColumnWidth(0.5),
-            },
-            children: <TableRow>[
-              TableRow(
-                decoration: tableTitleDecoration(),
-                children: const [
-                  TableTitleCell(
-                    "S/N",
-                    textAlign: TextAlign.center,
-                  ),
-                  TableTitleCell("Image"),
-                  TableTitleCell("Name"),
-                  TableTitleCell("Description"),
-                  TableTitleCell(
-                    "Price",
-                    textAlign: TextAlign.end,
-                  ),
-                  TableTitleCell(
-                    "Qty",
-                    textAlign: TextAlign.end,
-                  ),
-                  TableTitleCell(
-                    "Edit",
-                    textAlign: TextAlign.center,
-                  ),
-                  TableTitleCell(
-                    "Delete",
-                    textAlign: TextAlign.center,
-                  ),
-                ],
+        return BlocBuilder<ProductBloc, ProductState>(
+          builder: (_, state) {
+            if (state is ProductStateLoading) {
+              return const MyCircularIndicator();
+            }
+            List<Product> search = [];
+
+            if (state is ProductStateSearch) {
+              search = products.where((Product product) {
+                return stringCompare(product.name, state.query);
+              }).toList();
+            } else {
+              search = products;
+            }
+
+            return Table(
+              columnWidths: const {
+                0: FlexColumnWidth(0.5),
+                1: FlexColumnWidth(1),
+                2: FlexColumnWidth(1),
+                3: FlexColumnWidth(2),
+                4: FlexColumnWidth(1),
+                5: FlexColumnWidth(0.5),
+                6: FlexColumnWidth(0.5),
+                7: FlexColumnWidth(0.5),
+              },
+              children: <TableRow>[
+                TableRow(
+                  decoration: tableTitleDecoration(),
+                  children: const [
+                    TableTitleCell(
+                      "S/N",
+                      textAlign: TextAlign.center,
+                    ),
+                    TableTitleCell("Image"),
+                    TableTitleCell("Name"),
+                    TableTitleCell("Description"),
+                    TableTitleCell(
+                      "Price",
+                      textAlign: TextAlign.end,
+                    ),
+                    TableTitleCell(
+                      "Qty",
+                      textAlign: TextAlign.end,
+                    ),
+                    TableTitleCell(
+                      "Edit",
+                      textAlign: TextAlign.center,
+                    ),
+                    TableTitleCell(
+                      "Delete",
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+                ..._productTableRowView(search),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  List<TableRow> _productTableRowView(List<Product> products) => List.generate(
+        products.length,
+        (index) {
+          final product = products[index];
+          return TableRow(
+            decoration: tableTextDecoration(index),
+            children: [
+              TableSNCell(index),
+              // const TableCell(
+              //   child: Icon(Icons.abc, size: 128),
+              // ),
+              const TableTextCell(""),
+              TableTextCell(product.name),
+              TableTextCell(product.description),
+              TableTextCell(
+                product.price.toCurrencyFormat(),
+                textAlign: TextAlign.end,
               ),
-              ...List.generate(
-                products.length,
-                (index) {
-                  return TableRow(
-                    decoration: tableTextDecoration(index),
-                    children: [
-                      TableSNCell(index),
-                      // const TableCell(
-                      //   child: Icon(Icons.abc, size: 128),
-                      // ),
-                      const TableTextCell(""),
-                      TableTextCell(products[index].name),
-                      TableTextCell(products[index].description),
-                      TableTextCell(
-                        products[index].price.toCurrencyFormat(),
-                        textAlign: TextAlign.end,
-                      ),
-                      TableTextCell(
-                        products[index].stockQuantity.toString(),
-                        textAlign: TextAlign.end,
-                      ),
-                      TableButtonCell(
-                        icon: Icons.edit_square,
-                        iconColor: Colors.blueGrey,
-                        onPressed: () {
-                          _updateProduct(products[index]);
-                        },
-                      ),
-                      TableButtonCell(
-                        icon: Icons.delete,
-                        iconColor: Colors.red,
-                        onPressed: () {
-                          _deleteProduct(products[index]);
-                        },
-                      ),
-                    ],
-                  );
-                },
+              TableTextCell(
+                product.stockQuantity.toString(),
+                textAlign: TextAlign.end,
+              ),
+              TableButtonCell(
+                icon: Icons.edit_square,
+                iconColor: Colors.blueGrey,
+                onPressed: () => _updateProduct(product),
+              ),
+              TableButtonCell(
+                icon: Icons.delete,
+                iconColor: Colors.red,
+                onPressed: () => _deleteProduct(product),
               ),
             ],
           );
         },
-      ),
-    );
-  }
+      );
 }

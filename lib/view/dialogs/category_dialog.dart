@@ -18,8 +18,6 @@ class _CategoryDialog extends StatefulWidget {
 class _CategoryDialogState extends State<_CategoryDialog> {
   late CategoryBloc categoryBloc;
 
-  final _formKey = GlobalKey<FormState>();
-
   final _nameTxtCtrl = TextEditingController();
   final _descTxtCtrl = TextEditingController();
   final _nameFn = FocusNode();
@@ -27,9 +25,9 @@ class _CategoryDialogState extends State<_CategoryDialog> {
 
   void _onSave() {
     final Category category = Category(
+      id: widget.category?.id,
       name: _nameTxtCtrl.text,
       description: _descTxtCtrl.text,
-      id: widget.category?.id,
     );
 
     if (widget.category == null) {
@@ -79,46 +77,43 @@ class _CategoryDialogState extends State<_CategoryDialog> {
           ],
         ),
       ),
-      content: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            MyInputField(
-              controller: _nameTxtCtrl,
-              focusNode: _nameFn,
-              hintText: "Enter Name",
-              keyboardType: TextInputType.text,
-              textInputAction: TextInputAction.next,
-            ),
-            verticalHeight16,
-            MyInputField(
-              controller: _descTxtCtrl,
-              focusNode: _descFn,
-              hintText: "Enter Description",
-              keyboardType: TextInputType.text,
-              textInputAction: TextInputAction.done,
-              onSubmitted: (_) => _onSave(),
-            ),
-            BlocBuilder<CategoryBloc, CategoryState>(
-              builder: (_, state) {
-                if (state is CategoryDialogStateFail) {
-                  return Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: myText(
-                        "Error: ${state.error.message}",
-                        color: Consts.errorColor,
-                      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          MyInputField(
+            controller: _nameTxtCtrl,
+            focusNode: _nameFn,
+            hintText: "Enter Name",
+            keyboardType: TextInputType.text,
+            textInputAction: TextInputAction.next,
+          ),
+          verticalHeight16,
+          MyInputField(
+            controller: _descTxtCtrl,
+            focusNode: _descFn,
+            hintText: "Enter Description",
+            keyboardType: TextInputType.text,
+            textInputAction: TextInputAction.done,
+            onSubmitted: (_) => _onSave(),
+          ),
+          BlocBuilder<CategoryBloc, CategoryState>(
+            builder: (_, state) {
+              if (state is CategoryDialogStateFail) {
+                return Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: myText(
+                      "Error: ${state.error.message}",
+                      color: Consts.errorColor,
                     ),
-                  );
-                }
-                return emptyUI;
-              },
-            ),
-          ],
-        ),
+                  ),
+                );
+              }
+              return emptyUI;
+            },
+          ),
+        ],
       ),
       actions: [
         TextButton(

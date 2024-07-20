@@ -1,6 +1,6 @@
 import 'package:apos/lib_exp.dart';
 
-void showProductDialog(
+void showProductBlocDialog(
   BuildContext context, {
   Product? product,
 }) =>
@@ -21,10 +21,28 @@ class _ProductDialog extends StatefulWidget {
 class _ProductDialogState extends State<_ProductDialog> {
   late ProductBloc productBloc;
 
-  final _formKey = GlobalKey<FormState>();
-
   final _nameTxtCtrl = TextEditingController();
   final _descTxtCtrl = TextEditingController();
+  final _nameFn = FocusNode();
+  final _descFn = FocusNode();
+
+  void _onSave() {
+    final Product product = Product(
+      id: widget.product?.id,
+      name: _nameTxtCtrl.text,
+      image: "",
+      description: _descTxtCtrl.text,
+      price: 1,
+      stockQuantity: 1,
+      categoryId: "",
+      categoryName: "",
+    );
+    if (widget.product == null) {
+      productBloc.add(ProductEventCreateData(product: product));
+    } else {
+      productBloc.add(ProductEventUpdateData(product: product));
+    }
+  }
 
   @override
   void initState() {
@@ -33,6 +51,17 @@ class _ProductDialogState extends State<_ProductDialog> {
     super.initState();
     _nameTxtCtrl.text = widget.product?.name ?? '';
     _descTxtCtrl.text = widget.product?.description ?? '';
+  }
+
+  @override
+  void dispose() {
+    if (mounted) {
+      _nameTxtCtrl.dispose();
+      _descTxtCtrl.dispose();
+      _nameFn.dispose();
+      _descFn.dispose();
+    }
+    super.dispose();
   }
 
   @override
@@ -55,72 +84,84 @@ class _ProductDialogState extends State<_ProductDialog> {
           ],
         ),
       ),
-      content: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            MyInputField(
-              controller: _nameTxtCtrl,
-              hintText: "Enter Name",
-              keyboardType: TextInputType.text,
-              textInputAction: TextInputAction.next,
-            ),
-            verticalHeight16,
-            MyInputField(
-              controller: _descTxtCtrl,
-              hintText: "Enter Description",
-              keyboardType: TextInputType.text,
-              textInputAction: TextInputAction.next,
-            ),
-            verticalHeight16,
-            MyInputField(
-              controller: _descTxtCtrl,
-              hintText: "Enter Price",
-              keyboardType: TextInputType.text,
-              textInputAction: TextInputAction.next,
-            ),
-            verticalHeight16,
-            MyInputField(
-              controller: _descTxtCtrl,
-              hintText: "Enter Qty",
-              keyboardType: TextInputType.text,
-              textInputAction: TextInputAction.next,
-            ),
-          ],
-        ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          MyInputField(
+            controller: _nameTxtCtrl,
+            hintText: "Enter Name",
+            keyboardType: TextInputType.text,
+            textInputAction: TextInputAction.next,
+          ),
+          verticalHeight16,
+          MyInputField(
+            controller: _descTxtCtrl,
+            hintText: "Enter Description",
+            keyboardType: TextInputType.text,
+            textInputAction: TextInputAction.next,
+          ),
+          verticalHeight16,
+          MyInputField(
+            controller: _descTxtCtrl,
+            hintText: "Enter Price",
+            keyboardType: TextInputType.text,
+            textInputAction: TextInputAction.next,
+          ),
+          verticalHeight16,
+          MyInputField(
+            controller: _descTxtCtrl,
+            hintText: "Enter Qty",
+            keyboardType: TextInputType.text,
+            textInputAction: TextInputAction.next,
+          ),
+          BlocBuilder<ProductBloc, ProductState>(
+            builder: (_, state) {
+              if (state is ProductDialogStateFail) {
+                return Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: myText(
+                      "Error: ${state.error.message}",
+                      color: Consts.errorColor,
+                    ),
+                  ),
+                );
+              }
+              return emptyUI;
+            },
+          ),
+        ],
       ),
       actions: [
         TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+          onPressed: () => context.pop(),
           child: myText('Cancel'),
         ),
-        MyButton(
-          label: "Save",
-          onPressed: () {
-            if (_formKey.currentState!.validate()) {
-              _formKey.currentState!.save();
+        BlocConsumer<ProductBloc, ProductState>(
+          builder: (_, ProductState state) {
+            if (state is ProductDialogStateLoading) {
+              return const MyCircularIndicator();
+            }
 
-              String? id = widget.product?.id;
+            return MyButton(label: "Save", onPressed: _onSave);
+          },
+          listener: (_, ProductState state) {
+            if (state is ProductStateCreateDataSuccess ||
+                state is ProductStateUpdateDataSuccess) {
+              context.pop();
+            }
 
-              final product = Product(
-                id: id ?? DateTime.now().toIso8601String(),
-                name: _nameTxtCtrl.text,
-                description: _descTxtCtrl.text,
-                price: 1,
-                stockQuantity: 1,
-                image: "",
-                categoryId: "",
-                categoryName: "",
-              );
-              if (widget.product == null) {
-                productBloc.add(ProductEventCreateData(product: product));
-              } else {
-                productBloc.add(ProductEventUpdateData(product: product));
+            if (state is ProductDialogStateFail) {
+              if (state.error.code == 1) {
+                _nameFn.requestFocus();
+                return;
               }
-              Navigator.of(context).pop();
+
+              if (state.error.code == 2) {
+                _descFn.requestFocus();
+                return;
+              }
             }
           },
         ),

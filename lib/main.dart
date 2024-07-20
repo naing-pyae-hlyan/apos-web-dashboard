@@ -22,7 +22,7 @@ Future<void> main() async {
         BlocProvider(create: (_) => AuthBloc()),
         BlocProvider(create: (_) => HomeBloc()),
         BlocProvider(create: (_) => CategoryBloc(database: db)),
-        BlocProvider(create: (_) => ProductBloc()),
+        BlocProvider(create: (_) => ProductBloc(database: db)),
         BlocProvider(create: (_) => OrderBloc()),
       ],
       child: const MainApp(),
@@ -42,7 +42,7 @@ class MainApp extends StatelessWidget {
         primaryColor: Consts.primaryColor,
       ),
       home: const SafeArea(
-        child: CategoryPage(),
+        child: ProductPage(),
       ),
     );
   }

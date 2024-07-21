@@ -91,6 +91,7 @@ class _CategoryDialogState extends State<_CategoryDialog> {
           MyInputField(
             controller: _nameTxtCtrl,
             focusNode: _nameFn,
+            title: "Category Name",
             hintText: "Enter Name",
             keyboardType: TextInputType.text,
             textInputAction: TextInputAction.next,
@@ -99,6 +100,7 @@ class _CategoryDialogState extends State<_CategoryDialog> {
           MyInputField(
             controller: _descTxtCtrl,
             focusNode: _descFn,
+            title: "Category Description",
             hintText: "Enter Description",
             keyboardType: TextInputType.text,
             textInputAction: TextInputAction.done,
@@ -134,7 +136,11 @@ class _CategoryDialogState extends State<_CategoryDialog> {
               return const MyCircularIndicator();
             }
 
-            return MyButton(label: "Save", onPressed: _onSave);
+            return MyButton(
+              label: "Save",
+              icon: Icons.save,
+              onPressed: _onSave,
+            );
           },
           listener: (_, CategoryState state) {
             if (state is CategoryStateCreateDataSuccess ||

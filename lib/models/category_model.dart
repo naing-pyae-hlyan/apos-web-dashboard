@@ -27,4 +27,22 @@ class Category {
       'description': description,
     };
   }
+
+  @override
+  bool operator ==(Object other) {
+    return other is Category && id == other.id;
+  }
+
+  @override
+  // ignore: unnecessary_overrides
+  int get hashCode => super.hashCode;
+
+  static Category forDropdown() => Category(
+        id: "select-category",
+        readalbeId: "select-category",
+        name: "Select Category",
+        description: "",
+      );
+
+  bool get isDropdownTitle => id == "select-category";
 }

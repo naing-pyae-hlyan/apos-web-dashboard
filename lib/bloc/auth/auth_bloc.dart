@@ -31,7 +31,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       );
       return;
     }
-    await Future.delayed(const Duration(seconds: 3));
+    // await Future.delayed(const Duration(seconds: 3));
 
     if (event.rememberMe) {
       SpHelper.rememberMe(username: event.username, password: event.password);

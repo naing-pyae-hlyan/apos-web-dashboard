@@ -6,6 +6,7 @@ class MyButton extends StatelessWidget {
   final Color? backgroundColor;
   final Function() onPressed;
   final Color? borderColor;
+  final IconData? icon;
   const MyButton({
     super.key,
     required this.label,
@@ -13,25 +14,41 @@ class MyButton extends StatelessWidget {
     this.labelColor,
     this.backgroundColor,
     this.borderColor,
+    required this.icon,
   });
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton.icon(
+    return ElevatedButton(
       onPressed: onPressed,
-      label: myText(
-        label,
-        color: labelColor ?? Consts.primaryColor,
-        fontWeight: FontWeight.bold,
-      ),
       style: ElevatedButton.styleFrom(
-        backgroundColor: backgroundColor ?? Consts.scaffoldBackgroundColor,
+        padding: EdgeInsets.zero,
+        backgroundColor: backgroundColor ?? Consts.primaryColor,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: BorderRadius.circular(124),
           side: BorderSide(
-            width: 0.5,
             color: borderColor ?? Consts.primaryColor,
           ),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(32, 8, 24, 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            myText(
+              label,
+              color: labelColor ?? Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+            horizontalWidth16,
+            Icon(
+              icon,
+              color: labelColor ?? Colors.white,
+            ),
+          ],
         ),
       ),
     );

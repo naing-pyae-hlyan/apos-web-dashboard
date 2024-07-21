@@ -37,7 +37,7 @@ class _SplashPageState extends State<SplashPage> {
       callback: () async {
         await _checkCredentials();
       },
-      duration: const Duration(seconds: 1),
+      // duration: const Duration(seconds: 1),
     );
   }
 

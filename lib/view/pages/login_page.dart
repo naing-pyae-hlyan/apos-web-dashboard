@@ -136,6 +136,9 @@ class _LoginPageState extends State<LoginPage> {
 
                     return MyButton(
                       label: "Login",
+                      icon: Icons.login,
+                      labelColor: Colors.white,
+                      backgroundColor: Consts.primaryColor,
                       onPressed: _login,
                     );
                   },

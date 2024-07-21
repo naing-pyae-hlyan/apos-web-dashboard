@@ -3,4 +3,5 @@ extension StringExt on String {
         RegExp(r'[^A-Z0-9\-]'),
         '',
       );
+      
 }

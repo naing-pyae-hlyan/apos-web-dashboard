@@ -1,7 +1,3 @@
-import 'dart:math';
-
-import 'package:apos/lib_exp.dart';
-
 class Product {
   String? id;
   final String readableId;
@@ -10,8 +6,8 @@ class Product {
   final String? description;
   final double price;
   final int stockQuantity;
-  final String categoryId;
-  final String categoryName;
+  final String? categoryId;
+  final String? categoryName;
 
   Product({
     this.id,
@@ -51,4 +47,13 @@ class Product {
       'category_name': categoryName,
     };
   }
+
+  @override
+  bool operator ==(Object other) {
+    return other is Product && id == other.id;
+  }
+
+  @override
+  // ignore: unnecessary_overrides
+  int get hashCode => super.hashCode;
 }

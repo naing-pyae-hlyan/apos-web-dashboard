@@ -23,3 +23,7 @@ class ProductEventSearch extends ProductEvent {
   final String query;
   ProductEventSearch({required this.query});
 }
+
+class ProductEventPickProductImage extends ProductEvent {}
+
+class ProductEventRemoveProductImage extends ProductEvent {}

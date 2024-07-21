@@ -1,3 +1,4 @@
+export 'attachment_file.dart';
 export 'category_model.dart';
 export 'customer_model.dart';
 export 'error_model.dart';

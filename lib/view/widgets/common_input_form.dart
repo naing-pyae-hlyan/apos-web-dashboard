@@ -91,7 +91,7 @@ class MyInputField extends StatelessWidget {
   }
 
   OutlineInputBorder get outlineInputBorder => OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(4),
         borderSide: const BorderSide(
           color: Consts.primaryColor,
         ),

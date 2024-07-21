@@ -44,4 +44,16 @@ extension CurrencyExt on dynamic {
       return false;
     }
   }
+
+  int forceInt({int defaultValue = 0}) {
+    if (this == null) return defaultValue;
+    return int.tryParse(this) == null ? defaultValue : int.parse(this);
+  }
+
+  double forceDouble({double defaultValue = 0.0}) {
+    if (this == null) return defaultValue;
+    return int.tryParse(this) == null
+        ? defaultValue
+        : int.parse(this).roundToDouble();
+  }
 }

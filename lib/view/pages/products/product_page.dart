@@ -47,6 +47,7 @@ class _ProductPageState extends State<ProductPage> {
     return MyScaffoldDataGridView<QuerySnapshot<Product>>(
       header: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
             constraints: BoxConstraints(
@@ -61,13 +62,17 @@ class _ProductPageState extends State<ProductPage> {
             ),
           ),
           horizontalWidth16,
+          CategoryDropdown(
+            onSelectedCategory: (Category? selectedCategory) {},
+          ),
+          const Spacer(),
+          horizontalWidth16,
           MyButton(
             label: "New Product",
+            icon: Icons.post_add_rounded,
+            labelColor: Colors.white,
+            backgroundColor: Consts.primaryColor,
             onPressed: () => showProductBlocDialog(context),
-          ),
-          horizontalWidth16,
-          CaetgoryDropdown(
-            onSelectedCategory: (Category? selectedCategory) {},
           ),
         ],
       ),

@@ -8,14 +8,15 @@ class Clickable extends StatelessWidget {
   final Widget child;
   const Clickable({
     super.key,
-    this.radius = 8,
+    this.radius = 4,
     required this.onTap,
     required this.child,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
+      borderRadius: BorderRadius.circular(radius),
       onTap: onTap,
       child: child,
     );

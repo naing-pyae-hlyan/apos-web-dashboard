@@ -54,6 +54,7 @@ class _CategoryPageState extends State<CategoryPage> {
           horizontalWidth16,
           MyButton(
             label: "New Category",
+            icon: Icons.post_add_rounded,
             onPressed: () => showCategoryBlocDialog(context),
           ),
         ],

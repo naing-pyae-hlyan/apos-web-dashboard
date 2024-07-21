@@ -1,3 +1,4 @@
+export 'add_image_widget.dart';
 export 'category_dropdown.dart';
 export 'common_input_form.dart';
 export 'my_buttons.dart';

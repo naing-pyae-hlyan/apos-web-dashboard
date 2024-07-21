@@ -3,6 +3,7 @@ flutter 3.22.0
 21/08/2024 (0.1.8)
 1. UPDATE: ProductModel readableId add.
 2. NEW: Login Auth.
+3. NEW: CategoryDropdown, ProductImage picker.
 
 20/08/2024 (0.1.7)
 1. UPDATE: MyScaffoldDataGridView CodeRefactored.

@@ -45,3 +45,22 @@ bool stringCompare(String? name, String? query) {
       .replaceAll(' ', '')
       .contains(query.toUpperCase().replaceAll(' ', ''));
 }
+
+String slugify(String input) {
+  return input
+      .toUpperCase()
+      .replaceAll(' ', '-')
+      .replaceAll(RegExp(r'[^A-Z0-9\-]'), '');
+}
+
+String idsGenerator(String prefix, int length) {
+  String id = (length < 10)
+      ? "000$length"
+      : (length < 100)
+          ? "00$length"
+          : (length < 1000)
+              ? "0$length"
+              : "$length";
+
+  return slugify("$prefix $id");
+}

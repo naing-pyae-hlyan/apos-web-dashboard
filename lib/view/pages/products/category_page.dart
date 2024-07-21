@@ -88,7 +88,8 @@ class _CategoryPageState extends State<CategoryPage> {
             List<Category> search = [];
             if (state is CategoryStateSearch) {
               search = categories.where((Category category) {
-                return stringCompare(category.name, state.query);
+                return stringCompare(category.name, state.query) ||
+                    stringCompare(category.readalbeId, state.query);
               }).toList();
             } else {
               search = categories;
@@ -136,7 +137,7 @@ class _CategoryPageState extends State<CategoryPage> {
               TableTextCell(category.name),
               TableTextCell(category.description),
               TableTextCell(
-                categories[index].id,
+                categories[index].readalbeId.slugify,
                 textAlign: TextAlign.end,
               ),
               TableButtonCell(

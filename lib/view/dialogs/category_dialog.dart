@@ -26,6 +26,11 @@ class _CategoryDialogState extends State<_CategoryDialog> {
   void _onSave() {
     final Category category = Category(
       id: widget.category?.id,
+      readalbeId: widget.category?.readalbeId ??
+          idsGenerator(
+            "CTG",
+            CacheManager.categories.length + 1,
+          ),
       name: _nameTxtCtrl.text,
       description: _descTxtCtrl.text,
     );

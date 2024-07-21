@@ -1,5 +1,8 @@
 flutter 3.22.0
 
+21/08/2024 (0.1.8)
+1. UPDATE: ProductModel readableId add.
+
 20/08/2024 (0.1.7)
 1. UPDATE: MyScaffoldDataGridView CodeRefactored.
 2. WIP: Products CRUD.

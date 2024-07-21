@@ -65,6 +65,10 @@ class _ProductPageState extends State<ProductPage> {
             label: "New Product",
             onPressed: () => showProductBlocDialog(context),
           ),
+          horizontalWidth16,
+          CaetgoryDropdown(
+            onSelectedCategory: (Category? selectedCategory) {},
+          ),
         ],
       ),
       stream: productCollection.orderBy("name").snapshots(),
@@ -101,8 +105,9 @@ class _ProductPageState extends State<ProductPage> {
                 3: FlexColumnWidth(2),
                 4: FlexColumnWidth(1),
                 5: FlexColumnWidth(0.5),
-                6: FlexColumnWidth(0.5),
+                6: FlexColumnWidth(1),
                 7: FlexColumnWidth(0.5),
+                8: FlexColumnWidth(0.5),
               },
               children: <TableRow>[
                 TableRow(
@@ -123,6 +128,7 @@ class _ProductPageState extends State<ProductPage> {
                       "Qty",
                       textAlign: TextAlign.end,
                     ),
+                    TableTitleCell("Product Id", textAlign: TextAlign.end),
                     TableTitleCell(
                       "Edit",
                       textAlign: TextAlign.center,
@@ -162,6 +168,10 @@ class _ProductPageState extends State<ProductPage> {
               ),
               TableTextCell(
                 product.stockQuantity.toString(),
+                textAlign: TextAlign.end,
+              ),
+              TableTextCell(
+                product.readableId.slugify,
                 textAlign: TextAlign.end,
               ),
               TableButtonCell(

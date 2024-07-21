@@ -9,21 +9,27 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   late AuthBloc authBloc;
+  late CategoryBloc categoryBloc;
+
   final usernameTxtCtrl = TextEditingController();
   final passwordTxtCtrl = TextEditingController();
   final usernameFn = FocusNode();
   final passwordFn = FocusNode();
 
+  bool _rememberMe = false;
+
   void _login() {
     authBloc.add(AuthEventLogin(
       username: usernameTxtCtrl.text,
       password: passwordTxtCtrl.text,
+      rememberMe: _rememberMe,
     ));
   }
 
   @override
   void initState() {
     authBloc = context.read<AuthBloc>();
+    categoryBloc = context.read<CategoryBloc>();
     super.initState();
     doAfterBuild(
       callback: () {
@@ -82,7 +88,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: myText(
-                            "Error: ${state.error}",
+                            "Error: ${state.error.message}",
                             color: Consts.errorColor,
                           ),
                         ),
@@ -91,10 +97,25 @@ class _LoginPageState extends State<LoginPage> {
                     return verticalHeight32;
                   },
                 ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: MyCheckBoxWithLabel(
+                    label: "Remember Me",
+                    onSelected: (bool selected) {
+                      _rememberMe = selected;
+                    },
+                  ),
+                ),
                 BlocConsumer<AuthBloc, AuthState>(
                   listener: (_, AuthState state) {
                     if (state is AuthStateSuccess) {
-                      context.pushAndRemoveUntil(const HomePage());
+                      categoryBloc.add(
+                        CategoryEventReadData(
+                          readSuccess: () {
+                            context.pushAndRemoveUntil(const HomePage());
+                          },
+                        ),
+                      );
                     }
                     if (state is AuthStateFail) {
                       if (state.error.code == 1) {

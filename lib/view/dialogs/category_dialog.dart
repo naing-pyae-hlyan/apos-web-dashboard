@@ -49,6 +49,9 @@ class _CategoryDialogState extends State<_CategoryDialog> {
     super.initState();
     _nameTxtCtrl.text = widget.category?.name ?? '';
     _descTxtCtrl.text = widget.category?.description ?? '';
+    doAfterBuild(callback: () {
+      _nameFn.requestFocus();
+    });
   }
 
   @override

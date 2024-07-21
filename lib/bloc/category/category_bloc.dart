@@ -1,27 +1,37 @@
 import 'dart:async';
-
 import 'package:apos/lib_exp.dart';
 
 class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
-  // final FirebaseFirestore _database;
-  final CollectionReference _categoryRef;
-  CategoryBloc({required FirebaseFirestore database})
-      // : _database = database,
-      : _categoryRef = database.collection("category").withConverter<Category>(
-              fromFirestore: (snapshot, _) => Category.fromJson(
-                snapshot.data()!,
-                snapshot.id,
-              ),
-              toFirestore: (category, _) => category.toJson(),
-            ),
-        super(CategoryStateInitial()) {
+  CategoryBloc() : super(CategoryStateInitial()) {
+    on<CategoryEventReadData>(_onRead);
     on<CategoryEventCreateData>(_onCreate);
     on<CategoryEventUpdateData>(_onUpdate);
     on<CategoryEventDeleteData>(_onDelete);
     on<CategoryEventSearch>(_onSearch);
   }
 
-  CollectionReference categoryCollection() => _categoryRef;
+  Future<void> _onRead(
+    CategoryEventReadData event,
+    Emitter<CategoryState> emit,
+  ) async {
+    LoadingDialog.show();
+
+    await FFUtils.categoryCollection.orderBy("name").get().then(
+      (QuerySnapshot<Category> snapshot) {
+        CacheManager.categories.clear();
+        for (var doc in snapshot.docs) {
+          CacheManager.categories.add(doc.data());
+        }
+
+        LoadingDialog.hide();
+        if (event.readSuccess != null) {
+          event.readSuccess!();
+        }
+      },
+    ).catchError((error) {
+      LoadingDialog.hide();
+    });
+  }
 
   Future<void> _onCreate(
     CategoryEventCreateData event,
@@ -44,7 +54,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
       return;
     }
 
-    await _categoryRef
+    await FFUtils.categoryCollection
         .add(event.category)
         .then((_) => emit(CategoryStateCreateDataSuccess()))
         .catchError(
@@ -73,7 +83,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
       return;
     }
 
-    await _categoryRef
+    await FFUtils.categoryCollection
         .doc(event.category.id)
         .update(event.category.toJson())
         .then((_) => emit(CategoryStateUpdateDataSuccess()))
@@ -87,7 +97,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
     Emitter<CategoryState> emit,
   ) async {
     emit(CategoryStateLoading());
-    await _categoryRef
+    await FFUtils.categoryCollection
         .doc(event.categoryId)
         .delete()
         .then((_) => emit(CategoryStateDeleteDataSuccess()))

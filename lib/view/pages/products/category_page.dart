@@ -10,15 +10,6 @@ class CategoryPage extends StatefulWidget {
 class _CategoryPageState extends State<CategoryPage> {
   late CategoryBloc categoryBloc;
 
-  final categoryCollection =
-      FirebaseFirestore.instance.collection("category").withConverter<Category>(
-            fromFirestore: (snapshot, _) => Category.fromJson(
-              snapshot.data()!,
-              snapshot.id,
-            ),
-            toFirestore: (category, _) => category.toJson(),
-          );
-
   void _deleteCategory(Category category) {
     if (category.id != null) {
       showConfirmDialog(
@@ -68,7 +59,7 @@ class _CategoryPageState extends State<CategoryPage> {
         ],
       ),
       // Get data from firebase
-      stream: categoryCollection.orderBy("name").snapshots(),
+      stream: FFUtils.categoryCollection.orderBy("name").snapshots(),
       streamBuilder: (QuerySnapshot<Category> data) {
         final List<Category> categories = [];
         CacheManager.categories.clear();

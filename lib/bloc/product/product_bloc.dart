@@ -1,16 +1,7 @@
 import 'package:apos/lib_exp.dart';
 
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
-  final CollectionReference _productRef;
-  ProductBloc({required FirebaseFirestore database})
-      : _productRef = database.collection("product").withConverter<Product>(
-              fromFirestore: (snapshot, _) => Product.fromJson(
-                snapshot.data()!,
-                snapshot.id,
-              ),
-              toFirestore: (product, _) => product.toJson(),
-            ),
-        super(ProductStateInitial()) {
+  ProductBloc() : super(ProductStateInitial()) {
     on<ProductEventCreateData>(_onCreate);
     on<ProductEventUpdateData>(_onUpdate);
     on<ProductEventDeleteData>(_onDelete);
@@ -39,7 +30,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       return;
     }
 
-    await _productRef
+    await FFUtils.productCollection
         .add(event.product)
         .then((_) => emit(ProductStateCreateDataSuccess()))
         .catchError(
@@ -69,7 +60,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       return;
     }
 
-    await _productRef
+    await FFUtils.productCollection
         .doc(event.product.id)
         .update(event.product.toJson())
         .then((_) => emit(ProductStateUpdateDataSuccess()))
@@ -84,7 +75,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   ) async {
     emit(ProductStateLoading());
 
-    await _productRef
+    await FFUtils.productCollection
         .doc(event.productId)
         .delete()
         .then((_) => emit(ProductStateDeleteDataSuccess()))

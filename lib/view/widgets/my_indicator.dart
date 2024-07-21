@@ -1,4 +1,5 @@
 import 'package:apos/lib_exp.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class MyIndicator extends StatelessWidget {
   const MyIndicator({super.key});
@@ -20,10 +21,14 @@ class MyCircularIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CircularProgressIndicator.adaptive(
-      backgroundColor: Consts.primaryColor.withOpacity(1),
-
-      // color: Consts.primaryColor,
+    return LoadingAnimationWidget.threeArchedCircle(
+      color: Consts.primaryColor,
+      size: 24,
     );
+    //   return CircularProgressIndicator.adaptive(
+    //     backgroundColor: Consts.primaryColor.withOpacity(1),
+
+    //     // color: Consts.primaryColor,
+    //   );
   }
 }

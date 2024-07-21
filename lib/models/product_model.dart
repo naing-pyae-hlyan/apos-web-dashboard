@@ -4,16 +4,18 @@ import 'package:apos/lib_exp.dart';
 
 class Product {
   String? id;
-  String name;
-  String? image;
-  String? description;
-  double price;
-  int stockQuantity;
-  String categoryId;
-  String categoryName;
+  final String readableId;
+  final String name;
+  final String? image;
+  final String? description;
+  final double price;
+  final int stockQuantity;
+  final String categoryId;
+  final String categoryName;
 
   Product({
     this.id,
+    required this.readableId,
     required this.name,
     required this.image,
     required this.description,
@@ -23,9 +25,10 @@ class Product {
     required this.categoryName,
   });
 
-  factory Product.fromJson(Map<String, dynamic> json, String id) {
+  factory Product.fromJson(Map<String, dynamic> json, String docId) {
     return Product(
-      id: id,
+      id: docId,
+      readableId: json["id"],
       name: json['name'],
       image: json["image"],
       description: json['description'],
@@ -38,6 +41,7 @@ class Product {
 
   Map<String, dynamic> toJson() {
     return {
+      'id': readableId,
       'name': name,
       'image': image,
       'description': description,
@@ -48,14 +52,3 @@ class Product {
     };
   }
 }
-
-Product tempProduct(int index) => Product(
-      id: "#$index",
-      name: "Product ${Consts.aToz[index]}",
-      image: "",
-      description: "Lorem Ipsum",
-      price: Random().nextInt(1000) + 10000,
-      stockQuantity: Random().nextInt(1000),
-      categoryId: "",
-      categoryName: "",
-    );

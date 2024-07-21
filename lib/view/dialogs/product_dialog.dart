@@ -29,6 +29,11 @@ class _ProductDialogState extends State<_ProductDialog> {
   void _onSave() {
     final Product product = Product(
       id: widget.product?.id,
+      readableId: widget.product?.readableId ??
+          idsGenerator(
+            "PDT",
+            CacheManager.products.length + 1,
+          ),
       name: _nameTxtCtrl.text,
       image: "",
       description: _descTxtCtrl.text,
@@ -51,6 +56,9 @@ class _ProductDialogState extends State<_ProductDialog> {
     super.initState();
     _nameTxtCtrl.text = widget.product?.name ?? '';
     _descTxtCtrl.text = widget.product?.description ?? '';
+    doAfterBuild(callback: () {
+      _nameFn.requestFocus();
+    });
   }
 
   @override

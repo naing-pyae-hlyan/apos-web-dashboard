@@ -7,6 +7,11 @@ class CategoryEventCreateData extends CategoryEvent {
   CategoryEventCreateData({required this.category});
 }
 
+class CategoryEventReadData extends CategoryEvent {
+  final Function()? readSuccess;
+  CategoryEventReadData({this.readSuccess});
+}
+
 class CategoryEventUpdateData extends CategoryEvent {
   final Category category;
   CategoryEventUpdateData({required this.category});

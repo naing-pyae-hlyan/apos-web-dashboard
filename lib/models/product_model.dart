@@ -2,7 +2,7 @@ class Product {
   String? id;
   final String readableId;
   final String name;
-  final String? image;
+  final List<String> base64Images;
   final String? description;
   final double price;
   final int stockQuantity;
@@ -13,7 +13,7 @@ class Product {
     this.id,
     required this.readableId,
     required this.name,
-    required this.image,
+    required this.base64Images,
     required this.description,
     required this.price,
     required this.stockQuantity,
@@ -26,7 +26,7 @@ class Product {
       id: docId,
       readableId: json["id"],
       name: json['name'],
-      image: json["image"],
+      base64Images: List.from(json["images"].map((x) => x)),
       description: json['description'],
       price: json['price'],
       stockQuantity: json['stock_quantity'],
@@ -39,7 +39,7 @@ class Product {
     return {
       'id': readableId,
       'name': name,
-      'image': image,
+      'images': List.from(base64Images.map((x) => x)),
       'description': description,
       'price': price,
       'stock_quantity': stockQuantity,

@@ -1,6 +1,6 @@
 import 'package:apos/lib_exp.dart';
 
-class FFUtils {
+class FFirestoreUtils {
   static final _database = FirebaseFirestore.instance;
   static FirebaseFirestore get database => _database;
 

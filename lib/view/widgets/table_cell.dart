@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:apos/lib_exp.dart';
 
 class TableTitleCell extends StatelessWidget {
@@ -32,6 +34,35 @@ class TableSNCell extends StatelessWidget {
     return TableTextCell(
       "${index + 1}",
       textAlign: TextAlign.center,
+    );
+  }
+}
+
+class TableImagesCell extends StatelessWidget {
+  final List<String> images;
+  const TableImagesCell({super.key, required this.images});
+
+  @override
+  Widget build(BuildContext context) {
+    return TableCell(
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          runAlignment: WrapAlignment.start,
+          children: images
+              .map(
+                (String image) => Image.memory(
+                  base64Decode(image),
+                  width: 32,
+                  height: 32,
+                  fit: BoxFit.contain,
+                ),
+              )
+              .toList(),
+        ),
+      ),
     );
   }
 }

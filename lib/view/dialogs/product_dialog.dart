@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:apos/lib_exp.dart';
 
 void showProductBlocDialog(
@@ -7,7 +9,12 @@ void showProductBlocDialog(
     showAdaptiveDialog(
       context: context,
       barrierDismissible: true,
-      builder: (_) => _ProductDialog(product: product),
+      builder: (_) => MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (_) => AttachmentsBloc()),
+        ],
+        child: _ProductDialog(product: product),
+      ),
     );
 
 class _ProductDialog extends StatefulWidget {
@@ -20,6 +27,7 @@ class _ProductDialog extends StatefulWidget {
 
 class _ProductDialogState extends State<_ProductDialog> {
   late ProductBloc productBloc;
+  late AttachmentsBloc attachmentsBloc;
 
   final _nameTxtCtrl = TextEditingController();
   final _descTxtCtrl = TextEditingController();
@@ -32,24 +40,35 @@ class _ProductDialogState extends State<_ProductDialog> {
 
   Category? _selectedCategory;
 
-  void _onSave() {
+  Future<void> _onSave() async {
     final name = _nameTxtCtrl.text;
     final descriptoin = _descTxtCtrl.text;
     final price = _priceTxtCtrl.text.forceDouble();
     final qty = _qtyTxtCtrl.text.forceInt();
     final readableId = widget.product?.readableId ??
-        idsGenerator("PDT", CacheManager.products.length + 1);
+        RandomIdGenerator.getnerateProductUniqueId();
+    final String? categoryId =
+        widget.product?.categoryId ?? _selectedCategory?.id;
+    final String? categoryName =
+        widget.product?.categoryName ?? _selectedCategory?.name;
 
-    final Product product = Product(
+    final List<AttachmentFile> files = attachmentsBloc.state.files;
+    List<String> base64Images = [];
+
+    for (AttachmentFile file in files) {
+      base64Images.add(base64Encode(file.data));
+    }
+
+    final product = Product(
       id: widget.product?.id,
       readableId: readableId,
       name: name,
-      image: "",
+      base64Images: base64Images,
       description: descriptoin,
       price: price,
       stockQuantity: qty,
-      categoryId: _selectedCategory?.id,
-      categoryName: _selectedCategory?.name,
+      categoryId: categoryId,
+      categoryName: categoryName,
     );
     if (widget.product == null) {
       productBloc.add(ProductEventCreateData(product: product));
@@ -61,6 +80,7 @@ class _ProductDialogState extends State<_ProductDialog> {
   @override
   void initState() {
     productBloc = context.read<ProductBloc>();
+    attachmentsBloc = context.read<AttachmentsBloc>();
 
     super.initState();
     _nameTxtCtrl.text = widget.product?.name ?? '';
@@ -92,104 +112,128 @@ class _ProductDialogState extends State<_ProductDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final double dialogWidth = context.screenWidth * 0.7;
     return AlertDialog(
       backgroundColor: Colors.white,
       surfaceTintColor: Colors.white,
       shadowColor: Consts.secondaryColor,
-      title: SizedBox(
-        width: context.screenWidth * 0.3,
+      title: Column(
+        children: [
+          myTitle(
+            widget.product == null ? 'Add Product' : 'Edit Product',
+          ),
+          if (widget.product?.id != null) ...[
+            verticalHeight4,
+            myText(widget.product?.id),
+          ],
+        ],
+      ),
+      content: SizedBox(
+        width: dialogWidth,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            myTitle(
-              widget.product == null ? 'Add Product' : 'Edit Product',
+            CategoryDropdown(
+              title: "Category",
+              onSelectedCategory: (Category? category) {
+                _selectedCategory = category;
+              },
             ),
-            if (widget.product?.id != null) ...[
-              verticalHeight4,
-              myText(widget.product?.id),
-            ],
+            verticalHeight16,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                SizedBox(
+                  width: dialogWidth * 0.5,
+                  child: MyInputField(
+                    controller: _nameTxtCtrl,
+                    focusNode: _nameFn,
+                    title: "Product Name",
+                    hintText: "Enter Name",
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                  ),
+                ),
+                horizontalWidth16,
+                SizedBox(
+                  width: dialogWidth * 0.25 - 16,
+                  child: MyInputField(
+                    controller: _priceTxtCtrl,
+                    focusNode: _priceFn,
+                    title: "Price",
+                    hintText: "Enter Price",
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                  ),
+                ),
+                horizontalWidth16,
+                SizedBox(
+                  width: dialogWidth * 0.25 - 16,
+                  child: MyInputField(
+                    controller: _qtyTxtCtrl,
+                    focusNode: _qtyFn,
+                    title: "Quantity",
+                    hintText: "Enter Qty",
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                  ),
+                ),
+              ],
+            ),
+            verticalHeight16,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                SizedBox(
+                  width: dialogWidth * 0.5,
+                  child: MyInputField(
+                    controller: _descTxtCtrl,
+                    focusNode: _descFn,
+                    title: "Product Description",
+                    hintText: "Enter Description",
+                    maxLines: 4,
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                  ),
+                ),
+                horizontalWidth16,
+                ProductImagesWidget(
+                  contentWidth: dialogWidth * 0.5 - 16,
+                ),
+              ],
+            ),
+            verticalHeight16,
+            BlocBuilder<ProductBloc, ProductState>(
+              builder: (_, state) {
+                if (state is ProductDialogStateFail) {
+                  return Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: myText(
+                        "Error: ${state.error.message}",
+                        color: Consts.errorColor,
+                      ),
+                    ),
+                  );
+                }
+                return emptyUI;
+              },
+            ),
           ],
         ),
-      ),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          MyInputField(
-            controller: _nameTxtCtrl,
-            focusNode: _nameFn,
-            title: "Product Name",
-            hintText: "Enter Name",
-            keyboardType: TextInputType.text,
-            textInputAction: TextInputAction.next,
-          ),
-          verticalHeight16,
-          MyInputField(
-            controller: _descTxtCtrl,
-            focusNode: _descFn,
-            title: "Product Description",
-            hintText: "Enter Description",
-            keyboardType: TextInputType.text,
-            textInputAction: TextInputAction.next,
-          ),
-          verticalHeight16,
-          MyInputField(
-            controller: _priceTxtCtrl,
-            focusNode: _priceFn,
-            title: "Price",
-            hintText: "Enter Price",
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly,
-            ],
-            keyboardType: TextInputType.text,
-            textInputAction: TextInputAction.next,
-          ),
-          verticalHeight16,
-          MyInputField(
-            controller: _qtyTxtCtrl,
-            focusNode: _qtyFn,
-            title: "Quantity",
-            hintText: "Enter Qty",
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly,
-            ],
-            keyboardType: TextInputType.text,
-            textInputAction: TextInputAction.next,
-          ),
-          verticalHeight16,
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AddImageWidget(
-                pickedImage: (AttachmentFile? file) {},
-              ),
-              horizontalWidth8,
-              CategoryDropdown(
-                title: "Category",
-                onSelectedCategory: (Category? category) {
-                  _selectedCategory = category;
-                },
-              ),
-            ],
-          ),
-          BlocBuilder<ProductBloc, ProductState>(
-            builder: (_, state) {
-              if (state is ProductDialogStateFail) {
-                return Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: myText(
-                      "Error: ${state.error.message}",
-                      color: Consts.errorColor,
-                    ),
-                  ),
-                );
-              }
-              return emptyUI;
-            },
-          ),
-        ],
       ),
       actions: [
         TextButton(

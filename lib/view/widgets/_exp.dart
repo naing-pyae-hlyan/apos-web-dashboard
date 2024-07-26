@@ -7,6 +7,7 @@ export 'my_indicator.dart';
 export 'my_scaffold.dart';
 export 'my_select.dart';
 export 'my_seperator.dart';
+export 'product_images_widget.dart';
 export 'my_text.dart';
 export 'table_cell.dart';
 export 'widgets.dart';

@@ -1,12 +1,12 @@
 class Category {
   String? id;
-  final String readalbeId;
+  final String readableId;
   final String name;
   final String description;
 
   Category({
     this.id,
-    required this.readalbeId,
+    required this.readableId,
     required this.name,
     required this.description,
   });
@@ -14,7 +14,7 @@ class Category {
   factory Category.fromJson(Map<String, dynamic> json, String docId) {
     return Category(
       id: docId,
-      readalbeId: json['id'],
+      readableId: json['id'],
       name: json['name'],
       description: json['description'],
     );
@@ -22,7 +22,7 @@ class Category {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': readalbeId,
+      'id': readableId,
       'name': name,
       'description': description,
     };
@@ -39,7 +39,7 @@ class Category {
 
   static Category forDropdown() => Category(
         id: "select-category",
-        readalbeId: "select-category",
+        readableId: "select-category",
         name: "Select Category",
         description: "",
       );

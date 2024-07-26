@@ -105,9 +105,9 @@ class _ProductPageState extends State<ProductPage> {
             return Table(
               columnWidths: const {
                 0: FlexColumnWidth(0.5),
-                1: FlexColumnWidth(1),
+                1: FlexColumnWidth(1.5),
                 2: FlexColumnWidth(1),
-                3: FlexColumnWidth(2),
+                3: FlexColumnWidth(1.5),
                 4: FlexColumnWidth(1),
                 5: FlexColumnWidth(0.5),
                 6: FlexColumnWidth(1),
@@ -122,7 +122,7 @@ class _ProductPageState extends State<ProductPage> {
                       "S/N",
                       textAlign: TextAlign.center,
                     ),
-                    TableTitleCell("Image"),
+                    TableTitleCell("Images"),
                     TableTitleCell("Name"),
                     TableTitleCell("Description"),
                     TableTitleCell(
@@ -161,11 +161,8 @@ class _ProductPageState extends State<ProductPage> {
             decoration: tableTextDecoration(index),
             children: [
               TableSNCell(index),
-              // const TableCell(
-              //   child: Icon(Icons.abc, size: 128),
-              // ),
-              const TableTextCell(""),
-              TableTextCell(product.name),
+              TableImagesCell(images: product.base64Images),
+              TableTextCell(product.name, fontWeight: FontWeight.w800),
               TableTextCell(product.description),
               TableTextCell(
                 product.price.toCurrencyFormat(),

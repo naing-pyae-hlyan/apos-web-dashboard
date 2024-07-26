@@ -60,7 +60,7 @@ class _CategoryPageState extends State<CategoryPage> {
         ],
       ),
       // Get data from firebase
-      stream: FFUtils.categoryCollection.orderBy("name").snapshots(),
+      stream: FFirestoreUtils.categoryCollection.orderBy("name").snapshots(),
       streamBuilder: (QuerySnapshot<Category> data) {
         final List<Category> categories = [];
         CacheManager.categories.clear();
@@ -81,7 +81,7 @@ class _CategoryPageState extends State<CategoryPage> {
             if (state is CategoryStateSearch) {
               search = categories.where((Category category) {
                 return stringCompare(category.name, state.query) ||
-                    stringCompare(category.readalbeId, state.query);
+                    stringCompare(category.readableId, state.query);
               }).toList();
             } else {
               search = categories;
@@ -126,10 +126,10 @@ class _CategoryPageState extends State<CategoryPage> {
             decoration: tableTextDecoration(index),
             children: [
               TableSNCell(index),
-              TableTextCell(category.name),
+              TableTextCell(category.name, fontWeight: FontWeight.w800),
               TableTextCell(category.description),
               TableTextCell(
-                categories[index].readalbeId.slugify,
+                categories[index].readableId.slugify,
                 textAlign: TextAlign.end,
               ),
               TableButtonCell(

@@ -1,3 +1,7 @@
+export 'attachment/attachments_bloc.dart';
+export 'attachment/attachments_event.dart';
+export 'attachment/attachments_state.dart';
+//
 export 'auth/auth_bloc.dart';
 export 'auth/auth_event.dart';
 export 'auth/auth_service.dart';

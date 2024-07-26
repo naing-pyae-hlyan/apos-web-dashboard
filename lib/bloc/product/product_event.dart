@@ -2,6 +2,11 @@ import 'package:apos/lib_exp.dart';
 
 sealed class ProductEvent {}
 
+class ProductEventUploadImage extends ProductEvent {
+  final AttachmentFile file;
+  ProductEventUploadImage({required this.file});
+}
+
 class ProductEventCreateData extends ProductEvent {
   final Product product;
   ProductEventCreateData({required this.product});
@@ -23,7 +28,3 @@ class ProductEventSearch extends ProductEvent {
   final String query;
   ProductEventSearch({required this.query});
 }
-
-class ProductEventPickProductImage extends ProductEvent {}
-
-class ProductEventRemoveProductImage extends ProductEvent {}

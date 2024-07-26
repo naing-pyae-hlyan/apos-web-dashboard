@@ -40,7 +40,7 @@ class _CategoryDropdownState extends State<CategoryDropdown> {
         items: categories.map((Category category) {
           return DropdownMenuItem<Category>(
             value: category,
-            child: myText(category.name),
+            child: myText(category.name, fontWeight: FontWeight.w800),
           );
         }).toList(),
         onChanged: (Category? category) {

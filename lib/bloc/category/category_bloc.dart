@@ -16,7 +16,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   ) async {
     LoadingDialog.show();
 
-    await FFUtils.categoryCollection.orderBy("name").get().then(
+    await FFirestoreUtils.categoryCollection.orderBy("name").get().then(
       (QuerySnapshot<Category> snapshot) {
         CacheManager.categories.clear();
         for (var doc in snapshot.docs) {
@@ -54,7 +54,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
       return;
     }
 
-    await FFUtils.categoryCollection
+    await FFirestoreUtils.categoryCollection
         .add(event.category)
         .then((_) => emit(CategoryStateCreateDataSuccess()))
         .catchError(
@@ -83,7 +83,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
       return;
     }
 
-    await FFUtils.categoryCollection
+    await FFirestoreUtils.categoryCollection
         .doc(event.category.id)
         .update(event.category.toJson())
         .then((_) => emit(CategoryStateUpdateDataSuccess()))
@@ -97,7 +97,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
     Emitter<CategoryState> emit,
   ) async {
     emit(CategoryStateLoading());
-    await FFUtils.categoryCollection
+    await FFirestoreUtils.categoryCollection
         .doc(event.categoryId)
         .delete()
         .then((_) => emit(CategoryStateDeleteDataSuccess()))

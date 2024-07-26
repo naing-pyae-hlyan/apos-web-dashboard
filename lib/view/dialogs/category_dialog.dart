@@ -24,15 +24,16 @@ class _CategoryDialogState extends State<_CategoryDialog> {
   final _descFn = FocusNode();
 
   void _onSave() {
-    final Category category = Category(
+    final name = _nameTxtCtrl.text;
+    final description = _descTxtCtrl.text;
+    final readableId = widget.category?.readableId ??
+        RandomIdGenerator.getnerateCategoryUniqueId();
+
+    final category = Category(
       id: widget.category?.id,
-      readalbeId: widget.category?.readalbeId ??
-          idsGenerator(
-            "CTG",
-            CacheManager.categories.length + 1,
-          ),
-      name: _nameTxtCtrl.text,
-      description: _descTxtCtrl.text,
+      readableId: readableId,
+      name: name,
+      description: description,
     );
 
     if (widget.category == null) {
@@ -102,6 +103,7 @@ class _CategoryDialogState extends State<_CategoryDialog> {
             focusNode: _descFn,
             title: "Category Description",
             hintText: "Enter Description",
+            maxLines: 4,
             keyboardType: TextInputType.text,
             textInputAction: TextInputAction.done,
             onSubmitted: (_) => _onSave(),

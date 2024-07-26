@@ -50,8 +50,9 @@ class ConfirmDialog extends StatelessWidget {
         ),
         MyButton(
           label: "Delete",
-          labelColor: Colors.red,
+          labelColor: Colors.white,
           borderColor: Colors.red,
+          backgroundColor: Colors.red,
           icon: Icons.delete,
           onPressed: () {
             onTapOk();

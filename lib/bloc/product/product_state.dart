@@ -46,9 +46,3 @@ class ProductStateSearch extends ProductState {
   final String query;
   ProductStateSearch({required this.query});
 }
-
-// Pick Product Image
-class ProductStatePickedProductImage extends ProductState {
-  final AttachmentFile file;
-  ProductStatePickedProductImage({required this.file});
-}

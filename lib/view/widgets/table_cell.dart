@@ -44,26 +44,28 @@ class TableImagesCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TableCell(
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          runAlignment: WrapAlignment.start,
-          children: images
-              .map(
-                (String image) => Image.memory(
-                  base64Decode(image),
-                  width: 32,
-                  height: 32,
-                  fit: BoxFit.contain,
-                ),
-              )
-              .toList(),
-        ),
-      ),
-    );
+    return images.isEmpty
+        ? const TableTextCell("no-images")
+        : TableCell(
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                runAlignment: WrapAlignment.start,
+                children: images
+                    .map(
+                      (String image) => Image.memory(
+                        base64Decode(image),
+                        width: 32,
+                        height: 32,
+                        fit: BoxFit.contain,
+                      ),
+                    )
+                    .toList(),
+              ),
+            ),
+          );
   }
 }
 

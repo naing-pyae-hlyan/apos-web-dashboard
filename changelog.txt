@@ -3,6 +3,7 @@ flutter 3.22.0
 27/08/2024 (0.1.9)
 1. UPDATE: ProductPage add product dialog updated.
 2. UPDATE: ProductDialog update product part is updated.
+3. UPDATE: CodeRefactored for CategoryDropdown.
 
 21/08/2024 (0.1.8)
 1. UPDATE: ProductModel readableId add.

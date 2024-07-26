@@ -63,7 +63,12 @@ class _ProductPageState extends State<ProductPage> {
           ),
           horizontalWidth16,
           CategoryDropdown(
-            onSelectedCategory: (Category? selectedCategory) {},
+            defaultIsAll: true,
+            onSelectedCategory: (Category? selectedCategory) {
+              productBloc.add(
+                ProductEventSearch(query: selectedCategory?.name ?? ""),
+              );
+            },
           ),
           const Spacer(),
           horizontalWidth16,
@@ -96,7 +101,10 @@ class _ProductPageState extends State<ProductPage> {
 
             if (state is ProductStateSearch) {
               search = products.where((Product product) {
-                return stringCompare(product.name, state.query);
+                return stringCompare(product.name, state.query) ||
+                    stringCompare(product.readableId, state.query) ||
+                    stringCompare(product.price.toString(), state.query) ||
+                    stringCompare(product.categoryName, state.query);
               }).toList();
             } else {
               search = products;
@@ -111,8 +119,9 @@ class _ProductPageState extends State<ProductPage> {
                 4: FlexColumnWidth(1),
                 5: FlexColumnWidth(0.5),
                 6: FlexColumnWidth(1),
-                7: FlexColumnWidth(0.5),
+                7: FlexColumnWidth(1.5),
                 8: FlexColumnWidth(0.5),
+                9: FlexColumnWidth(0.5),
               },
               children: <TableRow>[
                 TableRow(
@@ -134,6 +143,7 @@ class _ProductPageState extends State<ProductPage> {
                       textAlign: TextAlign.end,
                     ),
                     TableTitleCell("Product Id", textAlign: TextAlign.end),
+                    TableTitleCell("Category", textAlign: TextAlign.end),
                     TableTitleCell(
                       "Edit",
                       textAlign: TextAlign.center,
@@ -174,6 +184,11 @@ class _ProductPageState extends State<ProductPage> {
               ),
               TableTextCell(
                 product.readableId.slugify,
+                textAlign: TextAlign.end,
+              ),
+              TableTextCell(
+                product.categoryName,
+                maxLines: 4,
                 textAlign: TextAlign.end,
               ),
               TableButtonCell(

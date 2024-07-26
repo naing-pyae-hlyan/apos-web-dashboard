@@ -46,9 +46,9 @@ class _ProductDialogState extends State<_ProductDialog> {
     final readableId = widget.product?.readableId ??
         RandomIdGenerator.getnerateProductUniqueId();
     final String? categoryId =
-        widget.product?.categoryId ?? _selectedCategory?.id;
+        _selectedCategory?.id ?? widget.product?.categoryId;
     final String? categoryName =
-        widget.product?.categoryName ?? _selectedCategory?.name;
+        _selectedCategory?.name ?? widget.product?.categoryName;
 
     final product = Product(
       id: widget.product?.id,
@@ -149,6 +149,7 @@ class _ProductDialogState extends State<_ProductDialog> {
             CategoryDropdown(
               title: "Category",
               value: _selectedCategory,
+              defaultIsAll: false,
               onSelectedCategory: (Category? category) {
                 _selectedCategory = category;
               },

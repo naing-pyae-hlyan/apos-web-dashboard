@@ -5,11 +5,13 @@ class CacheManager {
   static List<Product> products = [];
   static List<Order> orders = [];
 
-  static List<Category> get dropdownCategories {
+  static List<Category> dropdownCategories({bool defaultIsAll = false}) {
     if (categories.isNotEmpty && categories.first.id == "select-category") {
       return categories;
+    } else if (categories.isNotEmpty && categories.first.id == "all-category") {
+      categories.removeAt(0);
     }
-    categories.insert(0, Category.forDropdown());
+    categories.insert(0, Category.forDropdown(defaultIsAll: defaultIsAll));
     return categories;
   }
 

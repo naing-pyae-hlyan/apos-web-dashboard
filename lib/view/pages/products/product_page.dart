@@ -10,19 +10,16 @@ class ProductPage extends StatefulWidget {
 class _ProductPageState extends State<ProductPage> {
   late ProductBloc productBloc;
 
-  final productCollection =
-      FirebaseFirestore.instance.collection("product").withConverter(
-            fromFirestore: (snapshot, _) => Product.fromJson(
-              snapshot.data()!,
-              snapshot.id,
-            ),
-            toFirestore: (product, _) => product.toJson(),
-          );
-
   @override
   void initState() {
     productBloc = context.read<ProductBloc>();
     super.initState();
+
+    doAfterBuild(callback: () {
+      productBloc.add(
+        ProductEventSearch(query: ""),
+      );
+    });
   }
 
   void _deleteProduct(Product product) {
@@ -63,7 +60,9 @@ class _ProductPageState extends State<ProductPage> {
           ),
           horizontalWidth16,
           CategoryDropdown(
-            defaultIsAll: true,
+            categories: <Category>[
+              ...CacheManager.categories,
+            ]..insert(0, Category.allCategoriesValue),
             onSelectedCategory: (Category? selectedCategory) {
               productBloc.add(
                 ProductEventSearch(query: selectedCategory?.name ?? ""),
@@ -81,7 +80,7 @@ class _ProductPageState extends State<ProductPage> {
           ),
         ],
       ),
-      stream: productCollection.orderBy("name").snapshots(),
+      stream: FFirestoreUtils.productCollection.orderBy("name").snapshots(),
       streamBuilder: (QuerySnapshot<Product> data) {
         final List<Product> products = [];
         CacheManager.products.clear();
@@ -93,6 +92,7 @@ class _ProductPageState extends State<ProductPage> {
         CacheManager.products = products;
 
         return BlocBuilder<ProductBloc, ProductState>(
+          buildWhen: (previous, current) => current is ProductStateSearch,
           builder: (_, state) {
             if (state is ProductStateLoading) {
               return const MyCircularIndicator();

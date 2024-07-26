@@ -37,10 +37,17 @@ class Category {
   // ignore: unnecessary_overrides
   int get hashCode => super.hashCode;
 
-  static Category forDropdown({bool defaultIsAll = false}) => Category(
-        id: defaultIsAll ? "all-category" : "select-category",
-        readableId: defaultIsAll ? "all-category" : "select-category",
-        name: defaultIsAll ? "All Category" : "Select Category",
+  static Category get allCategoriesValue => Category(
+        id: "all-category",
+        readableId: "all-category",
+        name: "All Category",
+        description: "",
+      );
+
+  static Category get selectCategoriesValue => Category(
+        id: "select-category",
+        readableId: "select-category",
+        name: "Select Category",
         description: "",
       );
 

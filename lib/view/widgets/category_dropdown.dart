@@ -3,13 +3,13 @@ import 'package:apos/lib_exp.dart';
 class CategoryDropdown extends StatefulWidget {
   final String? title;
   final Category? value;
-  final bool defaultIsAll;
+  final List<Category> categories;
   final Function(Category?) onSelectedCategory;
   const CategoryDropdown({
     super.key,
     this.title,
     this.value,
-    this.defaultIsAll = false,
+    required this.categories,
     required this.onSelectedCategory,
   });
 
@@ -22,18 +22,13 @@ class _CategoryDropdownState extends State<CategoryDropdown> {
 
   @override
   void initState() {
-    dropdownValue = widget.value ??
-        Category.forDropdown(
-          defaultIsAll: widget.defaultIsAll,
-        );
+    dropdownValue = widget.value ?? widget.categories.first;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<Category> categories = CacheManager.dropdownCategories(
-      defaultIsAll: widget.defaultIsAll,
-    );
+    // final List<Category> categories = CacheManager.categories;
 
     final dropdown = Container(
       decoration: BoxDecoration(
@@ -52,7 +47,7 @@ class _CategoryDropdownState extends State<CategoryDropdown> {
         underline: emptyUI,
         borderRadius: BorderRadius.circular(4),
         elevation: 16,
-        items: categories.map((Category category) {
+        items: widget.categories.map((Category category) {
           return DropdownMenuItem<Category>(
             value: category,
             child: myText(category.name, fontWeight: FontWeight.w800),

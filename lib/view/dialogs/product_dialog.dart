@@ -149,7 +149,9 @@ class _ProductDialogState extends State<_ProductDialog> {
             CategoryDropdown(
               title: "Category",
               value: _selectedCategory,
-              defaultIsAll: false,
+              categories: <Category>[
+                ...CacheManager.categories,
+              ]..insert(0, Category.selectCategoriesValue),
               onSelectedCategory: (Category? category) {
                 _selectedCategory = category;
               },

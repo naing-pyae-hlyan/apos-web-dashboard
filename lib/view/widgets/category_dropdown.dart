@@ -2,10 +2,12 @@ import 'package:apos/lib_exp.dart';
 
 class CategoryDropdown extends StatefulWidget {
   final String? title;
+  final Category? value;
   final Function(Category?) onSelectedCategory;
   const CategoryDropdown({
     super.key,
     this.title,
+    this.value,
     required this.onSelectedCategory,
   });
 
@@ -14,7 +16,13 @@ class CategoryDropdown extends StatefulWidget {
 }
 
 class _CategoryDropdownState extends State<CategoryDropdown> {
-  Category dropdownValue = Category.forDropdown();
+  late Category dropdownValue;
+
+  @override
+  void initState() {
+    dropdownValue = widget.value ?? Category.forDropdown();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:apos/lib_exp.dart';
 
 class ProductImagesWidget extends StatefulWidget {
@@ -31,9 +33,7 @@ class _ProductImagesWidgetState extends State<ProductImagesWidget> {
           verticalHeight8,
           BlocBuilder<AttachmentsBloc, AttachmentsState>(
             builder: (_, state) {
-              if (state is AttachmentStatePickedImage) {}
-
-              final files = state.files;
+              final images = state.base64Images;
 
               return SizedBox(
                 height: 108,
@@ -41,9 +41,9 @@ class _ProductImagesWidgetState extends State<ProductImagesWidget> {
                   shrinkWrap: true,
                   physics: const BouncingScrollPhysics(),
                   scrollDirection: Axis.horizontal,
-                  itemCount: files.length + 1,
+                  itemCount: images.length + 1,
                   itemBuilder: (_, index) {
-                    if (index == files.length && index < 3) {
+                    if (index == images.length && index < 3) {
                       return addImageCard;
                     }
 
@@ -51,7 +51,7 @@ class _ProductImagesWidgetState extends State<ProductImagesWidget> {
                       return emptyUI;
                     }
 
-                    return imageCard(files[index], index);
+                    return imageCard(images[index], index);
                   },
                 ),
               );
@@ -66,7 +66,9 @@ class _ProductImagesWidgetState extends State<ProductImagesWidget> {
         onTap: () async {
           final file = await ImagePickerUtils.pickImage();
           if (file != null) {
-            attachmentsBloc.add(AttachmentsEventPickImage(file: file));
+            attachmentsBloc.add(
+              AttachmentsEventPickImage(base64Image: base64Encode(file.data)),
+            );
           }
         },
         radius: 12,
@@ -78,7 +80,7 @@ class _ProductImagesWidgetState extends State<ProductImagesWidget> {
         ),
       );
 
-  Widget imageCard(AttachmentFile file, int index) => MyCard(
+  Widget imageCard(String image, int index) => MyCard(
         padding: EdgeInsets.zero,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(8),
@@ -88,7 +90,7 @@ class _ProductImagesWidgetState extends State<ProductImagesWidget> {
               Container(
                 margin: const EdgeInsets.all(16),
                 child: Image.memory(
-                  file.data,
+                  base64Decode(image),
                   fit: BoxFit.cover,
                   width: 64,
                   height: 64,

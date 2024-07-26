@@ -1,18 +1,20 @@
-import 'package:apos/lib_exp.dart';
-
 sealed class AttachmentsState {
-  final List<AttachmentFile> files;
-  AttachmentsState({required this.files});
+  final List<String> base64Images;
+  AttachmentsState({required this.base64Images});
+}
+
+class AttachmentsStateSetImages extends AttachmentsState {
+  AttachmentsStateSetImages({required super.base64Images});
 }
 
 class AttachmentStateInitial extends AttachmentsState {
-  AttachmentStateInitial({required super.files});
+  AttachmentStateInitial({required super.base64Images});
 }
 
 class AttachmentStatePickedImage extends AttachmentsState {
-  AttachmentStatePickedImage({required super.files});
+  AttachmentStatePickedImage({required super.base64Images});
 }
 
 class AttachmentStateRemovedImage extends AttachmentsState {
-  AttachmentStateRemovedImage({required super.files});
+  AttachmentStateRemovedImage({required super.base64Images});
 }

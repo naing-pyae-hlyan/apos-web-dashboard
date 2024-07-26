@@ -86,13 +86,16 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       return;
     }
 
-    var same = CacheManager.products.where(
-      (Product product) => product.name == event.product.name,
-    );
-    if (same.isNotEmpty) {
-      await Future.delayed(const Duration(milliseconds: 500));
-      emit(_dialogStateFail(message: "Name is already taken", code: 1));
-      return;
+    if (event.checkTakenName) {
+      var same = CacheManager.products.where(
+        (Product product) => product.name == event.product.name,
+      );
+
+      if (same.isNotEmpty) {
+        await Future.delayed(const Duration(milliseconds: 500));
+        emit(_dialogStateFail(message: "Name is already taken", code: 1));
+        return;
+      }
     }
 
     await FFirestoreUtils.productCollection

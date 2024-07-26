@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:apos/lib_exp.dart';
 
 void showProductBlocDialog(
@@ -52,18 +50,11 @@ class _ProductDialogState extends State<_ProductDialog> {
     final String? categoryName =
         widget.product?.categoryName ?? _selectedCategory?.name;
 
-    final List<AttachmentFile> files = attachmentsBloc.state.files;
-    List<String> base64Images = [];
-
-    for (AttachmentFile file in files) {
-      base64Images.add(base64Encode(file.data));
-    }
-
     final product = Product(
       id: widget.product?.id,
       readableId: readableId,
       name: name,
-      base64Images: base64Images,
+      base64Images: attachmentsBloc.state.base64Images,
       description: descriptoin,
       price: price,
       stockQuantity: qty,
@@ -73,7 +64,11 @@ class _ProductDialogState extends State<_ProductDialog> {
     if (widget.product == null) {
       productBloc.add(ProductEventCreateData(product: product));
     } else {
-      productBloc.add(ProductEventUpdateData(product: product));
+      bool checkTakenName = name != widget.product?.name;
+      productBloc.add(ProductEventUpdateData(
+        product: product,
+        checkTakenName: checkTakenName,
+      ));
     }
   }
 
@@ -90,7 +85,23 @@ class _ProductDialogState extends State<_ProductDialog> {
     _qtyTxtCtrl.text = widget.product?.stockQuantity != null
         ? widget.product!.stockQuantity.toString()
         : "";
+    if (widget.product?.categoryId != null &&
+        widget.product?.categoryName != null) {
+      final categories = CacheManager.categories;
+      for (Category category in categories) {
+        if (category.id == widget.product?.categoryId) {
+          _selectedCategory = category;
+          break;
+        }
+      }
+    }
+
     doAfterBuild(callback: () {
+      if (widget.product?.base64Images.isNotEmpty == true) {
+        attachmentsBloc.add(AttachmentsEventSetImages(
+          base64Images: widget.product?.base64Images ?? [],
+        ));
+      }
       _nameFn.requestFocus();
     });
   }
@@ -137,6 +148,7 @@ class _ProductDialogState extends State<_ProductDialog> {
           children: [
             CategoryDropdown(
               title: "Category",
+              value: _selectedCategory,
               onSelectedCategory: (Category? category) {
                 _selectedCategory = category;
               },

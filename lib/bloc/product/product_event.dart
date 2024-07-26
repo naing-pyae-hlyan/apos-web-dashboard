@@ -16,7 +16,11 @@ class ProductEventReadData extends ProductEvent {}
 
 class ProductEventUpdateData extends ProductEvent {
   final Product product;
-  ProductEventUpdateData({required this.product});
+  final bool checkTakenName;
+  ProductEventUpdateData({
+    required this.product,
+    required this.checkTakenName,
+  });
 }
 
 class ProductEventDeleteData extends ProductEvent {

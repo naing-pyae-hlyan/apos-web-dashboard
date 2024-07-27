@@ -19,4 +19,20 @@ class FFirestoreUtils {
                 Product.fromJson(snapshot.data()!, snapshot.id),
             toFirestore: (product, _) => product.toJson(),
           );
+
+  // Get [order] table
+  static CollectionReference<Order> get orderCollection =>
+      _database.collection("order").withConverter<Order>(
+            fromFirestore: (snapshot, _) =>
+                Order.fromJson(snapshot.data()!, snapshot.id),
+            toFirestore: (product, _) => product.toJson(),
+          );
+
+  // Get [customer] table
+  static CollectionReference<Customer> get customerCollection =>
+      _database.collection("customer").withConverter<Customer>(
+            fromFirestore: (snapshot, _) =>
+                Customer.fromJson(snapshot.data()!, snapshot.id),
+            toFirestore: (product, _) => product.toJson(),
+          );
 }

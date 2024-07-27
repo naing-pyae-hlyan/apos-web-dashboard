@@ -4,18 +4,20 @@ import 'package:apos/lib_exp.dart';
 
 class Order {
   String? id;
-  Customer customer;
-  List<Item> items;
+  final String readableId;
+  final Customer customer;
+  final List<Item> items;
 
-  double totalAmount;
-  int statusId;
-  DateTime orderDate;
-  String comment;
+  final double totalAmount;
+  final int statusId;
+  final DateTime orderDate;
+  final String comment;
 
   OrderStatus status;
 
   Order({
     this.id,
+    required this.readableId,
     required this.customer,
     required this.items,
     required this.orderDate,
@@ -28,6 +30,7 @@ class Order {
   factory Order.fromJson(Map<String, dynamic> json, String id) {
     return Order(
       id: id,
+      readableId: json["id"],
       customer: Customer.fromJson(json["customer"], "TODO"),
       items: List.from(json["items"].map((x) => Item.fromJson(x, "TODO"))),
       orderDate: DateTime.parse(json['order_date']),
@@ -40,6 +43,7 @@ class Order {
 
   Map<String, dynamic> toJson() {
     return {
+      'id': readableId,
       'customer': customer.toJson(),
       'items': List.from(items.map((x) => x)),
       'order_date': orderDate.toIso8601String(),
@@ -54,6 +58,7 @@ Order tempOrder(int index) {
   final statusId = Random().nextInt(4);
   return Order(
     id: "#$index",
+    readableId: "",
     customer: tempCustomer(index),
     items: List.generate(
       Random().nextInt(8) + 2,

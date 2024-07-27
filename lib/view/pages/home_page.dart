@@ -71,8 +71,8 @@ class _HomePageState extends State<HomePage> {
             SelectedHome.dashboard => const DashboardPage(),
             SelectedHome.category => const CategoryPage(),
             SelectedHome.product => const ProductPage(),
-            SelectedHome.order => emptyUI, // const OrdersPage(),
-            SelectedHome.customer => emptyUI, // const CustomerPage(),
+            SelectedHome.order => const OrdersPage(),
+            SelectedHome.customer => const CustomerPage(),
           };
         },
       ),

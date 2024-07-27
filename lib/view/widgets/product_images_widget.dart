@@ -43,11 +43,11 @@ class _ProductImagesWidgetState extends State<ProductImagesWidget> {
                   scrollDirection: Axis.horizontal,
                   itemCount: images.length + 1,
                   itemBuilder: (_, index) {
-                    if (index == images.length && index < 3) {
+                    if (index == images.length && index < 5) {
                       return addImageCard;
                     }
 
-                    if (index == 3) {
+                    if (index == 5) {
                       return emptyUI;
                     }
 

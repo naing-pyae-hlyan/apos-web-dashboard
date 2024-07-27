@@ -25,7 +25,7 @@ class DashboardRecentOrdersCard extends StatelessWidget {
               ),
               color: Consts.primaryColor,
             ),
-            padding: const EdgeInsets.fromLTRB(16, 11, 0, 11),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -57,12 +57,12 @@ class DashboardRecentOrdersCard extends StatelessWidget {
                 children: [
                   TableTitleCell(
                     "Customers",
-                    padding: EdgeInsets.fromLTRB(16, 8, 0, 8),
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   ),
                   TableTitleCell(
                     "Price",
                     textAlign: TextAlign.end,
-                    padding: EdgeInsets.fromLTRB(0, 8, 16, 8),
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   ),
                 ],
               ),
@@ -75,12 +75,14 @@ class DashboardRecentOrdersCard extends StatelessWidget {
                     children: [
                       TableTextCell(
                         order.customer.name,
-                        padding: const EdgeInsets.fromLTRB(16, 8, 0, 8),
+                        padding: textCellPadding,
+                        maxLines: 1,
                       ),
                       TableTextCell(
                         order.totalAmount.toCurrencyFormat(),
                         textAlign: TextAlign.end,
-                        padding: const EdgeInsets.fromLTRB(0, 8, 16, 8),
+                        padding: textCellPadding,
+                        maxLines: 1,
                       ),
                     ],
                   );
@@ -93,4 +95,9 @@ class DashboardRecentOrdersCard extends StatelessWidget {
       ),
     );
   }
+
+  EdgeInsetsGeometry get textCellPadding => const EdgeInsets.symmetric(
+        horizontal: 16,
+        vertical: 12,
+      );
 }

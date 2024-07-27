@@ -60,6 +60,7 @@ class _ProductDialogState extends State<_ProductDialog> {
       stockQuantity: qty,
       categoryId: categoryId,
       categoryName: categoryName,
+      topSalesCount: widget.product?.topSalesCount ?? 0,
     );
     if (widget.product == null) {
       productBloc.add(ProductEventCreateData(product: product));

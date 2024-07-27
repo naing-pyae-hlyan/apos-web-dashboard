@@ -45,10 +45,13 @@ class TableImagesCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return images.isEmpty
-        ? const TableTextCell("no-images")
+        ? const TableTextCell(
+            "no-images",
+            padding: EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+          )
         : TableCell(
             child: Padding(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4.5),
               child: Wrap(
                 spacing: 8,
                 runSpacing: 8,
@@ -57,8 +60,8 @@ class TableImagesCell extends StatelessWidget {
                     .map(
                       (String image) => Image.memory(
                         base64Decode(image),
-                        width: 32,
-                        height: 32,
+                        width: 34,
+                        height: 34,
                         fit: BoxFit.contain,
                       ),
                     )

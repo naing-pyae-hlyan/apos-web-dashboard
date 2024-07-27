@@ -68,8 +68,7 @@ class _HomePageState extends State<HomePage> {
         builder: (_, state) {
           // return emptyUI;
           return switch (state.selectedPage) {
-            SelectedHome.dashboard =>
-              const ProductPage(), // const DashboardPage(),
+            SelectedHome.dashboard => const DashboardPage(),
             SelectedHome.category => const CategoryPage(),
             SelectedHome.product => const ProductPage(),
             SelectedHome.order => emptyUI, // const OrdersPage(),

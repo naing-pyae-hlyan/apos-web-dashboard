@@ -1,16 +1,59 @@
 import 'package:apos/lib_exp.dart';
 
 class DashboardTopSellingProductsCard extends StatelessWidget {
-  final List<Product> products;
+  final Function() onPressedViewOrders;
   const DashboardTopSellingProductsCard({
     super.key,
+    required this.onPressedViewOrders,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot<Product>>(
+      stream: FFirestoreUtils.productCollection
+          .orderBy("top_sales_count", descending: true)
+          .limit(5)
+          .snapshots(),
+      builder: (_, AsyncSnapshot<QuerySnapshot<Product>> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const MyCircularIndicator();
+        }
+
+        if (snapshot.hasError) {
+          return Center(
+            child: myText(
+              snapshot.error.toString(),
+              color: Consts.errorColor,
+            ),
+          );
+        }
+
+        QuerySnapshot<Product> data = snapshot.requireData;
+        final List<Product> products = [];
+        for (var doc in data.docs) {
+          products.add(doc.data());
+        }
+
+        return _DashboardTopSellingProductsCard(
+          products: products,
+          onPressedViewOrders: onPressedViewOrders,
+        );
+      },
+    );
+  }
+}
+
+class _DashboardTopSellingProductsCard extends StatelessWidget {
+  final Function() onPressedViewOrders;
+  final List<Product> products;
+  const _DashboardTopSellingProductsCard({
     required this.products,
+    required this.onPressedViewOrders,
   });
 
   @override
   Widget build(BuildContext context) {
     return MyCard(
-      // cardColor: Consts.primaryColor,
       padding: EdgeInsets.zero,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -23,15 +66,36 @@ class DashboardTopSellingProductsCard extends StatelessWidget {
               ),
               color: Consts.primaryColor,
             ),
-            padding: const EdgeInsets.all(16),
-            child: myTitle("TOP SELLING PRODUCTS", color: Colors.white),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Flexible(
+                  child: myTitle("TOP SELLING PRODUCTS", color: Colors.white),
+                ),
+                TextButton(
+                  onPressed: onPressedViewOrders,
+                  child: myText(
+                    "View Orders",
+                    fontWeight: FontWeight.bold,
+                    // color: Consts.primaryColor,
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
           ),
           Table(
             columnWidths: const {
-              0: FlexColumnWidth(2),
-              1: FlexColumnWidth(0.7),
-              2: FlexColumnWidth(0.7),
+              0: FlexColumnWidth(0.7),
+              1: FlexColumnWidth(0.6),
+              2: FlexColumnWidth(1),
               3: FlexColumnWidth(0.7),
+              4: FlexColumnWidth(0.5),
+              5: FlexColumnWidth(0.7),
+              6: FlexColumnWidth(1.5),
             },
             children: [
               const TableRow(
@@ -40,18 +104,32 @@ class DashboardTopSellingProductsCard extends StatelessWidget {
                 ),
                 children: [
                   TableTitleCell(
-                    "Name",
-                    padding: EdgeInsets.only(left: 16),
+                    "ID",
+                    padding: EdgeInsets.fromLTRB(16, 8, 0, 8),
+                    textAlign: TextAlign.start,
                   ),
-                  TableTitleCell("Price", textAlign: TextAlign.end),
                   TableTitleCell(
-                    "Quantity",
+                    "Image",
+                  ),
+                  TableTitleCell(
+                    "Product Name",
+                  ),
+                  TableTitleCell(
+                    "Price",
+                    textAlign: TextAlign.end,
+                  ),
+                  TableTitleCell(
+                    "Qty",
                     textAlign: TextAlign.end,
                   ),
                   TableTitleCell(
                     "Amount",
                     textAlign: TextAlign.end,
-                    padding: EdgeInsets.only(right: 16),
+                  ),
+                  TableTitleCell(
+                    "Category",
+                    textAlign: TextAlign.end,
+                    padding: EdgeInsets.fromLTRB(0, 8, 16, 8),
                   ),
                 ],
               ),
@@ -63,21 +141,40 @@ class DashboardTopSellingProductsCard extends StatelessWidget {
                     ),
                     children: [
                       TableTextCell(
+                        product.readableId,
+                        padding: const EdgeInsets.only(left: 16),
+                        textAlign: TextAlign.start,
+                        maxLines: 1,
+                      ),
+                      TableImagesCell(
+                        images: product.base64Images.take(1).toList(),
+                      ),
+                      TableTextCell(
                         product.name,
-                        padding: const EdgeInsets.fromLTRB(16, 8, 0, 8),
+                        fontWeight: FontWeight.w800,
+                        maxLines: 1,
                       ),
                       TableTextCell(
                         product.price.toCurrencyFormat(),
                         textAlign: TextAlign.end,
+                        maxLines: 1,
                       ),
                       TableTextCell(
-                        "${product.stockQuantity}",
+                        product.topSalesCount.toCurrencyFormat(),
                         textAlign: TextAlign.end,
+                        maxLines: 1,
                       ),
                       TableTextCell(
-                        product.price.toCurrencyFormat(),
+                        "${product.price * product.topSalesCount}"
+                            .toCurrencyFormat(),
                         textAlign: TextAlign.end,
-                        padding: const EdgeInsets.fromLTRB(0, 8, 16, 8),
+                        maxLines: 1,
+                      ),
+                      TableTextCell(
+                        product.categoryName,
+                        maxLines: 1,
+                        textAlign: TextAlign.end,
+                        padding: const EdgeInsets.only(right: 16),
                       ),
                     ],
                   );

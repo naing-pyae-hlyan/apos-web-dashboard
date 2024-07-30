@@ -2,6 +2,7 @@ flutter 3.22.0
 
 30/08/2024 (0.2.0)
 1. UPDATE: CategoryDialog added Size and Color tags.
+2. WIP: ProductDialog size and color are wip.
 
 27/08/2024 (0.1.9)
 1. UPDATE: ProductPage add product dialog updated.

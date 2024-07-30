@@ -87,10 +87,7 @@ class _LoginPageState extends State<LoginPage> {
                         alignment: Alignment.centerLeft,
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
-                          child: myText(
-                            "Error: ${state.error.message}",
-                            color: Consts.errorColor,
-                          ),
+                          child: errorText(state.error),
                         ),
                       );
                     }

@@ -138,10 +138,7 @@ class _CategoryDialogState extends State<_CategoryDialog> {
                   alignment: Alignment.centerLeft,
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: myText(
-                      "Error: ${state.error.message}",
-                      color: Consts.errorColor,
-                    ),
+                    child: errorText(state.error),
                   ),
                 );
               }

@@ -30,19 +30,22 @@ class _ProductDialogState extends State<_ProductDialog> {
   final _nameTxtCtrl = TextEditingController();
   final _descTxtCtrl = TextEditingController();
   final _priceTxtCtrl = TextEditingController();
-  final _qtyTxtCtrl = TextEditingController();
   final _nameFn = FocusNode();
   final _descFn = FocusNode();
   final _priceFn = FocusNode();
-  final _qtyFn = FocusNode();
 
   Category? _selectedCategory;
+
+  final ValueNotifier<bool> _hasSizeNotifier = ValueNotifier(false);
+  final ValueNotifier<bool> _hasColorNotifier = ValueNotifier(false);
+
+  final List<String> _sizes = [];
+  final List<int> _hexColors = [];
 
   Future<void> _onSave() async {
     final name = _nameTxtCtrl.text;
     final descriptoin = _descTxtCtrl.text;
     final price = _priceTxtCtrl.text.forceDouble();
-    final qty = _qtyTxtCtrl.text.forceInt();
     final readableId = widget.product?.readableId ??
         RandomIdGenerator.getnerateProductUniqueId();
     final String? categoryId =
@@ -57,7 +60,8 @@ class _ProductDialogState extends State<_ProductDialog> {
       base64Images: attachmentsBloc.state.base64Images,
       description: descriptoin,
       price: price,
-      stockQuantity: qty,
+      sizes: _sizes,
+      hexColors: _hexColors,
       categoryId: categoryId,
       categoryName: categoryName,
       topSalesCount: widget.product?.topSalesCount ?? 0,
@@ -73,6 +77,19 @@ class _ProductDialogState extends State<_ProductDialog> {
     }
   }
 
+  void onSelectedSizes(List<String> sizes) {
+    _sizes.clear();
+    _sizes.addAll(sizes);
+  }
+
+  /// colors must [Red, Orange, Yellow, Gren, Blue, Indigo, Violet]
+  void onSelectedColors(List<String> colorNames) {
+    _hexColors.clear();
+    for (var colorName in colorNames) {
+      _hexColors.add(parseProductColorNameToHex(colorName));
+    }
+  }
+
   @override
   void initState() {
     productBloc = context.read<ProductBloc>();
@@ -83,18 +100,22 @@ class _ProductDialogState extends State<_ProductDialog> {
     _descTxtCtrl.text = widget.product?.description ?? '';
     _priceTxtCtrl.text =
         widget.product?.price != null ? widget.product!.price.toString() : "";
-    _qtyTxtCtrl.text = widget.product?.stockQuantity != null
-        ? widget.product!.stockQuantity.toString()
-        : "";
+
     if (widget.product?.categoryId != null &&
         widget.product?.categoryName != null) {
       final categories = CacheManager.categories;
       for (Category category in categories) {
         if (category.id == widget.product?.categoryId) {
           _selectedCategory = category;
+
           break;
         }
       }
+    }
+
+    _sizes.addAll(widget.product?.sizes ?? []);
+    for (final int hexValue in widget.product?.hexColors ?? []) {
+      _hexColors.add(hexValue);
     }
 
     doAfterBuild(callback: () {
@@ -102,6 +123,15 @@ class _ProductDialogState extends State<_ProductDialog> {
         attachmentsBloc.add(AttachmentsEventSetImages(
           base64Images: widget.product?.base64Images ?? [],
         ));
+      }
+
+      if (_selectedCategory != null) {
+        if (_selectedCategory!.hasSize) {
+          _hasSizeNotifier.value = true;
+        }
+        if (_selectedCategory!.hasColor) {
+          _hasColorNotifier.value = true;
+        }
       }
       _nameFn.requestFocus();
     });
@@ -113,11 +143,9 @@ class _ProductDialogState extends State<_ProductDialog> {
       _nameTxtCtrl.dispose();
       _descTxtCtrl.dispose();
       _priceTxtCtrl.dispose();
-      _qtyTxtCtrl.dispose();
       _nameFn.dispose();
       _descFn.dispose();
       _priceFn.dispose();
-      _qtyFn.dispose();
     }
     super.dispose();
   }
@@ -155,6 +183,23 @@ class _ProductDialogState extends State<_ProductDialog> {
               ]..insert(0, Category.selectCategoriesValue),
               onSelectedCategory: (Category? category) {
                 _selectedCategory = category;
+
+                // TODO check selectedCategory change
+
+                // if (category?.id == widget.product?.categoryId) return;
+
+                final hasSize = category?.hasSize ?? false;
+                final hasColor = category?.hasColor ?? false;
+                if (hasSize == _hasSizeNotifier.value) {
+                  _hasSizeNotifier.value = !hasSize;
+                }
+                if (hasColor == _hasColorNotifier.value) {
+                  _hasColorNotifier.value = !hasColor;
+                }
+                _hasSizeNotifier.value = hasSize;
+                _hasColorNotifier.value = hasColor;
+                // _sizes.clear();
+                // _hexColors.clear();
               },
             ),
             verticalHeight16,
@@ -176,27 +221,12 @@ class _ProductDialogState extends State<_ProductDialog> {
                 ),
                 horizontalWidth16,
                 SizedBox(
-                  width: dialogWidth * 0.25 - 16,
+                  width: dialogWidth * 0.5 - 16,
                   child: MyInputField(
                     controller: _priceTxtCtrl,
                     focusNode: _priceFn,
                     title: "Price",
                     hintText: "Enter Price",
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
-                    keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.next,
-                  ),
-                ),
-                horizontalWidth16,
-                SizedBox(
-                  width: dialogWidth * 0.25 - 16,
-                  child: MyInputField(
-                    controller: _qtyTxtCtrl,
-                    focusNode: _qtyFn,
-                    title: "Quantity",
-                    hintText: "Enter Qty",
                     inputFormatters: [
                       FilteringTextInputFormatter.digitsOnly,
                     ],
@@ -230,6 +260,28 @@ class _ProductDialogState extends State<_ProductDialog> {
                 ),
               ],
             ),
+            ValueListenableBuilder(
+              valueListenable: _hasSizeNotifier,
+              builder: (_, __, ___) {
+                if (_hasSizeNotifier.value == false) return emptyUI;
+                return MultiSelectProductSizes(
+                  sizes: Consts.productSizes,
+                  oldSizes: widget.product?.sizes ?? [],
+                  onSelectedSizes: onSelectedSizes,
+                );
+              },
+            ),
+            ValueListenableBuilder(
+              valueListenable: _hasColorNotifier,
+              builder: (_, __, ___) {
+                if (_hasColorNotifier.value == false) return emptyUI;
+                return MultiSelectProductColors(
+                  productColors: ProductColors.values,
+                  oldHexColors: widget.product?.hexColors ?? [],
+                  onSelectedColors: onSelectedColors,
+                );
+              },
+            ),
             verticalHeight16,
             BlocBuilder<ProductBloc, ProductState>(
               builder: (_, state) {
@@ -238,10 +290,7 @@ class _ProductDialogState extends State<_ProductDialog> {
                     alignment: Alignment.centerLeft,
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: myText(
-                        "Error: ${state.error.message}",
-                        color: Consts.errorColor,
-                      ),
+                      child: errorText(state.error),
                     ),
                   );
                 }
@@ -284,9 +333,6 @@ class _ProductDialogState extends State<_ProductDialog> {
                   break;
                 case 3:
                   _priceFn.requestFocus();
-                  break;
-                case 4:
-                  _qtyFn.requestFocus();
                   break;
               }
             }

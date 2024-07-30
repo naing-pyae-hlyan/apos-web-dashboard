@@ -102,8 +102,8 @@ class _CategoryPageState extends State<CategoryPage> {
                   children: const [
                     TableTitleCell("S/N", textAlign: TextAlign.center),
                     TableTitleCell("Name"),
-                    TableTitleCell("Size", textAlign: TextAlign.end),
-                    TableTitleCell("Color", textAlign: TextAlign.end),
+                    TableTitleCell("Sizes", textAlign: TextAlign.end),
+                    TableTitleCell("Colors", textAlign: TextAlign.end),
                     TableTitleCell("Category Id", textAlign: TextAlign.end),
                     TableTitleCell("Edit", textAlign: TextAlign.center),
                     TableTitleCell("Delete", textAlign: TextAlign.center),

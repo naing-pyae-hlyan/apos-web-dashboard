@@ -26,12 +26,6 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       return;
     }
 
-    if (event.product.stockQuantity == 0) {
-      await Future.delayed(const Duration(milliseconds: 500));
-      emit(_dialogStateFail(message: "Enter qty", code: 4));
-      return;
-    }
-
     if (event.product.categoryId == null ||
         event.product.categoryName == null) {
       await Future.delayed(const Duration(milliseconds: 500));
@@ -70,12 +64,6 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     if (event.product.price == 0.0) {
       await Future.delayed(const Duration(milliseconds: 500));
       emit(_dialogStateFail(message: "Enter price", code: 3));
-      return;
-    }
-
-    if (event.product.stockQuantity == 0) {
-      await Future.delayed(const Duration(milliseconds: 500));
-      emit(_dialogStateFail(message: "Enter qty", code: 4));
       return;
     }
 

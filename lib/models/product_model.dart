@@ -5,7 +5,8 @@ class Product {
   final List<String> base64Images;
   final String? description;
   final double price;
-  final int stockQuantity;
+  final List<String>? sizes;
+  final List<int>? hexColors;
   final String? categoryId;
   final String? categoryName;
   final int topSalesCount;
@@ -17,7 +18,8 @@ class Product {
     required this.base64Images,
     required this.description,
     required this.price,
-    required this.stockQuantity,
+    required this.sizes,
+    required this.hexColors,
     required this.categoryId,
     required this.categoryName,
     required this.topSalesCount,
@@ -31,7 +33,11 @@ class Product {
       base64Images: List.from(json["images"].map((x) => x)),
       description: json['description'],
       price: json['price'],
-      stockQuantity: json['stock_quantity'] ?? 0,
+      sizes:
+          json['sizes'] == null ? null : List.from(json['sizes'].map((x) => x)),
+      hexColors: json['colors'] == null
+          ? null
+          : List.from(json['colors'].map((x) => x)),
       categoryId: json['category_id'],
       categoryName: json["category_name"],
       topSalesCount: json["top_sales_count"] ?? 0,
@@ -45,7 +51,8 @@ class Product {
       'images': List.from(base64Images.map((x) => x)),
       'description': description,
       'price': price,
-      'stock_quantity': stockQuantity,
+      'sizes': List.from((sizes ?? []).map((x) => x)),
+      'colors': List.from((hexColors ?? []).map((x) => x)),
       'category_id': categoryId,
       'category_name': categoryName,
       'top_sales_count': topSalesCount,

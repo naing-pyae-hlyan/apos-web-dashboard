@@ -28,8 +28,6 @@ class _CategoryDropdownState extends State<CategoryDropdown> {
 
   @override
   Widget build(BuildContext context) {
-    // final List<Category> categories = CacheManager.categories;
-
     final dropdown = Container(
       decoration: BoxDecoration(
         border: Border.all(color: Consts.primaryColor),

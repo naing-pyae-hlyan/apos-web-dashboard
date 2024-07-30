@@ -80,7 +80,11 @@ class _ProductPageState extends State<ProductPage> {
           ),
         ],
       ),
-      stream: FFirestoreUtils.productCollection.orderBy("name",).snapshots(),
+      stream: FFirestoreUtils.productCollection
+          .orderBy(
+            "name",
+          )
+          .snapshots(),
       streamBuilder: (QuerySnapshot<Product> data) {
         final List<Product> products = [];
         CacheManager.products.clear();
@@ -117,11 +121,12 @@ class _ProductPageState extends State<ProductPage> {
                 2: FlexColumnWidth(1),
                 3: FlexColumnWidth(1.5),
                 4: FlexColumnWidth(1),
-                5: FlexColumnWidth(0.5),
-                6: FlexColumnWidth(1),
-                7: FlexColumnWidth(1.5),
-                8: FlexColumnWidth(0.5),
+                5: FlexColumnWidth(1),
+                6: FlexColumnWidth(1.2),
+                7: FlexColumnWidth(1),
+                8: FlexColumnWidth(1.5),
                 9: FlexColumnWidth(0.5),
+                10: FlexColumnWidth(0.5),
               },
               children: <TableRow>[
                 TableRow(
@@ -138,10 +143,8 @@ class _ProductPageState extends State<ProductPage> {
                       "Price",
                       textAlign: TextAlign.end,
                     ),
-                    TableTitleCell(
-                      "Qty",
-                      textAlign: TextAlign.end,
-                    ),
+                    TableTitleCell("Sizes", textAlign: TextAlign.end),
+                    TableTitleCell("Colors", textAlign: TextAlign.end),
                     TableTitleCell("Product Id", textAlign: TextAlign.end),
                     TableTitleCell("Category", textAlign: TextAlign.end),
                     TableTitleCell(
@@ -179,9 +182,10 @@ class _ProductPageState extends State<ProductPage> {
                 textAlign: TextAlign.end,
               ),
               TableTextCell(
-                product.stockQuantity.toString(),
+                (product.sizes ?? []).isEmpty ? "-" : product.sizes!.join(", "),
                 textAlign: TextAlign.end,
               ),
+              TableColorsCell(hexColors: product.hexColors),
               TableTextCell(
                 product.readableId.slugify,
                 textAlign: TextAlign.end,

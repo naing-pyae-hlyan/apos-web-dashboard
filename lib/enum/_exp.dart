@@ -1,4 +1,3 @@
 export 'order_status.dart';
-export 'product_color.dart';
-export 'product_size.dart';
+export 'product_colors.dart';
 export 'selected_home.dart';

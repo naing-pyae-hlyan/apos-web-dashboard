@@ -188,6 +188,45 @@ class TableButtonCell extends StatelessWidget {
   }
 }
 
+class TableColorsCell extends StatelessWidget {
+  final List<int>? hexColors;
+  const TableColorsCell({
+    super.key,
+    required this.hexColors,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TableCell(
+      verticalAlignment: TableCellVerticalAlignment.middle,
+      child: (hexColors ?? []).isEmpty
+          ? myText("-", textAlign: TextAlign.end)
+          : Wrap(
+              spacing: 4,
+              runSpacing: 4,
+              direction: Axis.horizontal,
+              alignment: WrapAlignment.end,
+              runAlignment: WrapAlignment.center,
+              children: hexColors!
+                  .map(
+                    (int value) => Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Color(value),
+                        border: Border.all(
+                          width: 0.3,
+                        ),
+                      ),
+                      width: 14,
+                      height: 14,
+                    ),
+                  )
+                  .toList(),
+            ),
+    );
+  }
+}
+
 class TableTitleItemsDialogCell extends StatelessWidget {
   const TableTitleItemsDialogCell({super.key});
 

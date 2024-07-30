@@ -51,13 +51,15 @@ class MyCheckBoxWithLabel extends StatefulWidget {
   final bool? value;
   final String label;
   final double size;
+  final MainAxisAlignment mainAxisAlignment;
   final Function(bool)? onSelected;
   const MyCheckBoxWithLabel({
     super.key,
     this.value = false,
     required this.label,
+    this.mainAxisAlignment = MainAxisAlignment.start,
     this.onSelected,
-    this.size = 24,
+    this.size = 20,
   });
 
   @override
@@ -70,6 +72,10 @@ class _MyCheckBoxWithLabelState extends State<MyCheckBoxWithLabel> {
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     if (widget.value == true) {
       doAfterBuild(
         callback: () {
@@ -79,13 +85,9 @@ class _MyCheckBoxWithLabelState extends State<MyCheckBoxWithLabel> {
         },
       );
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisAlignment: widget.mainAxisAlignment,
       children: [
         myText(widget.label),
         horizontalWidth8,
@@ -115,7 +117,7 @@ class _MyCheckBoxWithLabelState extends State<MyCheckBoxWithLabel> {
                 ? const Icon(
                     Icons.check,
                     color: Colors.white,
-                    size: 20,
+                    size: 16,
                   )
                 : emptyUI,
           ),

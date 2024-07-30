@@ -77,7 +77,11 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
       (Category category) => category.name == event.category.name,
     );
 
-    if (same.isNotEmpty) {
+    var same2 = same.where(
+      (Category caetgory) => caetgory.name != event.currentCategoryName,
+    );
+
+    if (same2.isNotEmpty) {
       await Future.delayed(const Duration(milliseconds: 500));
       emit(_dialogStateFail(message: "Name is already taken"));
       return;

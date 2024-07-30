@@ -2,13 +2,15 @@ class Category {
   String? id;
   final String readableId;
   final String name;
-  final String description;
+  final bool hasSize;
+  final bool hasColor;
 
   Category({
     this.id,
     required this.readableId,
     required this.name,
-    required this.description,
+    required this.hasSize,
+    required this.hasColor,
   });
 
   factory Category.fromJson(Map<String, dynamic> json, String docId) {
@@ -16,7 +18,8 @@ class Category {
       id: docId,
       readableId: json['id'],
       name: json['name'],
-      description: json['description'],
+      hasSize: json['has_size'] ?? false,
+      hasColor: json['has_color'] ?? false,
     );
   }
 
@@ -24,7 +27,8 @@ class Category {
     return {
       'id': readableId,
       'name': name,
-      'description': description,
+      'has_size': hasSize,
+      'has_color': hasColor,
     };
   }
 
@@ -41,14 +45,16 @@ class Category {
         id: "all-category",
         readableId: "all-category",
         name: "All Category",
-        description: "",
+        hasSize: false,
+        hasColor: false,
       );
 
   static Category get selectCategoriesValue => Category(
         id: "select-category",
         readableId: "select-category",
         name: "Select Category",
-        description: "",
+        hasSize: false,
+        hasColor: false,
       );
 
   bool get isDropdownTitle => id == "select-category" || id == "all-category";

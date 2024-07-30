@@ -101,6 +101,7 @@ class _LoginPageState extends State<LoginPage> {
                   alignment: Alignment.centerRight,
                   child: MyCheckBoxWithLabel(
                     label: "Remember Me",
+                    mainAxisAlignment: MainAxisAlignment.end,
                     onSelected: (bool selected) {
                       _rememberMe = selected;
                     },

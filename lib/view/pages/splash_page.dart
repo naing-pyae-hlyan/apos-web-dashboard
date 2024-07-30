@@ -1,4 +1,5 @@
 import 'package:apos/lib_exp.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -48,11 +49,22 @@ class _SplashPageState extends State<SplashPage> {
       body: BlocConsumer<AuthBloc, AuthState>(
         builder: (_, AuthState state) {
           return Center(
-            child: myTitle(
-              "Hello There",
-              fontWeight: FontWeight.bold,
-              color: Consts.primaryColor,
-              fontSize: 32,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                myTitle(
+                  "Hello There",
+                  fontWeight: FontWeight.bold,
+                  color: Consts.primaryColor,
+                  fontSize: 86,
+                ),
+                verticalHeight32,
+                LoadingAnimationWidget.threeArchedCircle(
+                  color: Consts.primaryColor,
+                  size: 50,
+                ),
+              ],
             ),
           );
         },

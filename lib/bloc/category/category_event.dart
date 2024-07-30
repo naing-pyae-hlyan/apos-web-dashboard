@@ -14,7 +14,11 @@ class CategoryEventReadData extends CategoryEvent {
 
 class CategoryEventUpdateData extends CategoryEvent {
   final Category category;
-  CategoryEventUpdateData({required this.category});
+  final String currentCategoryName;
+  CategoryEventUpdateData({
+    required this.currentCategoryName,
+    required this.category,
+  });
 }
 
 class CategoryEventDeleteData extends CategoryEvent {

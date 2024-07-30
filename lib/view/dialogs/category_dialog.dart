@@ -19,27 +19,32 @@ class _CategoryDialogState extends State<_CategoryDialog> {
   late CategoryBloc categoryBloc;
 
   final _nameTxtCtrl = TextEditingController();
-  final _descTxtCtrl = TextEditingController();
   final _nameFn = FocusNode();
-  final _descFn = FocusNode();
+  final ValueNotifier<bool> _sizeListener = ValueNotifier<bool>(false);
+  final ValueNotifier<bool> _colorListener = ValueNotifier<bool>(false);
 
   void _onSave() {
     final name = _nameTxtCtrl.text;
-    final description = _descTxtCtrl.text;
     final readableId = widget.category?.readableId ??
         RandomIdGenerator.getnerateCategoryUniqueId();
+    final hasSize = _sizeListener.value;
+    final hasColor = _colorListener.value;
 
     final category = Category(
       id: widget.category?.id,
       readableId: readableId,
       name: name,
-      description: description,
+      hasSize: hasSize,
+      hasColor: hasColor,
     );
 
     if (widget.category == null) {
       categoryBloc.add(CategoryEventCreateData(category: category));
     } else {
-      categoryBloc.add(CategoryEventUpdateData(category: category));
+      categoryBloc.add(CategoryEventUpdateData(
+        currentCategoryName: widget.category!.name,
+        category: category,
+      ));
     }
   }
 
@@ -49,9 +54,10 @@ class _CategoryDialogState extends State<_CategoryDialog> {
 
     super.initState();
     _nameTxtCtrl.text = widget.category?.name ?? '';
-    _descTxtCtrl.text = widget.category?.description ?? '';
     doAfterBuild(callback: () {
       _nameFn.requestFocus();
+      _sizeListener.value = widget.category?.hasSize ?? false;
+      _colorListener.value = widget.category?.hasColor ?? false;
     });
   }
 
@@ -59,9 +65,7 @@ class _CategoryDialogState extends State<_CategoryDialog> {
   void dispose() {
     if (mounted) {
       _nameTxtCtrl.dispose();
-      _descTxtCtrl.dispose();
       _nameFn.dispose();
-      _descFn.dispose();
     }
     super.dispose();
   }
@@ -88,6 +92,7 @@ class _CategoryDialogState extends State<_CategoryDialog> {
       ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           MyInputField(
             controller: _nameTxtCtrl,
@@ -98,15 +103,33 @@ class _CategoryDialogState extends State<_CategoryDialog> {
             textInputAction: TextInputAction.next,
           ),
           verticalHeight16,
-          MyInputField(
-            controller: _descTxtCtrl,
-            focusNode: _descFn,
-            title: "Category Description",
-            hintText: "Enter Description",
-            maxLines: 4,
-            keyboardType: TextInputType.text,
-            textInputAction: TextInputAction.done,
-            onSubmitted: (_) => _onSave(),
+          myTitle("Tags"),
+          const Divider(),
+          verticalHeight8,
+          ValueListenableBuilder(
+            valueListenable: _sizeListener,
+            builder: (_, __, ___) {
+              return MyCheckBoxWithLabel(
+                label: "Size",
+                value: _sizeListener.value,
+                onSelected: (bool select) {
+                  _sizeListener.value = select;
+                },
+              );
+            },
+          ),
+          verticalHeight16,
+          ValueListenableBuilder(
+            valueListenable: _colorListener,
+            builder: (_, __, ___) {
+              return MyCheckBoxWithLabel(
+                label: "Color",
+                value: _colorListener.value,
+                onSelected: (bool select) {
+                  _colorListener.value = select;
+                },
+              );
+            },
           ),
           BlocBuilder<CategoryBloc, CategoryState>(
             builder: (_, state) {
@@ -157,7 +180,7 @@ class _CategoryDialogState extends State<_CategoryDialog> {
               }
 
               if (state.error.code == 2) {
-                _descFn.requestFocus();
+                // _descFn.requestFocus();
                 return;
               }
             }

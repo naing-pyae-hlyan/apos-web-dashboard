@@ -91,10 +91,10 @@ class _CategoryPageState extends State<CategoryPage> {
               columnWidths: const {
                 0: FlexColumnWidth(0.5),
                 1: FlexColumnWidth(1),
-                2: FlexColumnWidth(1),
-                3: FlexColumnWidth(1),
+                3: FlexColumnWidth(0.7),
                 4: FlexColumnWidth(0.5),
                 5: FlexColumnWidth(0.5),
+                6: FlexColumnWidth(0.5),
               },
               children: <TableRow>[
                 TableRow(
@@ -102,7 +102,8 @@ class _CategoryPageState extends State<CategoryPage> {
                   children: const [
                     TableTitleCell("S/N", textAlign: TextAlign.center),
                     TableTitleCell("Name"),
-                    TableTitleCell("Description"),
+                    TableTitleCell("Size", textAlign: TextAlign.end),
+                    TableTitleCell("Color", textAlign: TextAlign.end),
                     TableTitleCell("Category Id", textAlign: TextAlign.end),
                     TableTitleCell("Edit", textAlign: TextAlign.center),
                     TableTitleCell("Delete", textAlign: TextAlign.center),
@@ -127,7 +128,11 @@ class _CategoryPageState extends State<CategoryPage> {
             children: [
               TableSNCell(index),
               TableTextCell(category.name, fontWeight: FontWeight.w800),
-              TableTextCell(category.description),
+              TableTextCell(
+                category.hasSize ? "S, M, L, XL, XXL" : "no size",
+                textAlign: TextAlign.end,
+              ),
+              TableTextCell("${category.hasColor}", textAlign: TextAlign.end),
               TableTextCell(
                 categories[index].readableId.slugify,
                 textAlign: TextAlign.end,

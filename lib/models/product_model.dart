@@ -31,7 +31,7 @@ class Product {
       base64Images: List.from(json["images"].map((x) => x)),
       description: json['description'],
       price: json['price'],
-      stockQuantity: json['stock_quantity'],
+      stockQuantity: json['stock_quantity'] ?? 0,
       categoryId: json['category_id'],
       categoryName: json["category_name"],
       topSalesCount: json["top_sales_count"] ?? 0,

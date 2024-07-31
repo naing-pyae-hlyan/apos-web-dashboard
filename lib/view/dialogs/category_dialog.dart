@@ -112,6 +112,7 @@ class _CategoryDialogState extends State<_CategoryDialog> {
               return MyCheckBoxWithLabel(
                 label: "Size",
                 value: _sizeListener.value,
+                mainAxisAlignment: MainAxisAlignment.end,
                 onSelected: (bool select) {
                   _sizeListener.value = select;
                 },
@@ -125,6 +126,7 @@ class _CategoryDialogState extends State<_CategoryDialog> {
               return MyCheckBoxWithLabel(
                 label: "Color",
                 value: _colorListener.value,
+                mainAxisAlignment: MainAxisAlignment.end,
                 onSelected: (bool select) {
                   _colorListener.value = select;
                 },

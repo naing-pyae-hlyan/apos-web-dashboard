@@ -17,7 +17,7 @@ class MultiSelectProductSizes extends StatefulWidget {
 }
 
 class _MultiSelectProductSizesState extends State<MultiSelectProductSizes> {
-  List<String> selectedSizes = [];
+  final List<String> selectedSizes = [];
 
   List<Widget> _buildSizeList() {
     List<Widget> choices = [];
@@ -43,8 +43,15 @@ class _MultiSelectProductSizesState extends State<MultiSelectProductSizes> {
 
   @override
   void initState() {
-    selectedSizes = widget.oldSizes;
+    selectedSizes.clear();
+    selectedSizes.addAll(widget.oldSizes);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    selectedSizes.clear();
+    super.dispose();
   }
 
   @override

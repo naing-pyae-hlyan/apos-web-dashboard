@@ -1,5 +1,8 @@
 flutter 3.22.0
 
+31/08/2024 (0.2.1)
+1. FIXED: ProductDialog size and color are added.
+
 30/08/2024 (0.2.0)
 1. UPDATE: CategoryDialog added Size and Color tags.
 2. WIP: ProductDialog size and color are wip.

@@ -17,9 +17,9 @@ class MultiSelectProductColors extends StatefulWidget {
 }
 
 class _MultiSelectProductColorsState extends State<MultiSelectProductColors> {
-  List<String> selectedColorNames = [];
+  final List<String> selectedColorNames = [];
 
-  List<Widget> _buildSizeList() {
+  List<Widget> _buildColorList() {
     List<Widget> choices = [];
     for (final ProductColors productColor in widget.productColors) {
       choices.add(
@@ -46,10 +46,17 @@ class _MultiSelectProductColorsState extends State<MultiSelectProductColors> {
 
   @override
   void initState() {
+    selectedColorNames.clear();
     for (final int hexValue in widget.oldHexColors) {
       selectedColorNames.add(parseHexToProductColorName(hexValue));
     }
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    selectedColorNames.clear();
+    super.dispose();
   }
 
   @override
@@ -70,7 +77,7 @@ class _MultiSelectProductColorsState extends State<MultiSelectProductColors> {
         Wrap(
           spacing: 8,
           runSpacing: 8,
-          children: _buildSizeList(),
+          children: _buildColorList(),
         ),
       ],
     );

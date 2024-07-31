@@ -60,8 +60,8 @@ class _ProductDialogState extends State<_ProductDialog> {
       base64Images: attachmentsBloc.state.base64Images,
       description: descriptoin,
       price: price,
-      sizes: _sizes,
-      hexColors: _hexColors,
+      sizes: _selectedCategory?.hasSize == true ? _sizes : [],
+      hexColors: _selectedCategory?.hasColor == true ? _hexColors : [],
       categoryId: categoryId,
       categoryName: categoryName,
       topSalesCount: widget.product?.topSalesCount ?? 0,
@@ -113,11 +113,6 @@ class _ProductDialogState extends State<_ProductDialog> {
       }
     }
 
-    _sizes.addAll(widget.product?.sizes ?? []);
-    for (final int hexValue in widget.product?.hexColors ?? []) {
-      _hexColors.add(hexValue);
-    }
-
     doAfterBuild(callback: () {
       if (widget.product?.base64Images.isNotEmpty == true) {
         attachmentsBloc.add(AttachmentsEventSetImages(
@@ -127,9 +122,15 @@ class _ProductDialogState extends State<_ProductDialog> {
 
       if (_selectedCategory != null) {
         if (_selectedCategory!.hasSize) {
+          _sizes.clear();
+          _sizes.addAll(widget.product?.sizes ?? []);
           _hasSizeNotifier.value = true;
         }
         if (_selectedCategory!.hasColor) {
+          _hexColors.clear();
+          for (final int hexValue in widget.product?.hexColors ?? []) {
+            _hexColors.add(hexValue);
+          }
           _hasColorNotifier.value = true;
         }
       }
@@ -140,6 +141,8 @@ class _ProductDialogState extends State<_ProductDialog> {
   @override
   void dispose() {
     if (mounted) {
+      _sizes.clear();
+      _hexColors.clear();
       _nameTxtCtrl.dispose();
       _descTxtCtrl.dispose();
       _priceTxtCtrl.dispose();
@@ -182,14 +185,15 @@ class _ProductDialogState extends State<_ProductDialog> {
                 ...CacheManager.categories,
               ]..insert(0, Category.selectCategoriesValue),
               onSelectedCategory: (Category? category) {
+                if (_selectedCategory?.id == category?.id) return;
+
                 _selectedCategory = category;
-
-                // TODO check selectedCategory change
-
-                // if (category?.id == widget.product?.categoryId) return;
-
                 final hasSize = category?.hasSize ?? false;
                 final hasColor = category?.hasColor ?? false;
+                
+                if (hasSize) _sizes.clear();
+                if (hasColor) _hexColors.clear();
+
                 if (hasSize == _hasSizeNotifier.value) {
                   _hasSizeNotifier.value = !hasSize;
                 }
@@ -198,8 +202,6 @@ class _ProductDialogState extends State<_ProductDialog> {
                 }
                 _hasSizeNotifier.value = hasSize;
                 _hasColorNotifier.value = hasColor;
-                // _sizes.clear();
-                // _hexColors.clear();
               },
             ),
             verticalHeight16,
@@ -262,8 +264,9 @@ class _ProductDialogState extends State<_ProductDialog> {
             ),
             ValueListenableBuilder(
               valueListenable: _hasSizeNotifier,
-              builder: (_, __, ___) {
-                if (_hasSizeNotifier.value == false) return emptyUI;
+              builder: (_, bool value, ___) {
+                if (!value) return emptyUI;
+
                 return MultiSelectProductSizes(
                   sizes: Consts.productSizes,
                   oldSizes: widget.product?.sizes ?? [],
@@ -273,8 +276,9 @@ class _ProductDialogState extends State<_ProductDialog> {
             ),
             ValueListenableBuilder(
               valueListenable: _hasColorNotifier,
-              builder: (_, __, ___) {
-                if (_hasColorNotifier.value == false) return emptyUI;
+              builder: (_, bool value, ___) {
+                if (!value) return emptyUI;
+
                 return MultiSelectProductColors(
                   productColors: ProductColors.values,
                   oldHexColors: widget.product?.hexColors ?? [],

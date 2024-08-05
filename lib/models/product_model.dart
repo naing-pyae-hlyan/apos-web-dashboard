@@ -34,10 +34,9 @@ class Product {
       description: json['description'],
       price: json['price'],
       sizes:
-          json['sizes'] == null ? null : List.from(json['sizes'].map((x) => x)),
-      hexColors: json['colors'] == null
-          ? null
-          : List.from(json['colors'].map((x) => x)),
+          json['sizes'] == null ? [] : List.from(json['sizes'].map((x) => x)),
+      hexColors:
+          json['colors'] == null ? [] : List.from(json['colors'].map((x) => x)),
       categoryId: json['category_id'],
       categoryName: json["category_name"],
       topSalesCount: json["top_sales_count"] ?? 0,

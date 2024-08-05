@@ -40,11 +40,8 @@ class _ProductDialogState extends State<_ProductDialog> {
 
   Category? _selectedCategory;
 
-  final ValueNotifier<bool> _hasSizeNotifier = ValueNotifier(false);
-  final ValueNotifier<bool> _hasColorNotifier = ValueNotifier(false);
-
-  final List<String> _sizes = [];
-  final List<int> _hexColors = [];
+  final ValueNotifier<List<String>> _sizesListener = ValueNotifier([]);
+  final ValueNotifier<List<ProductColors>> _colorsListener = ValueNotifier([]);
 
   Future<void> _onSave() async {
     final name = _nameTxtCtrl.text;
@@ -64,8 +61,8 @@ class _ProductDialogState extends State<_ProductDialog> {
       base64Images: attachmentsBloc.state.base64Images,
       description: descriptoin,
       price: price,
-      sizes: _selectedCategory?.hasSize == true ? _sizes : [],
-      hexColors: _selectedCategory?.hasColor == true ? _hexColors : [],
+      sizes: _sizesListener.value,
+      hexColors: parseProductColorsToHexs(_colorsListener.value),
       categoryId: categoryId,
       categoryName: categoryName,
       topSalesCount: widget.product?.topSalesCount ?? 0,
@@ -78,19 +75,6 @@ class _ProductDialogState extends State<_ProductDialog> {
         product: product,
         checkTakenName: checkTakenName,
       ));
-    }
-  }
-
-  void onSelectedSizes(List<String> sizes) {
-    _sizes.clear();
-    _sizes.addAll(sizes);
-  }
-
-  /// colors must [Red, Orange, Yellow, Gren, Blue, Indigo, Violet]
-  void onSelectedColors(List<String> colorNames) {
-    _hexColors.clear();
-    for (var colorName in colorNames) {
-      _hexColors.add(parseProductColorNameToHex(colorName));
     }
   }
 
@@ -125,17 +109,13 @@ class _ProductDialogState extends State<_ProductDialog> {
       }
 
       if (_selectedCategory != null) {
-        if (_selectedCategory!.hasSize) {
-          _sizes.clear();
-          _sizes.addAll(widget.product?.sizes ?? []);
-          _hasSizeNotifier.value = true;
+        if (_selectedCategory!.sizes.isNotEmpty) {
+          _sizesListener.value = _selectedCategory?.sizes ?? [];
         }
-        if (_selectedCategory!.hasColor) {
-          _hexColors.clear();
-          for (final int hexValue in widget.product?.hexColors ?? []) {
-            _hexColors.add(hexValue);
-          }
-          _hasColorNotifier.value = true;
+        if (_selectedCategory!.colorHexs.isNotEmpty) {
+          _colorsListener.value = parseHexsToProductColors(
+            _selectedCategory?.colorHexs ?? [],
+          );
         }
       }
       _nameFn.requestFocus();
@@ -145,8 +125,6 @@ class _ProductDialogState extends State<_ProductDialog> {
   @override
   void dispose() {
     if (mounted) {
-      _sizes.clear();
-      _hexColors.clear();
       _nameTxtCtrl.dispose();
       _descTxtCtrl.dispose();
       _priceTxtCtrl.dispose();
@@ -190,22 +168,11 @@ class _ProductDialogState extends State<_ProductDialog> {
               ]..insert(0, Category.selectCategoriesValue),
               onSelectedCategory: (Category? category) {
                 if (_selectedCategory?.id == category?.id) return;
-
                 _selectedCategory = category;
-                final hasSize = category?.hasSize ?? false;
-                final hasColor = category?.hasColor ?? false;
-
-                if (hasSize) _sizes.clear();
-                if (hasColor) _hexColors.clear();
-
-                if (hasSize == _hasSizeNotifier.value) {
-                  _hasSizeNotifier.value = !hasSize;
-                }
-                if (hasColor == _hasColorNotifier.value) {
-                  _hasColorNotifier.value = !hasColor;
-                }
-                _hasSizeNotifier.value = hasSize;
-                _hasColorNotifier.value = hasColor;
+                _sizesListener.value = category?.sizes ?? [];
+                _colorsListener.value = parseHexsToProductColors(
+                  category?.colorHexs ?? [],
+                );
               },
             ),
             verticalHeight16,
@@ -270,26 +237,44 @@ class _ProductDialogState extends State<_ProductDialog> {
               ],
             ),
             ValueListenableBuilder(
-              valueListenable: _hasSizeNotifier,
-              builder: (_, bool value, ___) {
-                if (!value) return emptyUI;
-
-                return MultiSelectProductSizes(
-                  sizes: Consts.productSizes,
-                  oldSizes: widget.product?.sizes ?? [],
-                  onSelectedSizes: onSelectedSizes,
+              valueListenable: _sizesListener,
+              builder: (_, List<String> sizes, __) {
+                if (sizes.isEmpty) return emptyUI;
+                List<String> oldSize = [];
+                if (widget.product?.categoryId == _selectedCategory?.id) {
+                  oldSize = widget.product?.sizes ?? [];
+                }
+                return Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: MultiSelectProductSizes(
+                    sizes: _selectedCategory?.sizes ?? [],
+                    oldSizes: oldSize,
+                    onSelectedSizes: (List<String> sizes) {
+                      _sizesListener.value = sizes;
+                    },
+                  ),
                 );
               },
             ),
             ValueListenableBuilder(
-              valueListenable: _hasColorNotifier,
-              builder: (_, bool value, ___) {
-                if (!value) return emptyUI;
-
-                return MultiSelectProductColors(
-                  productColors: ProductColors.values,
-                  oldHexColors: widget.product?.hexColors ?? [],
-                  onSelectedColors: onSelectedColors,
+              valueListenable: _colorsListener,
+              builder: (_, List<ProductColors> colorList, __) {
+                if (colorList.isEmpty) return emptyUI;
+                List<int> oldSize = [];
+                if (widget.product?.categoryId == _selectedCategory?.id) {
+                  oldSize = widget.product?.hexColors ?? [];
+                }
+                return Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: MultiSelectProductColors(
+                    productColors: parseHexsToProductColors(
+                      _selectedCategory?.colorHexs ?? [],
+                    ),
+                    oldHexColors: oldSize,
+                    onSelectedColors: (List<ProductColors> colors) {
+                      _colorsListener.value = colors;
+                    },
+                  ),
                 );
               },
             ),

@@ -56,18 +56,19 @@ class _MultiSelectProductSizesState extends State<MultiSelectProductSizes> {
 
   @override
   void didUpdateWidget(covariant MultiSelectProductSizes oldWidget) {
-    selectedSizes.clear();
+    // selectedSizes.clear();
     super.didUpdateWidget(oldWidget);
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_buildSizeList().isEmpty) return emptyUI;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         verticalHeight16,
-        myTitle("Avaliable Sizes", fontWeight: FontWeight.w800),
+        myText("Avaliable Sizes", fontWeight: FontWeight.w800),
         verticalHeight8,
         Wrap(
           spacing: 8,

@@ -1,11 +1,13 @@
 import 'package:apos/lib_exp.dart';
 
 class MultiSelectProductColors extends StatefulWidget {
+  final String? title;
   final List<ProductColors> productColors;
   final List<int> oldHexColors;
-  final Function(List<String>) onSelectedColors;
+  final Function(List<ProductColors>) onSelectedColors;
   const MultiSelectProductColors({
     super.key,
+    this.title,
     required this.productColors,
     required this.oldHexColors,
     required this.onSelectedColors,
@@ -17,7 +19,7 @@ class MultiSelectProductColors extends StatefulWidget {
 }
 
 class _MultiSelectProductColorsState extends State<MultiSelectProductColors> {
-  final List<String> selectedColorNames = [];
+  final List<ProductColors> selectedColorNames = [];
 
   List<Widget> _buildColorList() {
     List<Widget> choices = [];
@@ -29,12 +31,12 @@ class _MultiSelectProductColorsState extends State<MultiSelectProductColors> {
           ),
           checkmarkColor: Colors.white,
           label: myText(productColor.name),
-          selected: selectedColorNames.contains(productColor.name),
+          selected: selectedColorNames.contains(productColor),
           onSelected: (bool selected) {
             setState(() {
-              selectedColorNames.contains(productColor.name)
-                  ? selectedColorNames.remove(productColor.name)
-                  : selectedColorNames.add(productColor.name);
+              selectedColorNames.contains(productColor)
+                  ? selectedColorNames.remove(productColor)
+                  : selectedColorNames.add(productColor);
             });
             widget.onSelectedColors(selectedColorNames);
           },
@@ -47,9 +49,7 @@ class _MultiSelectProductColorsState extends State<MultiSelectProductColors> {
   @override
   void initState() {
     selectedColorNames.clear();
-    for (final int hexValue in widget.oldHexColors) {
-      selectedColorNames.add(parseHexToProductColorName(hexValue));
-    }
+    selectedColorNames.addAll(parseHexsToProductColors(widget.oldHexColors));
     super.initState();
   }
 
@@ -61,18 +61,18 @@ class _MultiSelectProductColorsState extends State<MultiSelectProductColors> {
 
   @override
   void didUpdateWidget(covariant MultiSelectProductColors oldWidget) {
-    selectedColorNames.clear();
+    // selectedColorNames.clear();
     super.didUpdateWidget(oldWidget);
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_buildColorList().isEmpty) return emptyUI;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        verticalHeight16,
-        myTitle("Available Colors", fontWeight: FontWeight.w800),
+        myText(widget.title ?? "Available Colors", fontWeight: FontWeight.w800),
         verticalHeight8,
         Wrap(
           spacing: 8,

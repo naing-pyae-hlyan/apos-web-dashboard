@@ -130,10 +130,10 @@ class _CategoryPageState extends State<CategoryPage> {
               TableSNCell(index),
               TableTextCell(category.name, fontWeight: FontWeight.w800),
               TableTextCell(
-                category.hasSize ? "S, M, L, XL, XXL" : "no size",
+                category.sizes.join(','),
                 textAlign: TextAlign.end,
               ),
-              TableTextCell("${category.hasColor}", textAlign: TextAlign.end),
+              TableColorsCell(hexColors: category.colorHexs),
               TableTextCell(
                 categories[index].readableId.slugify,
                 textAlign: TextAlign.end,

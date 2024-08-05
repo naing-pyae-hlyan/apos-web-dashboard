@@ -15,6 +15,27 @@ enum ProductColors {
   });
 }
 
+List<ProductColors> parseHexsToProductColors(List<int> hex) {
+  List<ProductColors> result = [];
+  for (var value in ProductColors.values) {
+    for (var h in hex) {
+      if (h == value.hex) {
+        result.add(value);
+        break;
+      }
+    }
+  }
+  return result;
+}
+
+List<int> parseProductColorsToHexs(List<ProductColors> pcs) {
+  List<int> result = [];
+  for (var value in pcs) {
+    result.add(value.hex);
+  }
+  return result;
+}
+
 String parseHexToProductColorName(int hex) {
   String result = "";
   for (var value in ProductColors.values) {

@@ -2,6 +2,8 @@ flutter 3.22.0
 
 05/08/2024 (0.2.2)
 1. UPDATE: ErrorBloc is added for input fields.
+2. UPDATE: CategoryDialog add dynamic sizes.
+3. WIP: ProductDialog old size data issue is WIP.
 
 31/08/2024 (0.2.1)
 1. FIXED: ProductDialog size and color are added.

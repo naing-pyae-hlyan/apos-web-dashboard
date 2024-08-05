@@ -19,7 +19,6 @@ class Consts {
   static const currencyGreenDark = Color(0xff0b5a04);
   static const dividerColor = Color(0xffdbe2e6);
 
-  static const List<String> productSizes = ['S', 'M', 'L', 'XL', 'XXL'];
 
   static const List<String> aToz = [
     "A",

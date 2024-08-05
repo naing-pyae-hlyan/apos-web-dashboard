@@ -79,7 +79,7 @@ class MyInputField extends StatelessWidget {
               if (state.errorKey == errorKey) {
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: myText(state.error.message, color: Consts.errorColor),
+                  child: errorText(state.error.message),
                 );
               }
             }

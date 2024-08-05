@@ -8,8 +8,6 @@ void showCategoryBlocDialog(BuildContext context, {Category? category}) =>
     );
 
 const _categoryNameErrorKey = "category-name-error-key";
-const _categoryDescErrorKey = "category-desc-error-key";
-const _categorySizesErrorKey = "category-sizes-error-key";
 
 class _CategoryDialog extends StatefulWidget {
   final Category? category;
@@ -21,27 +19,28 @@ class _CategoryDialog extends StatefulWidget {
 
 class _CategoryDialogState extends State<_CategoryDialog> {
   late CategoryBloc categoryBloc;
+  late ErrorBloc errorBloc;
 
   final _nameTxtCtrl = TextEditingController();
   final _nameFn = FocusNode();
   final _sizeTxtCtrl = TextEditingController();
   final _sizeFn = FocusNode();
-  final ValueNotifier<bool> _sizeListener = ValueNotifier<bool>(false);
-  final ValueNotifier<bool> _colorListener = ValueNotifier<bool>(false);
+  
+  List<ProductColors> _colors = [];
+
 
   void _onSave() {
     final name = _nameTxtCtrl.text;
     final readableId = widget.category?.readableId ??
         RandomIdGenerator.getnerateCategoryUniqueId();
-    final hasSize = _sizeListener.value;
-    final hasColor = _colorListener.value;
+    final List<String> sizes = _sizeTxtCtrl.text.split(",");
 
     final category = Category(
       id: widget.category?.id,
       readableId: readableId,
       name: name,
-      hasSize: hasSize,
-      hasColor: hasColor,
+      sizes: sizes,
+      colorHexs: parseProductColorsToHexs(_colors),
     );
 
     if (widget.category == null) {
@@ -57,13 +56,14 @@ class _CategoryDialogState extends State<_CategoryDialog> {
   @override
   void initState() {
     categoryBloc = context.read<CategoryBloc>();
+    errorBloc = context.read<ErrorBloc>();
 
     super.initState();
     _nameTxtCtrl.text = widget.category?.name ?? '';
+    _sizeTxtCtrl.text = (widget.category?.sizes ?? []).join(",");
+    _colors = parseHexsToProductColors(widget.category?.colorHexs ?? []);
     doAfterBuild(callback: () {
       _nameFn.requestFocus();
-      _sizeListener.value = widget.category?.hasSize ?? false;
-      _colorListener.value = widget.category?.hasColor ?? false;
     });
   }
 
@@ -110,50 +110,25 @@ class _CategoryDialogState extends State<_CategoryDialog> {
             errorKey: _categoryNameErrorKey,
           ),
           verticalHeight16,
-          myTitle("Tags"),
-          const Divider(),
-          verticalHeight8,
-          ValueListenableBuilder(
-            valueListenable: _sizeListener,
-            builder: (_, __, ___) {
-              return MyCheckBoxWithLabel(
-                label: "Size",
-                value: _sizeListener.value,
-                mainAxisAlignment: MainAxisAlignment.end,
-                onSelected: (bool select) {
-                  _sizeListener.value = select;
-                },
-              );
+          MyInputField(
+            controller: _sizeTxtCtrl,
+            focusNode: _sizeFn,
+            title: "Sizes (Optional)",
+            hintText: "Eg. S,M,L,XL,XXL",
+            keyboardType: TextInputType.text,
+            textInputAction: TextInputAction.next,
+            errorKey: null,
+          ),
+          verticalHeight16,
+          MultiSelectProductColors(
+            title: "Colors (Optional)",
+            productColors: ProductColors.values,
+            oldHexColors: widget.category?.colorHexs ?? [],
+            onSelectedColors: (s) {
+              _colors = s;
             },
           ),
           verticalHeight16,
-          ValueListenableBuilder(
-            valueListenable: _colorListener,
-            builder: (_, __, ___) {
-              return MyCheckBoxWithLabel(
-                label: "Color",
-                value: _colorListener.value,
-                mainAxisAlignment: MainAxisAlignment.end,
-                onSelected: (bool select) {
-                  _colorListener.value = select;
-                },
-              );
-            },
-          ),
-          BlocBuilder<CategoryBloc, CategoryState>(
-            builder: (_, state) {
-              if (state is CategoryDialogStateFail) {
-                return Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: errorText(state.error),
-                  ),
-                );
-              }
-              return emptyUI;
-            },
-          ),
         ],
       ),
       actions: [
@@ -182,6 +157,10 @@ class _CategoryDialogState extends State<_CategoryDialog> {
             if (state is CategoryDialogStateFail) {
               if (state.error.code == 1) {
                 _nameFn.requestFocus();
+                errorBloc.add(
+                  ErrorEventSetError(
+                      errorKey: _categoryNameErrorKey, error: state.error),
+                );
                 return;
               }
 

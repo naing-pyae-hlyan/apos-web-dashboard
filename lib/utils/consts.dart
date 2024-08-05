@@ -6,6 +6,7 @@ class Consts {
   static const primaryColor = Color(0xff9c28b1);
   static const primaryFontColor = Color(0xff012d3b);
   static const secondaryColor = Color(0xfff0e4f2);
+  static const inputFieldPlaceholderColor = Color(0xfff0e4f2);
   static const successColor = Color(0xff26ca4e);
   static const warningColor = Color(0xfff7af0b);
   static const errorColor = Colors.red;

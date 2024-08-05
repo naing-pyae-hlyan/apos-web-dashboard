@@ -15,6 +15,10 @@ void showProductBlocDialog(
       ),
     );
 
+const _productNameErrorKey = "product-name-error-key";
+const _productDescErrorKey = "product-desc-error-key";
+const _productPriceErrorKey = "product-price-error-key";
+
 class _ProductDialog extends StatefulWidget {
   final Product? product;
   const _ProductDialog({this.product});
@@ -190,7 +194,7 @@ class _ProductDialogState extends State<_ProductDialog> {
                 _selectedCategory = category;
                 final hasSize = category?.hasSize ?? false;
                 final hasColor = category?.hasColor ?? false;
-                
+
                 if (hasSize) _sizes.clear();
                 if (hasColor) _hexColors.clear();
 
@@ -219,6 +223,7 @@ class _ProductDialogState extends State<_ProductDialog> {
                     hintText: "Enter Name",
                     keyboardType: TextInputType.text,
                     textInputAction: TextInputAction.next,
+                    errorKey: _productNameErrorKey,
                   ),
                 ),
                 horizontalWidth16,
@@ -234,6 +239,7 @@ class _ProductDialogState extends State<_ProductDialog> {
                     ],
                     keyboardType: TextInputType.text,
                     textInputAction: TextInputAction.next,
+                    errorKey: _productPriceErrorKey,
                   ),
                 ),
               ],
@@ -254,6 +260,7 @@ class _ProductDialogState extends State<_ProductDialog> {
                     maxLines: 4,
                     keyboardType: TextInputType.text,
                     textInputAction: TextInputAction.next,
+                    errorKey: _productDescErrorKey,
                   ),
                 ),
                 horizontalWidth16,

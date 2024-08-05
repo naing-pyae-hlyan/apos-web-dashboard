@@ -46,6 +46,7 @@ class _CategoryPageState extends State<CategoryPage> {
             child: MyInputField(
               controller: TextEditingController(),
               hintText: "Search",
+              errorKey: null,
               onChanged: (String query) {
                 categoryBloc.add(CategoryEventSearch(query: query));
               },

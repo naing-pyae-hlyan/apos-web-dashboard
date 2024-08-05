@@ -1,5 +1,8 @@
 import 'package:apos/lib_exp.dart';
 
+const _userNameErrorKey = "user-name-error-key";
+const _passwordErrorKey = "password-error-key";
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -9,6 +12,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   late AuthBloc authBloc;
+  late ErrorBloc errorBloc;
   late CategoryBloc categoryBloc;
 
   final usernameTxtCtrl = TextEditingController();
@@ -29,6 +33,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     authBloc = context.read<AuthBloc>();
+    errorBloc = context.read<ErrorBloc>();
     categoryBloc = context.read<CategoryBloc>();
     super.initState();
     doAfterBuild(
@@ -68,6 +73,7 @@ class _LoginPageState extends State<LoginPage> {
                   hintText: "Username",
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
+                  errorKey: _userNameErrorKey,
                 ),
                 verticalHeight16,
                 MyPasswordInputField(
@@ -76,32 +82,23 @@ class _LoginPageState extends State<LoginPage> {
                   hintText: "Password",
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.done,
+                  errorKey: _passwordErrorKey,
                   onSubmitted: (String str) {
                     _login();
                   },
                 ),
-                BlocBuilder<AuthBloc, AuthState>(
-                  builder: (_, state) {
-                    if (state is AuthStateFail) {
-                      return Align(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: errorText(state.error),
-                        ),
-                      );
-                    }
-                    return verticalHeight32;
-                  },
-                ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: MyCheckBoxWithLabel(
-                    label: "Remember Me",
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    onSelected: (bool selected) {
-                      _rememberMe = selected;
-                    },
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: MyCheckBoxWithLabel(
+                      label: "Remember Me",
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      onSelected: (bool selected) {
+                        _rememberMe = selected;
+                      },
+                    ),
                   ),
                 ),
                 BlocConsumer<AuthBloc, AuthState>(
@@ -118,11 +115,23 @@ class _LoginPageState extends State<LoginPage> {
                     if (state is AuthStateFail) {
                       if (state.error.code == 1) {
                         usernameFn.requestFocus();
+                        errorBloc.add(
+                          ErrorEventSetError(
+                            errorKey: _userNameErrorKey,
+                            error: state.error,
+                          ),
+                        );
                         return;
                       }
 
                       if (state.error.code == 2) {
                         passwordFn.requestFocus();
+                        errorBloc.add(
+                          ErrorEventSetError(
+                            errorKey: _passwordErrorKey,
+                            error: state.error,
+                          ),
+                        );
                         return;
                       }
                     }

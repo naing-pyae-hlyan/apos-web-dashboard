@@ -1,0 +1,12 @@
+import 'package:apos/lib_exp.dart';
+
+sealed class ErrorEvent {}
+
+class ErrorEventSetError extends ErrorEvent {
+  final String? errorKey;
+  final ErrorModel? error;
+  ErrorEventSetError({
+    required this.errorKey,
+    required this.error,
+  });
+}

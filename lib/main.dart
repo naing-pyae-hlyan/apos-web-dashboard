@@ -24,6 +24,7 @@ Future<void> main() async {
       providers: [
         BlocProvider(create: (_) => AuthBloc()),
         BlocProvider(create: (_) => HomeBloc()),
+        BlocProvider(create: (_) => ErrorBloc()),
         BlocProvider(create: (_) => CategoryBloc()),
         BlocProvider(create: (_) => ProductBloc()),
         BlocProvider(create: (_) => OrderBloc()),

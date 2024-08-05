@@ -27,19 +27,13 @@ class ProductDialogStateFail extends ProductState {
 }
 
 // Create
-class ProductStateCreateDataSuccess extends ProductState {
-  ProductStateCreateDataSuccess();
-}
+class ProductStateCreateDataSuccess extends ProductState {}
 
 // Update
-class ProductStateUpdateDataSuccess extends ProductState {
-  ProductStateUpdateDataSuccess();
-}
+class ProductStateUpdateDataSuccess extends ProductState {}
 
 // Delete
-class ProductStateDeleteDataSuccess extends ProductState {
-  ProductStateDeleteDataSuccess();
-}
+class ProductStateDeleteDataSuccess extends ProductState {}
 
 // Search
 class ProductStateSearch extends ProductState {

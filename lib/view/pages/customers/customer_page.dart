@@ -23,6 +23,7 @@ class _CustomerPageState extends State<CustomerPage> {
             child: MyInputField(
               controller: TextEditingController(),
               hintText: "Search by name, phone, email, id",
+              errorKey: null,
             ),
           ),
         ],

@@ -53,6 +53,7 @@ class _ProductPageState extends State<ProductPage> {
             child: MyInputField(
               controller: TextEditingController(),
               hintText: "Search",
+              errorKey: null,
               onChanged: (String query) {
                 productBloc.add(ProductEventSearch(query: query));
               },

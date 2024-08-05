@@ -44,6 +44,7 @@ class _OrdersPageState extends State<OrdersPage> {
             child: MyInputField(
               controller: TextEditingController(),
               hintText: "Search",
+              errorKey: null,
             ),
           ),
         ],

@@ -7,6 +7,10 @@ void showCategoryBlocDialog(BuildContext context, {Category? category}) =>
       builder: (_) => _CategoryDialog(category: category),
     );
 
+const _categoryNameErrorKey = "category-name-error-key";
+const _categoryDescErrorKey = "category-desc-error-key";
+const _categorySizesErrorKey = "category-sizes-error-key";
+
 class _CategoryDialog extends StatefulWidget {
   final Category? category;
   const _CategoryDialog({this.category});
@@ -20,6 +24,8 @@ class _CategoryDialogState extends State<_CategoryDialog> {
 
   final _nameTxtCtrl = TextEditingController();
   final _nameFn = FocusNode();
+  final _sizeTxtCtrl = TextEditingController();
+  final _sizeFn = FocusNode();
   final ValueNotifier<bool> _sizeListener = ValueNotifier<bool>(false);
   final ValueNotifier<bool> _colorListener = ValueNotifier<bool>(false);
 
@@ -101,6 +107,7 @@ class _CategoryDialogState extends State<_CategoryDialog> {
             hintText: "Enter Name",
             keyboardType: TextInputType.text,
             textInputAction: TextInputAction.next,
+            errorKey: _categoryNameErrorKey,
           ),
           verticalHeight16,
           myTitle("Tags"),

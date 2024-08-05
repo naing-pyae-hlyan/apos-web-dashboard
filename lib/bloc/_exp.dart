@@ -14,6 +14,11 @@ export 'category/category_service.dart';
 export 'category/category_state.dart';
 
 //
+export 'error/error_bloc.dart';
+export 'error/error_event.dart';
+export 'error/error_state.dart';
+
+//
 export 'home/home_bloc.dart';
 export 'home/home_event.dart';
 export 'home/home_state.dart';

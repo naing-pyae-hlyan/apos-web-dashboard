@@ -35,10 +35,6 @@ class _ProductPageState extends State<ProductPage> {
     }
   }
 
-  void _updateProduct(Product product) {
-    showProductBlocDialog(context, product: product);
-  }
-
   @override
   Widget build(BuildContext context) {
     return MyScaffoldDataGridView<QuerySnapshot<Product>>(
@@ -81,11 +77,7 @@ class _ProductPageState extends State<ProductPage> {
           ),
         ],
       ),
-      stream: FFirestoreUtils.productCollection
-          .orderBy(
-            "name",
-          )
-          .snapshots(),
+      stream: FFirestoreUtils.productCollection.orderBy("name").snapshots(),
       streamBuilder: (QuerySnapshot<Product> data) {
         final List<Product> products = [];
         CacheManager.products.clear();
@@ -122,7 +114,7 @@ class _ProductPageState extends State<ProductPage> {
                 2: FlexColumnWidth(1),
                 3: FlexColumnWidth(1.5),
                 4: FlexColumnWidth(1),
-                5: FlexColumnWidth(1),
+                5: FlexColumnWidth(1.2),
                 6: FlexColumnWidth(1.2),
                 7: FlexColumnWidth(1),
                 8: FlexColumnWidth(1.5),
@@ -148,14 +140,8 @@ class _ProductPageState extends State<ProductPage> {
                     TableTitleCell("Colors", textAlign: TextAlign.end),
                     TableTitleCell("Product Id", textAlign: TextAlign.end),
                     TableTitleCell("Category", textAlign: TextAlign.end),
-                    TableTitleCell(
-                      "Edit",
-                      textAlign: TextAlign.center,
-                    ),
-                    TableTitleCell(
-                      "Delete",
-                      textAlign: TextAlign.center,
-                    ),
+                    TableTitleCell("Edit", textAlign: TextAlign.center),
+                    TableTitleCell("Del", textAlign: TextAlign.center),
                   ],
                 ),
                 ..._productTableRowView(search),
@@ -170,7 +156,7 @@ class _ProductPageState extends State<ProductPage> {
   List<TableRow> _productTableRowView(List<Product> products) => List.generate(
         products.length,
         (index) {
-          final product = products[index];
+          final Product product = products[index];
           return TableRow(
             decoration: tableTextDecoration(index),
             children: [
@@ -183,8 +169,9 @@ class _ProductPageState extends State<ProductPage> {
                 textAlign: TextAlign.end,
               ),
               TableTextCell(
-                (product.sizes ?? []).isEmpty ? "-" : product.sizes!.join(", "),
+                product.sizes.isEmpty ? "-" : product.sizes.join(", "),
                 textAlign: TextAlign.end,
+                maxLines: 4,
               ),
               TableColorsCell(hexColors: product.hexColors),
               TableTextCell(
@@ -199,7 +186,10 @@ class _ProductPageState extends State<ProductPage> {
               TableButtonCell(
                 icon: Icons.edit_square,
                 iconColor: Colors.blueGrey,
-                onPressed: () => _updateProduct(product),
+                onPressed: () => showProductBlocDialog(
+                  context,
+                  product: product,
+                ),
               ),
               TableButtonCell(
                 icon: Icons.delete,

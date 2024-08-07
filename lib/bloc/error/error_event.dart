@@ -10,3 +10,5 @@ class ErrorEventSetError extends ErrorEvent {
     required this.error,
   });
 }
+
+class ErrorEventResert extends ErrorEvent {}

@@ -23,10 +23,6 @@ class _CategoryPageState extends State<CategoryPage> {
     }
   }
 
-  void _updateCategory(Category category) {
-    showCategoryBlocDialog(context, category: category);
-  }
-
   @override
   void initState() {
     categoryBloc = context.read<CategoryBloc>();
@@ -56,7 +52,10 @@ class _CategoryPageState extends State<CategoryPage> {
           MyButton(
             label: "New Category",
             icon: Icons.post_add_rounded,
-            onPressed: () => showCategoryBlocDialog(context),
+            onPressed: () => showCategoryBlocDialog(
+              context,
+              isNewCategory: true,
+            ),
           ),
         ],
       ),
@@ -92,7 +91,7 @@ class _CategoryPageState extends State<CategoryPage> {
               columnWidths: const {
                 0: FlexColumnWidth(0.5),
                 1: FlexColumnWidth(1),
-                3: FlexColumnWidth(0.7),
+                3: FlexColumnWidth(1),
                 4: FlexColumnWidth(0.5),
                 5: FlexColumnWidth(0.5),
                 6: FlexColumnWidth(0.5),
@@ -130,7 +129,7 @@ class _CategoryPageState extends State<CategoryPage> {
               TableSNCell(index),
               TableTextCell(category.name, fontWeight: FontWeight.w800),
               TableTextCell(
-                category.sizes.join(','),
+                category.sizes.isEmpty ? "-" : category.sizes.join(", "),
                 textAlign: TextAlign.end,
               ),
               TableColorsCell(hexColors: category.colorHexs),
@@ -141,7 +140,11 @@ class _CategoryPageState extends State<CategoryPage> {
               TableButtonCell(
                 icon: Icons.edit_square,
                 iconColor: Colors.blueGrey,
-                onPressed: () => _updateCategory(category),
+                onPressed: () => showCategoryBlocDialog(
+                  context,
+                  category: category,
+                  isNewCategory: false,
+                ),
               ),
               TableButtonCell(
                 icon: Icons.delete,

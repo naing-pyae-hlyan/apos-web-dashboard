@@ -21,7 +21,7 @@ const _productPriceErrorKey = "product-price-error-key";
 
 class _ProductDialog extends StatefulWidget {
   final Product? product;
-  const _ProductDialog({this.product});
+  const _ProductDialog({required this.product});
 
   @override
   State<_ProductDialog> createState() => _ProductDialogState();
@@ -29,6 +29,7 @@ class _ProductDialog extends StatefulWidget {
 
 class _ProductDialogState extends State<_ProductDialog> {
   late ProductBloc productBloc;
+  late ErrorBloc errorBloc;
   late AttachmentsBloc attachmentsBloc;
 
   final _nameTxtCtrl = TextEditingController();
@@ -40,8 +41,10 @@ class _ProductDialogState extends State<_ProductDialog> {
 
   Category? _selectedCategory;
 
-  final ValueNotifier<List<String>> _sizesListener = ValueNotifier([]);
-  final ValueNotifier<List<ProductColors>> _colorsListener = ValueNotifier([]);
+  final ValueNotifier<bool> _hasSizesListener = ValueNotifier(false);
+  final ValueNotifier<bool> _hasColorsListener = ValueNotifier(false);
+  List<ProductSize> _sizes = [];
+  List<ProductColor> _colors = [];
 
   Future<void> _onSave() async {
     final name = _nameTxtCtrl.text;
@@ -61,8 +64,8 @@ class _ProductDialogState extends State<_ProductDialog> {
       base64Images: attachmentsBloc.state.base64Images,
       description: descriptoin,
       price: price,
-      sizes: _sizesListener.value,
-      hexColors: parseProductColorsToHexs(_colorsListener.value),
+      sizes: ProductSize.parseProductSizesToName(_sizes),
+      hexColors: ProductColor.parseProductColorsToHexs(_colors),
       categoryId: categoryId,
       categoryName: categoryName,
       topSalesCount: widget.product?.topSalesCount ?? 0,
@@ -81,27 +84,34 @@ class _ProductDialogState extends State<_ProductDialog> {
   @override
   void initState() {
     productBloc = context.read<ProductBloc>();
+    errorBloc = context.read<ErrorBloc>();
     attachmentsBloc = context.read<AttachmentsBloc>();
 
     super.initState();
+
     _nameTxtCtrl.text = widget.product?.name ?? '';
     _descTxtCtrl.text = widget.product?.description ?? '';
     _priceTxtCtrl.text =
         widget.product?.price != null ? widget.product!.price.toString() : "";
 
-    if (widget.product?.categoryId != null &&
-        widget.product?.categoryName != null) {
+    // For Edit Product
+    if (widget.product?.categoryId != null) {
       final categories = CacheManager.categories;
       for (Category category in categories) {
         if (category.id == widget.product?.categoryId) {
           _selectedCategory = category;
-
+          _selectedCategory?.sizes.removeWhere((size) => size == "-");
+          _sizes = ProductSize.parseSizesToSelectedProductSizes(category.sizes);
+          _colors = ProductColor.parseHexsToProductColors(
+            category.colorHexs,
+          );
           break;
         }
       }
     }
 
     doAfterBuild(callback: () {
+      errorBloc.add(ErrorEventResert());
       if (widget.product?.base64Images.isNotEmpty == true) {
         attachmentsBloc.add(AttachmentsEventSetImages(
           base64Images: widget.product?.base64Images ?? [],
@@ -110,12 +120,10 @@ class _ProductDialogState extends State<_ProductDialog> {
 
       if (_selectedCategory != null) {
         if (_selectedCategory!.sizes.isNotEmpty) {
-          _sizesListener.value = _selectedCategory?.sizes ?? [];
+          _hasSizesListener.value = true;
         }
         if (_selectedCategory!.colorHexs.isNotEmpty) {
-          _colorsListener.value = parseHexsToProductColors(
-            _selectedCategory?.colorHexs ?? [],
-          );
+          _hasColorsListener.value = true;
         }
       }
       _nameFn.requestFocus();
@@ -155,145 +163,146 @@ class _ProductDialogState extends State<_ProductDialog> {
       ),
       content: SizedBox(
         width: dialogWidth,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CategoryDropdown(
-              title: "Category",
-              value: _selectedCategory,
-              categories: <Category>[
-                ...CacheManager.categories,
-              ]..insert(0, Category.selectCategoriesValue),
-              onSelectedCategory: (Category? category) {
-                if (_selectedCategory?.id == category?.id) return;
-                _selectedCategory = category;
-                _sizesListener.value = category?.sizes ?? [];
-                _colorsListener.value = parseHexsToProductColors(
-                  category?.colorHexs ?? [],
-                );
-              },
-            ),
-            verticalHeight16,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                SizedBox(
-                  width: dialogWidth * 0.5,
-                  child: MyInputField(
-                    controller: _nameTxtCtrl,
-                    focusNode: _nameFn,
-                    title: "Product Name",
-                    hintText: "Enter Name",
-                    keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.next,
-                    errorKey: _productNameErrorKey,
-                  ),
-                ),
-                horizontalWidth16,
-                SizedBox(
-                  width: dialogWidth * 0.5 - 16,
-                  child: MyInputField(
-                    controller: _priceTxtCtrl,
-                    focusNode: _priceFn,
-                    title: "Price",
-                    hintText: "Enter Price",
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
-                    keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.next,
-                    errorKey: _productPriceErrorKey,
-                  ),
-                ),
-              ],
-            ),
-            verticalHeight16,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                SizedBox(
-                  width: dialogWidth * 0.5,
-                  child: MyInputField(
-                    controller: _descTxtCtrl,
-                    focusNode: _descFn,
-                    title: "Product Description",
-                    hintText: "Enter Description",
-                    maxLines: 4,
-                    keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.next,
-                    errorKey: _productDescErrorKey,
-                  ),
-                ),
-                horizontalWidth16,
-                ProductImagesWidget(
-                  contentWidth: dialogWidth * 0.5 - 16,
-                ),
-              ],
-            ),
-            ValueListenableBuilder(
-              valueListenable: _sizesListener,
-              builder: (_, List<String> sizes, __) {
-                if (sizes.isEmpty) return emptyUI;
-                List<String> oldSize = [];
-                if (widget.product?.categoryId == _selectedCategory?.id) {
-                  oldSize = widget.product?.sizes ?? [];
-                }
-                return Padding(
-                  padding: const EdgeInsets.only(top: 16),
-                  child: MultiSelectProductSizes(
-                    sizes: _selectedCategory?.sizes ?? [],
-                    oldSizes: oldSize,
-                    onSelectedSizes: (List<String> sizes) {
-                      _sizesListener.value = sizes;
-                    },
-                  ),
-                );
-              },
-            ),
-            ValueListenableBuilder(
-              valueListenable: _colorsListener,
-              builder: (_, List<ProductColors> colorList, __) {
-                if (colorList.isEmpty) return emptyUI;
-                List<int> oldSize = [];
-                if (widget.product?.categoryId == _selectedCategory?.id) {
-                  oldSize = widget.product?.hexColors ?? [];
-                }
-                return Padding(
-                  padding: const EdgeInsets.only(top: 16),
-                  child: MultiSelectProductColors(
-                    productColors: parseHexsToProductColors(
-                      _selectedCategory?.colorHexs ?? [],
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CategoryDropdown(
+                title: "Category",
+                value: _selectedCategory,
+                categories: <Category>[
+                  ...CacheManager.categories,
+                ]..insert(0, Category.selectCategoriesValue),
+                onSelectedCategory: (Category? category) {
+                  if (_selectedCategory?.id == category?.id) return;
+                  _selectedCategory = category;
+                  _sizes.clear();
+                  _colors.clear();
+                  _hasSizesListener.value = (category?.sizes ?? []).isNotEmpty;
+                  _hasColorsListener.value =
+                      (category?.colorHexs ?? []).isNotEmpty;
+                },
+              ),
+              verticalHeight16,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  SizedBox(
+                    width: dialogWidth * 0.5,
+                    child: MyInputField(
+                      controller: _nameTxtCtrl,
+                      focusNode: _nameFn,
+                      title: "Product Name",
+                      hintText: "Enter Name",
+                      keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.next,
+                      errorKey: _productNameErrorKey,
                     ),
-                    oldHexColors: oldSize,
-                    onSelectedColors: (List<ProductColors> colors) {
-                      _colorsListener.value = colors;
-                    },
                   ),
-                );
-              },
-            ),
-            verticalHeight16,
-            BlocBuilder<ProductBloc, ProductState>(
-              builder: (_, state) {
-                if (state is ProductDialogStateFail) {
-                  return Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: errorText(state.error),
+                  horizontalWidth16,
+                  SizedBox(
+                    width: dialogWidth * 0.5 - 16,
+                    child: MyInputField(
+                      controller: _priceTxtCtrl,
+                      focusNode: _priceFn,
+                      title: "Price",
+                      hintText: "Enter Price",
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                      keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.next,
+                      errorKey: _productPriceErrorKey,
+                    ),
+                  ),
+                ],
+              ),
+              verticalHeight16,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  SizedBox(
+                    width: dialogWidth * 0.5,
+                    child: MyInputField(
+                      controller: _descTxtCtrl,
+                      focusNode: _descFn,
+                      title: "Product Description",
+                      hintText: "Enter Description",
+                      maxLines: 4,
+                      keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.next,
+                      errorKey: _productDescErrorKey,
+                    ),
+                  ),
+                  horizontalWidth16,
+                  ProductImagesWidget(
+                    contentWidth: dialogWidth * 0.5 - 16,
+                  ),
+                ],
+              ),
+              ValueListenableBuilder(
+                valueListenable: _hasSizesListener,
+                builder: (_, bool hasSizes, __) {
+                  if (!hasSizes) return emptyUI;
+                  List<String> oldSize = [];
+                  if (widget.product?.categoryId == _selectedCategory?.id) {
+                    oldSize = widget.product?.sizes ?? [];
+                  }
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: MultiSelectProductSizes(
+                      allSizes: _selectedCategory?.sizes ?? [],
+                      oldSizes: oldSize,
+                      onSelectedSizes: (List<ProductSize> sizes) {
+                        _sizes = sizes;
+                      },
                     ),
                   );
-                }
-                return emptyUI;
-              },
-            ),
-          ],
+                },
+              ),
+              ValueListenableBuilder(
+                valueListenable: _hasColorsListener,
+                builder: (_, bool hasColors, __) {
+                  if (!hasColors) return emptyUI;
+                  List<int> oldColorHexs = [];
+                  if (widget.product?.categoryId == _selectedCategory?.id) {
+                    oldColorHexs = widget.product?.hexColors ?? [];
+                  }
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: MultiSelectProductColors(
+                      allHexColors: _selectedCategory?.colorHexs ?? [],
+                      oldHexColors: oldColorHexs,
+                      onSelectedColors: (List<ProductColor> colors) {
+                        _colors = colors;
+                      },
+                    ),
+                  );
+                },
+              ),
+              verticalHeight16,
+              BlocBuilder<ProductBloc, ProductState>(
+                builder: (_, state) {
+                  if (state is ProductDialogStateFail) {
+                    return Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: errorText(state.error),
+                      ),
+                    );
+                  }
+                  return emptyUI;
+                },
+              ),
+            ],
+          ),
         ),
       ),
       actions: [

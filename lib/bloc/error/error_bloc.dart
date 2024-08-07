@@ -3,6 +3,7 @@ import 'package:apos/lib_exp.dart';
 class ErrorBloc extends Bloc<ErrorEvent, ErrorState> {
   ErrorBloc() : super(ErrorStateInitial()) {
     on<ErrorEventSetError>(_onErrorSet);
+    on<ErrorEventResert>(_onErrorReset);
   }
 
   Future<void> _onErrorSet(
@@ -17,5 +18,12 @@ class ErrorBloc extends Bloc<ErrorEvent, ErrorState> {
       errorKey: event.errorKey!,
       error: event.error!,
     ));
+  }
+
+  Future<void> _onErrorReset(
+    ErrorEventResert event,
+    Emitter<ErrorState> emit,
+  ) async {
+    emit(ErrorStateNoError());
   }
 }

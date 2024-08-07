@@ -2,13 +2,13 @@ import 'package:apos/lib_exp.dart';
 
 class MultiSelectProductColors extends StatefulWidget {
   final String? title;
-  final List<ProductColors> productColors;
+  final List<int> allHexColors;
   final List<int> oldHexColors;
-  final Function(List<ProductColors>) onSelectedColors;
+  final Function(List<ProductColor>) onSelectedColors;
   const MultiSelectProductColors({
     super.key,
     this.title,
-    required this.productColors,
+    required this.allHexColors,
     required this.oldHexColors,
     required this.onSelectedColors,
   });
@@ -19,26 +19,26 @@ class MultiSelectProductColors extends StatefulWidget {
 }
 
 class _MultiSelectProductColorsState extends State<MultiSelectProductColors> {
-  final List<ProductColors> selectedColorNames = [];
+  final List<ProductColor> selectedColors = [];
 
   List<Widget> _buildColorList() {
     List<Widget> choices = [];
-    for (final ProductColors productColor in widget.productColors) {
+    for (ProductColor pc in selectedColors) {
       choices.add(
         ChoiceChip(
           avatar: CircleAvatar(
-            backgroundColor: Color(productColor.hex),
+            backgroundColor: Color(pc.hex),
           ),
           checkmarkColor: Colors.white,
-          label: myText(productColor.name),
-          selected: selectedColorNames.contains(productColor),
+          label: myText(pc.name),
+          selected: pc.status,
           onSelected: (bool selected) {
             setState(() {
-              selectedColorNames.contains(productColor)
-                  ? selectedColorNames.remove(productColor)
-                  : selectedColorNames.add(productColor);
+              pc.status = selected;
             });
-            widget.onSelectedColors(selectedColorNames);
+            final List<ProductColor> onSelectedColors =
+                selectedColors.where((ProductColor pc) => pc.status).toList();
+            widget.onSelectedColors(onSelectedColors);
           },
         ),
       );
@@ -48,14 +48,20 @@ class _MultiSelectProductColorsState extends State<MultiSelectProductColors> {
 
   @override
   void initState() {
-    selectedColorNames.clear();
-    selectedColorNames.addAll(parseHexsToProductColors(widget.oldHexColors));
+    selectedColors.clear();
+    selectedColors.addAll(
+      ProductColor.parseHexsToAllProductColors(
+        hexs: widget.allHexColors,
+        oldHexs: widget.oldHexColors,
+      ),
+    );
+
     super.initState();
   }
 
   @override
   void dispose() {
-    selectedColorNames.clear();
+    selectedColors.clear();
     super.dispose();
   }
 

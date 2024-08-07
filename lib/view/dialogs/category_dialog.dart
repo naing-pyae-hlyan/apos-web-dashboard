@@ -1,17 +1,25 @@
 import 'package:apos/lib_exp.dart';
 
-void showCategoryBlocDialog(BuildContext context, {Category? category}) =>
+void showCategoryBlocDialog(
+  BuildContext context, {
+  Category? category,
+  required bool isNewCategory,
+}) =>
     showAdaptiveDialog(
       context: context,
       barrierDismissible: true,
-      builder: (_) => _CategoryDialog(category: category),
+      builder: (_) => _CategoryDialog(
+        category: category,
+        isNewCategory: isNewCategory,
+      ),
     );
 
 const _categoryNameErrorKey = "category-name-error-key";
 
 class _CategoryDialog extends StatefulWidget {
   final Category? category;
-  const _CategoryDialog({this.category});
+  final bool isNewCategory;
+  const _CategoryDialog({required this.category, required this.isNewCategory});
 
   @override
   State<_CategoryDialog> createState() => _CategoryDialogState();
@@ -25,25 +33,28 @@ class _CategoryDialogState extends State<_CategoryDialog> {
   final _nameFn = FocusNode();
   final _sizeTxtCtrl = TextEditingController();
   final _sizeFn = FocusNode();
-  
-  List<ProductColors> _colors = [];
 
+  List<ProductColor> _colors = [];
 
   void _onSave() {
     final name = _nameTxtCtrl.text;
     final readableId = widget.category?.readableId ??
         RandomIdGenerator.getnerateCategoryUniqueId();
     final List<String> sizes = _sizeTxtCtrl.text.split(",");
+    sizes.removeWhere((String str) => str.isEmpty || str == "-");
+    if (sizes.isNotEmpty && sizes.first.isEmpty) {
+      sizes.clear();
+    }
 
     final category = Category(
       id: widget.category?.id,
       readableId: readableId,
       name: name,
       sizes: sizes,
-      colorHexs: parseProductColorsToHexs(_colors),
+      colorHexs: ProductColor.parseProductColorsToHexs(_colors),
     );
 
-    if (widget.category == null) {
+    if (widget.isNewCategory && widget.category == null) {
       categoryBloc.add(CategoryEventCreateData(category: category));
     } else {
       categoryBloc.add(CategoryEventUpdateData(
@@ -60,10 +71,14 @@ class _CategoryDialogState extends State<_CategoryDialog> {
 
     super.initState();
     _nameTxtCtrl.text = widget.category?.name ?? '';
-    _sizeTxtCtrl.text = (widget.category?.sizes ?? []).join(",");
-    _colors = parseHexsToProductColors(widget.category?.colorHexs ?? []);
+    _sizeTxtCtrl.text =
+        (widget.category?.sizes ?? []).join(",").replaceAll("-", "");
+    _colors = ProductColor.parseHexsToProductColors(
+      widget.category?.colorHexs ?? [],
+    );
     doAfterBuild(callback: () {
       _nameFn.requestFocus();
+      errorBloc.add(ErrorEventResert());
     });
   }
 
@@ -122,10 +137,10 @@ class _CategoryDialogState extends State<_CategoryDialog> {
           verticalHeight16,
           MultiSelectProductColors(
             title: "Colors (Optional)",
-            productColors: ProductColors.values,
+            allHexColors: ProductColor.getAllProductColorHexs(),
             oldHexColors: widget.category?.colorHexs ?? [],
-            onSelectedColors: (s) {
-              _colors = s;
+            onSelectedColors: (List<ProductColor> colors) {
+              _colors = colors;
             },
           ),
           verticalHeight16,

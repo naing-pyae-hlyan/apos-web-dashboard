@@ -1,12 +1,12 @@
 import 'package:apos/lib_exp.dart';
 
 class MultiSelectProductSizes extends StatefulWidget {
-  final List<String> sizes;
+  final List<String> allSizes;
   final List<String> oldSizes;
-  final Function(List<String>) onSelectedSizes;
+  final Function(List<ProductSize>) onSelectedSizes;
   const MultiSelectProductSizes({
     super.key,
-    required this.sizes,
+    required this.allSizes,
     required this.oldSizes,
     required this.onSelectedSizes,
   });
@@ -17,25 +17,29 @@ class MultiSelectProductSizes extends StatefulWidget {
 }
 
 class _MultiSelectProductSizesState extends State<MultiSelectProductSizes> {
-  final List<String> selectedSizes = [];
+  final List<ProductSize> selectedSizes = [];
 
   List<Widget> _buildSizeList() {
     List<Widget> choices = [];
-    for (final String size in widget.sizes) {
-      choices.add(
-        ChoiceChip(
-          label: myText(size),
-          selected: selectedSizes.contains(size),
-          onSelected: (bool selected) {
-            setState(() {
-              selectedSizes.contains(size)
-                  ? selectedSizes.remove(size)
-                  : selectedSizes.add(size);
-            });
-            widget.onSelectedSizes(selectedSizes);
-          },
-        ),
-      );
+    for (ProductSize pz in selectedSizes) {
+      if (pz.size.isNotEmpty && pz.size != "-") {
+        choices.add(
+          ChoiceChip(
+            label: myText(pz.size),
+            selected: pz.status,
+            onSelected: (bool selected) {
+              setState(() {
+                pz.status = selected;
+              });
+
+              // removed status = false sizes
+              final List<ProductSize> onSelectedSizes =
+                  selectedSizes.where((ProductSize pz) => pz.status).toList();
+              widget.onSelectedSizes(onSelectedSizes);
+            },
+          ),
+        );
+      }
     }
 
     return choices;
@@ -44,7 +48,10 @@ class _MultiSelectProductSizesState extends State<MultiSelectProductSizes> {
   @override
   void initState() {
     selectedSizes.clear();
-    selectedSizes.addAll(widget.oldSizes);
+    selectedSizes.addAll(ProductSize.parseSiezsToAllProductSizes(
+      sizes: widget.allSizes,
+      oldSizes: widget.oldSizes,
+    ));
     super.initState();
   }
 

@@ -19,7 +19,6 @@ class Consts {
   static const currencyGreenDark = Color(0xff0b5a04);
   static const dividerColor = Color(0xffdbe2e6);
 
-
   static const List<String> aToz = [
     "A",
     "B",
@@ -47,6 +46,21 @@ class Consts {
     "X",
     "Y",
     "Z"
+  ];
+
+  static final defaultAllProductColors = <ProductColor>[
+    ProductColor(name: "Black", hex: 0xFF000000, status: false),
+    ProductColor(name: "White", hex: 0xFFFFFFFF, status: false),
+    ProductColor(name: "Red", hex: 0xFFFF0000, status: false),
+    ProductColor(name: "Blue", hex: 0xFF0000FF, status: false),
+    ProductColor(name: "Green", hex: 0xFF008000, status: false),
+    ProductColor(name: "Yellow", hex: 0xFFFFFF00, status: false),
+    ProductColor(name: "Pink", hex: 0xFFE91E63, status: false),
+    ProductColor(name: "Purple", hex: 0xFF9C27B0, status: false),
+    ProductColor(name: "Gold", hex: 0xFFFFD700, status: false),
+    ProductColor(name: "Silver", hex: 0xFFC0C0C0, status: false),
+    ProductColor(name: "Brown", hex: 0xFF795548, status: false),
+    ProductColor(name: "Grey", hex: 0xFF808080, status: false),
   ];
 }
 

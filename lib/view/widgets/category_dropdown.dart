@@ -57,8 +57,9 @@ class _CategoryDropdownState extends State<CategoryDropdown> {
               dropdownValue = category;
             });
 
-            widget
-                .onSelectedCategory(category.isDropdownTitle ? null : category);
+            widget.onSelectedCategory(
+              category.isDropdownTitle ? null : category,
+            );
           }
         },
       ),

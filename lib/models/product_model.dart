@@ -5,8 +5,8 @@ class Product {
   final List<String> base64Images;
   final String? description;
   final double price;
-  final List<String>? sizes;
-  final List<int>? hexColors;
+  final List<String> sizes;
+  final List<int> hexColors;
   final String? categoryId;
   final String? categoryName;
   final int topSalesCount;

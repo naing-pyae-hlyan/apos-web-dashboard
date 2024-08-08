@@ -57,10 +57,10 @@ class _ProductPageState extends State<ProductPage> {
           ),
           horizontalWidth16,
           CategoryDropdown(
-            categories: <Category>[
+            categories: <CategoryModel>[
               ...CacheManager.categories,
-            ]..insert(0, Category.allCategoriesValue),
-            onSelectedCategory: (Category? selectedCategory) {
+            ]..insert(0, CategoryModel.allCategoriesValue),
+            onSelectedCategory: (CategoryModel? selectedCategory) {
               productBloc.add(
                 ProductEventSearch(query: selectedCategory?.name ?? ""),
               );
@@ -77,7 +77,9 @@ class _ProductPageState extends State<ProductPage> {
           ),
         ],
       ),
-      stream: FFirestoreUtils.productCollection.orderBy("category_name").snapshots(),
+      stream: FFirestoreUtils.productCollection
+          .orderBy("category_name")
+          .snapshots(),
       streamBuilder: (QuerySnapshot<Product> data) {
         final List<Product> products = [];
         CacheManager.products.clear();

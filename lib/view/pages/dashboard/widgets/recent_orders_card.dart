@@ -1,7 +1,7 @@
 import 'package:apos/lib_exp.dart';
 
 class DashboardRecentOrdersCard extends StatelessWidget {
-  final List<Order> orders;
+  final List<OrderModel> orders;
   final Function() onPressedViewAll;
   const DashboardRecentOrdersCard({
     super.key,
@@ -67,7 +67,7 @@ class DashboardRecentOrdersCard extends StatelessWidget {
                 ],
               ),
               ...orders.map(
-                (Order order) {
+                (OrderModel order) {
                   return TableRow(
                     decoration: const BoxDecoration(
                       color: Colors.white,

@@ -2,7 +2,7 @@ import 'package:apos/lib_exp.dart';
 
 void showOrderDetailsDialog(
   BuildContext context, {
-  required Order order,
+  required OrderModel order,
 }) =>
     showAdaptiveDialog(
       context: context,
@@ -11,7 +11,7 @@ void showOrderDetailsDialog(
     );
 
 class _OrderDetailsDialog extends StatefulWidget {
-  final Order order;
+  final OrderModel order;
   const _OrderDetailsDialog({
     required this.order,
   });
@@ -113,7 +113,7 @@ class _OrderDetailsDialogState extends State<_OrderDetailsDialog> {
                     ],
                   ),
                   ...widget.order.items.map(
-                    (Item item) {
+                    (ItemModel item) {
                       return TableRow(
                         children: [
                           TableTextCell(

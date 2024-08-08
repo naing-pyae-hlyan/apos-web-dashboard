@@ -4,7 +4,7 @@ class MultiSelectProductColors extends StatefulWidget {
   final String? title;
   final List<int> allHexColors;
   final List<int> oldHexColors;
-  final Function(List<ProductColor>) onSelectedColors;
+  final Function(List<ProductColorModel>) onSelectedColors;
   const MultiSelectProductColors({
     super.key,
     this.title,
@@ -19,11 +19,11 @@ class MultiSelectProductColors extends StatefulWidget {
 }
 
 class _MultiSelectProductColorsState extends State<MultiSelectProductColors> {
-  final List<ProductColor> selectedColors = [];
+  final List<ProductColorModel> selectedColors = [];
 
   List<Widget> _buildColorList() {
     List<Widget> choices = [];
-    for (ProductColor pc in selectedColors) {
+    for (ProductColorModel pc in selectedColors) {
       choices.add(
         ChoiceChip(
           avatar: CircleAvatar(
@@ -36,8 +36,9 @@ class _MultiSelectProductColorsState extends State<MultiSelectProductColors> {
             setState(() {
               pc.status = selected;
             });
-            final List<ProductColor> onSelectedColors =
-                selectedColors.where((ProductColor pc) => pc.status).toList();
+            final List<ProductColorModel> onSelectedColors = selectedColors
+                .where((ProductColorModel pc) => pc.status)
+                .toList();
             widget.onSelectedColors(onSelectedColors);
           },
         ),
@@ -50,7 +51,7 @@ class _MultiSelectProductColorsState extends State<MultiSelectProductColors> {
   void initState() {
     selectedColors.clear();
     selectedColors.addAll(
-      ProductColor.parseHexsToAllProductColors(
+      ProductColorModel.parseHexsToAllProductColors(
         hexs: widget.allHexColors,
         oldHexs: widget.oldHexColors,
       ),

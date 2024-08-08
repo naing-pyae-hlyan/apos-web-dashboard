@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:apos/lib_exp.dart';
 
-class Item {
+class ItemModel {
   String? id;
   final String readableId;
   final String name;
@@ -10,7 +10,7 @@ class Item {
   final double discount;
   final int quantity;
 
-  Item({
+  ItemModel({
     this.id,
     required this.readableId,
     required this.name,
@@ -19,7 +19,7 @@ class Item {
     required this.quantity,
   });
 
-  factory Item.fromJson(Map<String, dynamic> json, String id) => Item(
+  factory ItemModel.fromJson(Map<String, dynamic> json, String id) => ItemModel(
         id: id,
         readableId: json['id'],
         name: json["name"],
@@ -37,7 +37,7 @@ class Item {
       };
 }
 
-Item tempItem(int index) => Item(
+ItemModel tempItem(int index) => ItemModel(
       id: "#$index",
       readableId: "",
       name: "Item ${Consts.aToz[index]}",

@@ -10,7 +10,7 @@ class OrdersPage extends StatefulWidget {
 class _OrdersPageState extends State<OrdersPage> {
   late OrderBloc orderBloc;
 
-  void _onPressedStatus(Order order) {
+  void _onPressedStatus(OrderModel order) {
     showOrderStatusChangeDialog(
       context,
       order: order,
@@ -30,7 +30,7 @@ class _OrdersPageState extends State<OrdersPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffoldDataGridView<QuerySnapshot<Order>>(
+    return MyScaffoldDataGridView<QuerySnapshot<OrderModel>>(
       header: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
@@ -50,14 +50,14 @@ class _OrdersPageState extends State<OrdersPage> {
         ],
       ),
       stream: FFirestoreUtils.orderCollection.snapshots(),
-      streamBuilder: (QuerySnapshot<Order> data) {
+      streamBuilder: (QuerySnapshot<OrderModel> data) {
         return BlocBuilder<OrderBloc, OrderState>(
           builder: (_, state) {
             if (state is OrderStateLoading) {
               return const MyCircularIndicator();
             }
 
-            final List<Order> orders = state.orders;
+            final List<OrderModel> orders = state.orders;
             return Table(
               columnWidths: const {
                 0: FlexColumnWidth(0.7),

@@ -5,10 +5,10 @@ class FFirestoreUtils {
   static FirebaseFirestore get database => _database;
 
   // Get [category] table
-  static CollectionReference<Category> get categoryCollection =>
-      _database.collection("category").withConverter<Category>(
+  static CollectionReference<CategoryModel> get categoryCollection =>
+      _database.collection("category").withConverter<CategoryModel>(
             fromFirestore: (snapshot, _) =>
-                Category.fromJson(snapshot.data()!, snapshot.id),
+                CategoryModel.fromJson(snapshot.data()!, snapshot.id),
             toFirestore: (category, _) => category.toJson(),
           );
 
@@ -21,18 +21,18 @@ class FFirestoreUtils {
           );
 
   // Get [order] table
-  static CollectionReference<Order> get orderCollection =>
-      _database.collection("order").withConverter<Order>(
+  static CollectionReference<OrderModel> get orderCollection =>
+      _database.collection("order").withConverter<OrderModel>(
             fromFirestore: (snapshot, _) =>
-                Order.fromJson(snapshot.data()!, snapshot.id),
+                OrderModel.fromJson(snapshot.data()!, snapshot.id),
             toFirestore: (product, _) => product.toJson(),
           );
 
   // Get [customer] table
-  static CollectionReference<Customer> get customerCollection =>
-      _database.collection("customer").withConverter<Customer>(
+  static CollectionReference<CustomerModel> get customerCollection =>
+      _database.collection("customer").withConverter<CustomerModel>(
             fromFirestore: (snapshot, _) =>
-                Customer.fromJson(snapshot.data()!, snapshot.id),
+                CustomerModel.fromJson(snapshot.data()!, snapshot.id),
             toFirestore: (product, _) => product.toJson(),
           );
 }

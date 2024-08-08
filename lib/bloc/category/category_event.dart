@@ -3,7 +3,7 @@ import 'package:apos/lib_exp.dart';
 sealed class CategoryEvent {}
 
 class CategoryEventCreateData extends CategoryEvent {
-  final Category category;
+  final CategoryModel category;
   CategoryEventCreateData({required this.category});
 }
 
@@ -13,7 +13,7 @@ class CategoryEventReadData extends CategoryEvent {
 }
 
 class CategoryEventUpdateData extends CategoryEvent {
-  final Category category;
+  final CategoryModel category;
   final String currentCategoryName;
   CategoryEventUpdateData({
     required this.currentCategoryName,

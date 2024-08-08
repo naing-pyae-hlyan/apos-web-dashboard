@@ -1,11 +1,11 @@
-class Category {
+class CategoryModel {
   String? id;
   final String readableId;
   final String name;
   final List<String> sizes;
   final List<int> colorHexs;
 
-  Category({
+  CategoryModel({
     this.id,
     required this.readableId,
     required this.name,
@@ -13,8 +13,8 @@ class Category {
     required this.colorHexs,
   });
 
-  factory Category.fromJson(Map<String, dynamic> json, String docId) {
-    return Category(
+  factory CategoryModel.fromJson(Map<String, dynamic> json, String docId) {
+    return CategoryModel(
       id: docId,
       readableId: json['id'],
       name: json['name'],
@@ -36,14 +36,14 @@ class Category {
 
   @override
   bool operator ==(Object other) {
-    return other is Category && id == other.id;
+    return other is CategoryModel && id == other.id;
   }
 
   @override
   // ignore: unnecessary_overrides
   int get hashCode => super.hashCode;
 
-  static Category get allCategoriesValue => Category(
+  static CategoryModel get allCategoriesValue => CategoryModel(
         id: "all-category",
         readableId: "all-category",
         name: "All Category",
@@ -51,7 +51,7 @@ class Category {
         colorHexs: [],
       );
 
-  static Category get selectCategoriesValue => Category(
+  static CategoryModel get selectCategoriesValue => CategoryModel(
         id: "select-category",
         readableId: "select-category",
         name: "Select Category",

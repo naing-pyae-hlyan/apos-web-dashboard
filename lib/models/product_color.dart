@@ -1,16 +1,16 @@
 import 'package:apos/lib_exp.dart';
 
-class ProductColor {
+class ProductColorModel {
   final String name;
   final int hex;
   bool status;
-  ProductColor({
+  ProductColorModel({
     required this.name,
     required this.hex,
     required this.status,
   });
 
-  factory ProductColor.clone(ProductColor pc) => ProductColor(
+  factory ProductColorModel.clone(ProductColorModel pc) => ProductColorModel(
         name: pc.name,
         hex: pc.hex,
         status: pc.status,
@@ -21,20 +21,20 @@ class ProductColor {
   }
 
   // Just return the passed data
-  static List<int> parseProductColorsToHexs(List<ProductColor> colors) {
-    return colors.map((ProductColor pc) => pc.hex).toList();
+  static List<int> parseProductColorsToHexs(List<ProductColorModel> colors) {
+    return colors.map((ProductColorModel pc) => pc.hex).toList();
   }
 
   // Just return the passed data
-  static List<ProductColor> parseHexsToProductColors(
+  static List<ProductColorModel> parseHexsToProductColors(
     List<int> hexs, {
     bool defaultStatus = true,
   }) {
-    final List<ProductColor> colors = [];
+    final List<ProductColorModel> colors = [];
     for (int hex in hexs) {
-      for (ProductColor color in Consts.defaultAllProductColors) {
+      for (ProductColorModel color in Consts.defaultAllProductColors) {
         if (color.hex == hex) {
-          colors.add(ProductColor(
+          colors.add(ProductColorModel(
             name: color.name,
             hex: hex,
             status: defaultStatus,
@@ -47,17 +47,17 @@ class ProductColor {
   }
 
   // return type will the same as Consts.defaultAllProductColors of length
-  static List<ProductColor> parseHexsToAllProductColors({
+  static List<ProductColorModel> parseHexsToAllProductColors({
     required List<int> hexs,
     required List<int> oldHexs,
   }) {
-    final List<ProductColor> result = [];
-    final List<ProductColor> parsedPc = parseHexsToProductColors(
+    final List<ProductColorModel> result = [];
+    final List<ProductColorModel> parsedPc = parseHexsToProductColors(
       hexs,
       defaultStatus: false,
     );
 
-    for (ProductColor pc in parsedPc) {
+    for (ProductColorModel pc in parsedPc) {
       bool status = false;
       for (int old in oldHexs) {
         if (old == pc.hex) {
@@ -65,7 +65,7 @@ class ProductColor {
           break;
         }
       }
-      result.add(ProductColor(name: pc.name, hex: pc.hex, status: status));
+      result.add(ProductColorModel(name: pc.name, hex: pc.hex, status: status));
     }
     // colors.length will the same as Consts.defaultAllProductColors of length
     return result;

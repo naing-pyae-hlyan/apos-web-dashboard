@@ -39,3 +39,8 @@ export 'product/product_state.dart';
 export 'category_change/category_change_bloc.dart';
 export 'category_change/category_change_event.dart';
 export 'category_change/category_change_state.dart';
+
+//
+export 'users/users_bloc.dart';
+export 'users/users_event.dart';
+export 'users/users_state.dart';

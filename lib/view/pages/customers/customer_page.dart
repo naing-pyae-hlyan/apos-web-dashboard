@@ -10,7 +10,7 @@ class CustomerPage extends StatefulWidget {
 class _CustomerPageState extends State<CustomerPage> {
   @override
   Widget build(BuildContext context) {
-    return MyScaffoldDataGridView<QuerySnapshot<Customer>>(
+    return MyScaffoldDataGridView<QuerySnapshot<CustomerModel>>(
       header: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
@@ -29,7 +29,7 @@ class _CustomerPageState extends State<CustomerPage> {
         ],
       ),
       stream: FFirestoreUtils.customerCollection.snapshots(),
-      streamBuilder: (QuerySnapshot<Customer> data) {
+      streamBuilder: (QuerySnapshot<CustomerModel> data) {
         return BlocBuilder<ProductBloc, ProductState>(
           builder: (_, state) {
             if (state is ProductStateLoading) {
@@ -64,7 +64,7 @@ class _CustomerPageState extends State<CustomerPage> {
                 ...List.generate(
                   4,
                   (index) {
-                    final Customer customer = tempCustomer(index);
+                    final CustomerModel customer = tempCustomer(index);
                     return TableRow(
                       decoration: tableTextDecoration(index),
                       children: [

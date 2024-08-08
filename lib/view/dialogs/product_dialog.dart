@@ -52,7 +52,7 @@ class _ProductDialogState extends State<_ProductDialog> {
     final String? categoryName = categoryChangeBloc.selectedCategory?.name ??
         widget.product?.categoryName;
 
-    final product = Product(
+    final product = Product.ProductModel(
       id: widget.product?.id,
       readableId: readableId,
       name: name,
@@ -76,15 +76,15 @@ class _ProductDialogState extends State<_ProductDialog> {
     }
   }
 
-  void _onSelectedSizes(List<ProductSize> sizes) {
+  void _onSelectedSizes(List<ProductSizeModel> sizes) {
     categoryChangeBloc.add(CategoryChangeEventAddSizes(sizes));
   }
 
-  void _onSelectedColors(List<ProductColor> colors) {
+  void _onSelectedColors(List<ProductColorModel> colors) {
     categoryChangeBloc.add(CategoryChangeEventAddColors(colors));
   }
 
-  void _onSelectedCategory(Category? category) {
+  void _onSelectedCategory(CategoryModel? category) {
     final selected = categoryChangeBloc.selectedCategory;
     if (selected?.id != null && selected?.id == category?.id) {
       return;
@@ -114,7 +114,7 @@ class _ProductDialogState extends State<_ProductDialog> {
       if (widget.product != null) {
         bool categoryIdIsNotNull = widget.product?.categoryId != null;
         final categories = CacheManager.categories;
-        for (Category category in categories) {
+        for (CategoryModel category in categories) {
           bool categoryIdIsSame = widget.product?.categoryId == category.id;
           if (categoryIdIsNotNull && categoryIdIsSame) {
             categoryChangeBloc.add(CategoryChangeEventSelectCategory(category));
@@ -180,9 +180,9 @@ class _ProductDialogState extends State<_ProductDialog> {
                     key: UniqueKey(),
                     title: "Category",
                     value: categoryChangeBloc.selectedCategory,
-                    categories: <Category>[
+                    categories: <CategoryModel>[
                       ...CacheManager.categories,
-                    ]..insert(0, Category.selectCategoriesValue),
+                    ]..insert(0, CategoryModel.selectCategoriesValue),
                     onSelectedCategory: _onSelectedCategory,
                   );
                 },
@@ -250,7 +250,7 @@ class _ProductDialogState extends State<_ProductDialog> {
               ),
               BlocBuilder<CategoryChangeBloc, CategoryChangeState>(
                 builder: (_, state) {
-                  final Category? selected =
+                  final CategoryModel? selected =
                       categoryChangeBloc.selectedCategory;
                   final categorySizes = categoryChangeBloc.categorySizes;
                   final categoryHexColors =
@@ -290,7 +290,6 @@ class _ProductDialogState extends State<_ProductDialog> {
                   );
                 },
               ),
-          
               verticalHeight16,
               BlocBuilder<ProductBloc, ProductState>(
                 builder: (_, state) {

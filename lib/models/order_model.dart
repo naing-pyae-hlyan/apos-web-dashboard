@@ -2,11 +2,11 @@ import 'dart:math';
 
 import 'package:apos/lib_exp.dart';
 
-class Order {
+class OrderModel {
   String? id;
   final String readableId;
-  final Customer customer;
-  final List<Item> items;
+  final CustomerModel customer;
+  final List<ItemModel> items;
 
   final double totalAmount;
   final int statusId;
@@ -15,7 +15,7 @@ class Order {
 
   OrderStatus status;
 
-  Order({
+  OrderModel({
     this.id,
     required this.readableId,
     required this.customer,
@@ -27,12 +27,12 @@ class Order {
     required this.comment,
   });
 
-  factory Order.fromJson(Map<String, dynamic> json, String id) {
-    return Order(
+  factory OrderModel.fromJson(Map<String, dynamic> json, String id) {
+    return OrderModel(
       id: id,
       readableId: json["id"],
-      customer: Customer.fromJson(json["customer"], "TODO"),
-      items: List.from(json["items"].map((x) => Item.fromJson(x, "TODO"))),
+      customer: CustomerModel.fromJson(json["customer"], "TODO"),
+      items: List.from(json["items"].map((x) => ItemModel.fromJson(x, "TODO"))),
       orderDate: DateTime.parse(json['order_date']),
       totalAmount: json['total_amount'],
       statusId: json['status_id'],
@@ -54,9 +54,9 @@ class Order {
   }
 }
 
-Order tempOrder(int index) {
+OrderModel tempOrder(int index) {
   final statusId = Random().nextInt(4);
-  return Order(
+  return OrderModel(
     id: "#$index",
     readableId: "",
     customer: tempCustomer(index),

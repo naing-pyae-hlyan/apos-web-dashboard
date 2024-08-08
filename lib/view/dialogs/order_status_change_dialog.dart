@@ -2,7 +2,7 @@ import 'package:apos/lib_exp.dart';
 
 void showOrderStatusChangeDialog(
   BuildContext context, {
-  required Order order,
+  required OrderModel order,
   required Function(int) onStatusIdChanged,
 }) =>
     showAdaptiveDialog(
@@ -15,7 +15,7 @@ void showOrderStatusChangeDialog(
     );
 
 class _OrderStatusChangeDialog extends StatefulWidget {
-  final Order order;
+  final OrderModel order;
   final Function(int) onStausIdChanged;
   const _OrderStatusChangeDialog({
     required this.order,

@@ -2,9 +2,9 @@ import 'package:apos/lib_exp.dart';
 
 class CategoryDropdown extends StatefulWidget {
   final String? title;
-  final Category? value;
-  final List<Category> categories;
-  final Function(Category?) onSelectedCategory;
+  final CategoryModel? value;
+  final List<CategoryModel> categories;
+  final Function(CategoryModel?) onSelectedCategory;
   const CategoryDropdown({
     super.key,
     this.title,
@@ -18,7 +18,7 @@ class CategoryDropdown extends StatefulWidget {
 }
 
 class _CategoryDropdownState extends State<CategoryDropdown> {
-  late Category dropdownValue;
+  late CategoryModel dropdownValue;
 
   @override
   void initState() {
@@ -34,7 +34,7 @@ class _CategoryDropdownState extends State<CategoryDropdown> {
         borderRadius: BorderRadius.circular(4),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      child: DropdownButton<Category>(
+      child: DropdownButton<CategoryModel>(
         padding: EdgeInsets.zero,
         isDense: true,
         value: dropdownValue,
@@ -45,13 +45,13 @@ class _CategoryDropdownState extends State<CategoryDropdown> {
         underline: emptyUI,
         borderRadius: BorderRadius.circular(4),
         elevation: 16,
-        items: widget.categories.map((Category category) {
-          return DropdownMenuItem<Category>(
+        items: widget.categories.map((CategoryModel category) {
+          return DropdownMenuItem<CategoryModel>(
             value: category,
             child: myText(category.name, fontWeight: FontWeight.w800),
           );
         }).toList(),
-        onChanged: (Category? category) {
+        onChanged: (CategoryModel? category) {
           if (category != null) {
             setState(() {
               dropdownValue = category;

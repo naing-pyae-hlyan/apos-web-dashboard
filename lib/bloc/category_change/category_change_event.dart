@@ -5,16 +5,16 @@ sealed class CategoryChangeEvent {}
 class CategoryChangeEventInit extends CategoryChangeEvent {}
 
 class CategoryChangeEventSelectCategory extends CategoryChangeEvent {
-  final Category? category;
+  final CategoryModel? category;
   CategoryChangeEventSelectCategory(this.category);
 }
 
 class CategoryChangeEventAddSizes extends CategoryChangeEvent {
-  final List<ProductSize> sizes;
+  final List<ProductSizeModel> sizes;
   CategoryChangeEventAddSizes(this.sizes);
 }
 
 class CategoryChangeEventAddColors extends CategoryChangeEvent {
-  final List<ProductColor> colors;
+  final List<ProductColorModel> colors;
   CategoryChangeEventAddColors(this.colors);
 }

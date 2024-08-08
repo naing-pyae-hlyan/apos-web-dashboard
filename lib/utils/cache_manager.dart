@@ -1,9 +1,9 @@
 import 'package:apos/lib_exp.dart';
 
 class CacheManager {
-  static List<Category> categories = [];
+  static List<CategoryModel> categories = [];
   static List<Product> products = [];
-  static List<Order> orders = [];
+  static List<OrderModel> orders = [];
 
   static void clear() {
     categories.clear();

@@ -1,7 +1,7 @@
 import 'package:apos/lib_exp.dart';
 
 sealed class OrderState {
-  final List<Order> orders;
+  final List<OrderModel> orders;
   OrderState({required this.orders});
 }
 

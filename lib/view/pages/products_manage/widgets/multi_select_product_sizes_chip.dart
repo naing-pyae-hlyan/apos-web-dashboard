@@ -3,7 +3,7 @@ import 'package:apos/lib_exp.dart';
 class MultiSelectProductSizes extends StatefulWidget {
   final List<String> allSizes;
   final List<String> oldSizes;
-  final Function(List<ProductSize>) onSelectedSizes;
+  final Function(List<ProductSizeModel>) onSelectedSizes;
   const MultiSelectProductSizes({
     super.key,
     required this.allSizes,
@@ -17,11 +17,11 @@ class MultiSelectProductSizes extends StatefulWidget {
 }
 
 class _MultiSelectProductSizesState extends State<MultiSelectProductSizes> {
-  final List<ProductSize> selectedSizes = [];
+  final List<ProductSizeModel> selectedSizes = [];
 
   List<Widget> _buildSizeList() {
     List<Widget> choices = [];
-    for (ProductSize pz in selectedSizes) {
+    for (ProductSizeModel pz in selectedSizes) {
       if (pz.size.isNotEmpty && pz.size != "-") {
         choices.add(
           ChoiceChip(
@@ -33,8 +33,9 @@ class _MultiSelectProductSizesState extends State<MultiSelectProductSizes> {
               });
 
               // removed status = false sizes
-              final List<ProductSize> onSelectedSizes =
-                  selectedSizes.where((ProductSize pz) => pz.status).toList();
+              final List<ProductSizeModel> onSelectedSizes = selectedSizes
+                  .where((ProductSizeModel pz) => pz.status)
+                  .toList();
               widget.onSelectedSizes(onSelectedSizes);
             },
           ),
@@ -48,7 +49,7 @@ class _MultiSelectProductSizesState extends State<MultiSelectProductSizes> {
   @override
   void initState() {
     selectedSizes.clear();
-    selectedSizes.addAll(ProductSize.parseSiezsToAllProductSizes(
+    selectedSizes.addAll(ProductSizeModel.parseSiezsToAllProductSizes(
       sizes: widget.allSizes,
       oldSizes: widget.oldSizes,
     ));

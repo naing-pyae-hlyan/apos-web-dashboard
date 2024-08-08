@@ -17,7 +17,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
     LoadingDialog.show();
 
     await FFirestoreUtils.categoryCollection.orderBy("name").get().then(
-      (QuerySnapshot<Category> snapshot) {
+      (QuerySnapshot<CategoryModel> snapshot) {
         CacheManager.categories.clear();
         for (var doc in snapshot.docs) {
           CacheManager.categories.add(doc.data());
@@ -45,7 +45,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
     }
 
     var same = CacheManager.categories.where(
-      (Category category) => category.name == event.category.name,
+      (CategoryModel category) => category.name == event.category.name,
     );
 
     if (same.isNotEmpty) {
@@ -74,11 +74,11 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
     }
 
     var same = CacheManager.categories.where(
-      (Category category) => category.name == event.category.name,
+      (CategoryModel category) => category.name == event.category.name,
     );
 
     var same2 = same.where(
-      (Category caetgory) => caetgory.name != event.currentCategoryName,
+      (CategoryModel caetgory) => caetgory.name != event.currentCategoryName,
     );
 
     if (same2.isNotEmpty) {

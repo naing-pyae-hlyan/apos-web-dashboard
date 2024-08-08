@@ -27,7 +27,7 @@ class RandomIdGenerator {
     bool isUnique = false;
     while (!isUnique) {
       uniqueId = generateUniqueId();
-      var result = CacheManager.categories.where((Category category) {
+      var result = CacheManager.categories.where((CategoryModel category) {
         return category.readableId == uniqueId;
       });
 

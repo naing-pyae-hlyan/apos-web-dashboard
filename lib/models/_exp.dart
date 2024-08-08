@@ -7,3 +7,4 @@ export 'order_model.dart';
 export 'product_color.dart';
 export 'product_model.dart';
 export 'product_size.dart';
+export 'user_model.dart';

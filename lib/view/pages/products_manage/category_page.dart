@@ -10,7 +10,7 @@ class CategoryPage extends StatefulWidget {
 class _CategoryPageState extends State<CategoryPage> {
   late CategoryBloc categoryBloc;
 
-  void _deleteCategory(Category category) {
+  void _deleteCategory(CategoryModel category) {
     if (category.id != null) {
       showConfirmDialog(
         context,
@@ -31,7 +31,7 @@ class _CategoryPageState extends State<CategoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffoldDataGridView<QuerySnapshot<Category>>(
+    return MyScaffoldDataGridView<QuerySnapshot<CategoryModel>>(
       header: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -61,8 +61,8 @@ class _CategoryPageState extends State<CategoryPage> {
       ),
       // Get data from firebase
       stream: FFirestoreUtils.categoryCollection.orderBy("name").snapshots(),
-      streamBuilder: (QuerySnapshot<Category> data) {
-        final List<Category> categories = [];
+      streamBuilder: (QuerySnapshot<CategoryModel> data) {
+        final List<CategoryModel> categories = [];
         CacheManager.categories.clear();
 
         for (var doc in data.docs) {
@@ -77,9 +77,9 @@ class _CategoryPageState extends State<CategoryPage> {
               return const MyCircularIndicator();
             }
 
-            List<Category> search = [];
+            List<CategoryModel> search = [];
             if (state is CategoryStateSearch) {
-              search = categories.where((Category category) {
+              search = categories.where((CategoryModel category) {
                 return stringCompare(category.name, state.query) ||
                     stringCompare(category.readableId, state.query);
               }).toList();
@@ -118,11 +118,11 @@ class _CategoryPageState extends State<CategoryPage> {
     );
   }
 
-  List<TableRow> _categoryTableRowView(List<Category> categories) =>
+  List<TableRow> _categoryTableRowView(List<CategoryModel> categories) =>
       List.generate(
         categories.length,
         (index) {
-          final Category category = categories[index];
+          final CategoryModel category = categories[index];
           return TableRow(
             decoration: tableTextDecoration(index),
             children: [

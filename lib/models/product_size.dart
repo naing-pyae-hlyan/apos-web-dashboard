@@ -1,28 +1,28 @@
-class ProductSize {
+class ProductSizeModel {
   final String size;
   bool status;
-  ProductSize({required this.size, required this.status});
+  ProductSizeModel({required this.size, required this.status});
 
   // Just return the passed data
-  static List<String> parseProductSizesToName(List<ProductSize> sizes) {
-    return sizes.map((ProductSize ps) => ps.size).toList();
+  static List<String> parseProductSizesToName(List<ProductSizeModel> sizes) {
+    return sizes.map((ProductSizeModel ps) => ps.size).toList();
   }
 
-  static List<ProductSize> parseSizesToSelectedProductSizes(
+  static List<ProductSizeModel> parseSizesToSelectedProductSizes(
       List<String> sizes) {
     sizes.removeWhere((String s) => s == "-");
     return sizes
-        .map((String size) => ProductSize(size: size, status: true))
+        .map((String size) => ProductSizeModel(size: size, status: true))
         .toList();
   }
 
-  static List<ProductSize> parseSiezsToAllProductSizes({
+  static List<ProductSizeModel> parseSiezsToAllProductSizes({
     required List<String> sizes,
     required List<String> oldSizes,
   }) {
     sizes.removeWhere((String s) => s == "-" || s.isEmpty);
     oldSizes.removeWhere((String s) => s == "-" || s.isEmpty);
-    final List<ProductSize> result = [];
+    final List<ProductSizeModel> result = [];
     for (String size in sizes) {
       bool status = false;
       for (String old in oldSizes) {
@@ -31,7 +31,7 @@ class ProductSize {
           break;
         }
       }
-      result.add(ProductSize(size: size, status: status));
+      result.add(ProductSizeModel(size: size, status: status));
     }
     return result;
   }

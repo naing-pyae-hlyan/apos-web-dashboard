@@ -11,7 +11,7 @@ class Product {
   final String? categoryName;
   final int topSalesCount;
 
-  Product({
+  Product.ProductModel({
     this.id,
     required this.readableId,
     required this.name,
@@ -26,7 +26,7 @@ class Product {
   });
 
   factory Product.fromJson(Map<String, dynamic> json, String docId) {
-    return Product(
+    return Product.ProductModel(
       id: docId,
       readableId: json["id"],
       name: json['name'],

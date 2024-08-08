@@ -2,7 +2,7 @@ import 'package:apos/lib_exp.dart';
 
 void showCategoryBlocDialog(
   BuildContext context, {
-  Category? category,
+  CategoryModel? category,
   required bool isNewCategory,
 }) =>
     showAdaptiveDialog(
@@ -17,7 +17,7 @@ void showCategoryBlocDialog(
 const _categoryNameErrorKey = "category-name-error-key";
 
 class _CategoryDialog extends StatefulWidget {
-  final Category? category;
+  final CategoryModel? category;
   final bool isNewCategory;
   const _CategoryDialog({required this.category, required this.isNewCategory});
 
@@ -34,7 +34,7 @@ class _CategoryDialogState extends State<_CategoryDialog> {
   final _sizeTxtCtrl = TextEditingController();
   final _sizeFn = FocusNode();
 
-  List<ProductColor> _colors = [];
+  List<ProductColorModel> _colors = [];
 
   void _onSave() {
     final name = _nameTxtCtrl.text;
@@ -46,12 +46,12 @@ class _CategoryDialogState extends State<_CategoryDialog> {
       sizes.clear();
     }
 
-    final category = Category(
+    final category = CategoryModel(
       id: widget.category?.id,
       readableId: readableId,
       name: name,
       sizes: sizes,
-      colorHexs: ProductColor.parseProductColorsToHexs(_colors),
+      colorHexs: ProductColorModel.parseProductColorsToHexs(_colors),
     );
 
     if (widget.isNewCategory && widget.category == null) {
@@ -73,7 +73,7 @@ class _CategoryDialogState extends State<_CategoryDialog> {
     _nameTxtCtrl.text = widget.category?.name ?? '';
     _sizeTxtCtrl.text =
         (widget.category?.sizes ?? []).join(",").replaceAll("-", "");
-    _colors = ProductColor.parseHexsToProductColors(
+    _colors = ProductColorModel.parseHexsToProductColors(
       widget.category?.colorHexs ?? [],
     );
     doAfterBuild(callback: () {
@@ -137,9 +137,9 @@ class _CategoryDialogState extends State<_CategoryDialog> {
           verticalHeight16,
           MultiSelectProductColors(
             title: "Colors (Optional)",
-            allHexColors: ProductColor.getAllProductColorHexs(),
+            allHexColors: ProductColorModel.getAllProductColorHexs(),
             oldHexColors: widget.category?.colorHexs ?? [],
-            onSelectedColors: (List<ProductColor> colors) {
+            onSelectedColors: (List<ProductColorModel> colors) {
               _colors = colors;
             },
           ),

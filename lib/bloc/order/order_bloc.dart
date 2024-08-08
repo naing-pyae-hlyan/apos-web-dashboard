@@ -12,7 +12,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
   ) async {
     emit(OrderStateLoading(orders: state.orders));
 
-    List<Order> orders = List.generate(26, (index) => tempOrder(index));
+    List<OrderModel> orders = List.generate(26, (index) => tempOrder(index));
 
     //
     CacheManager.orders = orders;

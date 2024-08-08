@@ -3,7 +3,8 @@ enum SelectedHome {
   category("Categories"),
   product("Prodcts"),
   order("Orders"),
-  customer("Customers");
+  customer("Customers"),
+  user("Users");
 
   final String title;
   const SelectedHome(this.title);

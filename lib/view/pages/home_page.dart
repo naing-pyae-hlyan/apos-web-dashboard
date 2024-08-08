@@ -1,4 +1,5 @@
 import 'package:apos/lib_exp.dart';
+import 'package:apos/view/pages/users/_exp.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -39,6 +40,7 @@ class _HomePageState extends State<HomePage> {
             SelectedHome.product => myTitle(SelectedHome.product.title),
             SelectedHome.order => myTitle(SelectedHome.order.title),
             SelectedHome.customer => myTitle(SelectedHome.customer.title),
+            SelectedHome.user => myTitle(SelectedHome.user.title),
           },
         ),
         leading: Builder(
@@ -72,6 +74,7 @@ class _HomePageState extends State<HomePage> {
             SelectedHome.product => const ProductPage(),
             SelectedHome.order => const OrdersPage(),
             SelectedHome.customer => const CustomerPage(),
+            SelectedHome.user => const UsersPage(),
           };
         },
       ),

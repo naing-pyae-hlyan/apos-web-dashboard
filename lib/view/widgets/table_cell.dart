@@ -269,7 +269,7 @@ class TableTitleItemsDialogCell extends StatelessWidget {
 }
 
 class TableProductItemsCell extends StatelessWidget {
-  final List<Item> items;
+  final List<ItemModel> items;
   const TableProductItemsCell({
     super.key,
     required this.items,
@@ -278,7 +278,7 @@ class TableProductItemsCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<String> labels = [];
-    for (Item item in items) {
+    for (ItemModel item in items) {
       labels.add(item.name);
     }
     return TableTextCell(labels.join(", "));
@@ -286,7 +286,7 @@ class TableProductItemsCell extends StatelessWidget {
 }
 
 class TableProductItemsDialogCell extends StatelessWidget {
-  final List<Item> items;
+  final List<ItemModel> items;
   const TableProductItemsDialogCell({super.key, required this.items});
 
   @override
@@ -301,7 +301,7 @@ class TableProductItemsDialogCell extends StatelessWidget {
             2: FlexColumnWidth(1),
           },
           children: items.map(
-            (Item item) {
+            (ItemModel item) {
               return TableRow(
                 children: [
                   TableTextCell("${item.quantity}"),

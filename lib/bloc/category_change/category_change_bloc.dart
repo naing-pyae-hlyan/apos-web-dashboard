@@ -9,10 +9,10 @@ class CategoryChangeBloc
     on<CategoryChangeEventAddColors>(_onAddColors);
   }
 
-  final List<ProductSize> _productSizes = [];
-  final List<ProductColor> _productColors = [];
-  Category? _selectedCategory;
-  Category? get selectedCategory => _selectedCategory;
+  final List<ProductSizeModel> _productSizes = [];
+  final List<ProductColorModel> _productColors = [];
+  CategoryModel? _selectedCategory;
+  CategoryModel? get selectedCategory => _selectedCategory;
 
   List<String> get categorySizes {
     List<String> result = _selectedCategory?.sizes ?? [];
@@ -27,7 +27,8 @@ class CategoryChangeBloc
 
   // List<ProductSize> get productSizes => _productSizes;
   List<String> get productSizesAsStrings {
-    List<String> result = ProductSize.parseProductSizesToName(_productSizes);
+    List<String> result =
+        ProductSizeModel.parseProductSizesToName(_productSizes);
     result.removeWhere(
       (String size) => size == "-" || size.isEmpty || size == " ",
     );
@@ -36,7 +37,7 @@ class CategoryChangeBloc
 
   // List<ProductColor> get productColors => _productColors;
   List<int> get productColorsAsHexs {
-    return ProductColor.parseProductColorsToHexs(_productColors);
+    return ProductColorModel.parseProductColorsToHexs(_productColors);
   }
 
   void _onInit(

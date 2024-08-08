@@ -1,17 +1,18 @@
-enum UserRole {
-  superAdmin("Super Admin"), // 1
-  manager("Manager"), // 2
-  normalUser("User"); // 0
+enum UserRoleEnum {
+  normalUser("User", 0), // 0
+  manager("Manager", 1), // 1
+  superAdmin("SuperAdmin", 2); // 2
 
   final String label;
-  const UserRole(this.label);
+  final int role;
+  const UserRoleEnum(this.label, this.role);
 }
 
-UserRole parseUserRole(int role) => role == 1
-    ? UserRole.superAdmin
-    : role == 2
-        ? UserRole.manager
-        : UserRole.normalUser;
+UserRoleEnum parseUserRole(int role) => role == 2
+    ? UserRoleEnum.superAdmin
+    : role == 1
+        ? UserRoleEnum.manager
+        : UserRoleEnum.normalUser;
 
 class UserModel {
   String? id;
@@ -20,12 +21,12 @@ class UserModel {
   final String email;
   final String password;
   final int role;
-  UserRole userRole;
+  UserRoleEnum userRole;
   UserModel({
     this.id,
     required this.readableId,
-    required this.email,
     required this.username,
+    required this.email,
     required this.password,
     required this.role,
     required this.userRole,

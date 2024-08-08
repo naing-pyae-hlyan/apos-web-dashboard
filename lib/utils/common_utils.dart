@@ -32,8 +32,6 @@ class CommonUtils {
     return '#${color.value.toRadixString(16).padLeft(8, '0').toUpperCase()}';
   }
 
-
-
   static Color hexToColor(String hexString) {
     final buffer = StringBuffer();
     if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');
@@ -76,4 +74,8 @@ String idsGenerator(String prefix, int length) {
               : "$length";
 
   return slugify("$prefix $id");
+}
+
+String formatToStar(String value) {
+  return value.replaceAll(RegExp(r'.'), "*");
 }

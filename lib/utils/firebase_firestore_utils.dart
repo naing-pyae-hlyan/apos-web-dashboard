@@ -35,4 +35,12 @@ class FFirestoreUtils {
                 CustomerModel.fromJson(snapshot.data()!, snapshot.id),
             toFirestore: (product, _) => product.toJson(),
           );
+
+  // Get [user] table
+  static CollectionReference<UserModel> get userCollection =>
+      _database.collection("user").withConverter<UserModel>(
+            fromFirestore: (snapshot, _) =>
+                UserModel.fromJson(snapshot.data()!, snapshot.id),
+            toFirestore: (user, _) => user.toJson(),
+          );
 }

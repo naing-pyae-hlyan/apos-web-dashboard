@@ -15,20 +15,17 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   ) async {
     emit(ProductDialogStateLoading());
     if (event.product.name.isEmpty) {
-      await Future.delayed(const Duration(milliseconds: 500));
       emit(_dialogStateFail(message: "Enter product name", code: 1));
       return;
     }
 
     if (event.product.price == 0.0) {
-      await Future.delayed(const Duration(milliseconds: 500));
       emit(_dialogStateFail(message: "Enter price", code: 2));
       return;
     }
 
     if (event.product.categoryId == null ||
         event.product.categoryName == null) {
-      await Future.delayed(const Duration(milliseconds: 500));
       emit(_dialogStateFail(message: "Select Category", code: 3));
       return;
     }
@@ -37,7 +34,6 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       (Product product) => product.name == event.product.name,
     );
     if (same.isNotEmpty) {
-      await Future.delayed(const Duration(milliseconds: 500));
       emit(_dialogStateFail(message: "Name is already taken", code: 1));
       return;
     }
@@ -56,20 +52,17 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   ) async {
     emit(ProductDialogStateLoading());
     if (event.product.name.isEmpty) {
-      await Future.delayed(const Duration(milliseconds: 500));
       emit(_dialogStateFail(message: "Enter product name", code: 1));
       return;
     }
 
     if (event.product.price == 0.0) {
-      await Future.delayed(const Duration(milliseconds: 500));
       emit(_dialogStateFail(message: "Enter price", code: 3));
       return;
     }
 
     if (event.product.categoryId == null ||
         event.product.categoryName == null) {
-      await Future.delayed(const Duration(milliseconds: 500));
       emit(_dialogStateFail(message: "Select Category"));
       return;
     }
@@ -80,7 +73,6 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       );
 
       if (same.isNotEmpty) {
-        await Future.delayed(const Duration(milliseconds: 500));
         emit(_dialogStateFail(message: "Name is already taken", code: 1));
         return;
       }

@@ -178,6 +178,18 @@ class _HomePageState extends State<HomePage> {
                       Navigator.pop(context);
                     },
                   ),
+                  // TODO check userRole
+                  ListTile(
+                    leading: const Icon(Icons.manage_accounts),
+                    title: myText("Users"),
+                    selected: _isSelected(SelectedHome.user),
+                    onTap: () {
+                      // Update the state of the app
+                      _onItemTapped(SelectedHome.user);
+                      // Then close the drawer
+                      Navigator.pop(context);
+                    },
+                  ),
                 ],
               ),
             ),

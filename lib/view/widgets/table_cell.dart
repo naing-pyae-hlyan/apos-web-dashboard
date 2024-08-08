@@ -227,6 +227,20 @@ class TableColorsCell extends StatelessWidget {
   }
 }
 
+class TableIconCell extends StatelessWidget {
+  final Icon icon;
+  const TableIconCell({super.key, required this.icon});
+
+  @override
+  Widget build(BuildContext context) {
+    return TableCell(
+        child: Padding(
+      padding: const EdgeInsets.all(8),
+      child: icon,
+    ));
+  }
+}
+
 class TableTitleItemsDialogCell extends StatelessWidget {
   const TableTitleItemsDialogCell({super.key});
 

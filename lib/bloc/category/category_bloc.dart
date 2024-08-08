@@ -39,7 +39,6 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   ) async {
     emit(CategoryDialogStateLoading());
     if (event.category.name.isEmpty) {
-      await Future.delayed(const Duration(milliseconds: 500));
       emit(_dialogStateFail(message: "Enter category name"));
       return;
     }
@@ -49,7 +48,6 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
     );
 
     if (same.isNotEmpty) {
-      await Future.delayed(const Duration(milliseconds: 500));
       emit(_dialogStateFail(message: "Name is already taken"));
       return;
     }
@@ -68,7 +66,6 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   ) async {
     emit(CategoryDialogStateLoading());
     if (event.category.name.isEmpty) {
-      await Future.delayed(const Duration(milliseconds: 500));
       emit(_dialogStateFail(message: "Enter category name"));
       return;
     }
@@ -82,7 +79,6 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
     );
 
     if (same2.isNotEmpty) {
-      await Future.delayed(const Duration(milliseconds: 500));
       emit(_dialogStateFail(message: "Name is already taken"));
       return;
     }

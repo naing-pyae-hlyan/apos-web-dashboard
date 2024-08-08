@@ -111,40 +111,42 @@ class _CategoryDialogState extends State<_CategoryDialog> {
           ],
         ),
       ),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          MyInputField(
-            controller: _nameTxtCtrl,
-            focusNode: _nameFn,
-            title: "Category Name",
-            hintText: "Enter Name",
-            keyboardType: TextInputType.text,
-            textInputAction: TextInputAction.next,
-            errorKey: _categoryNameErrorKey,
-          ),
-          verticalHeight16,
-          MyInputField(
-            controller: _sizeTxtCtrl,
-            focusNode: _sizeFn,
-            title: "Sizes (Optional)",
-            hintText: "Eg. S,M,L,XL,XXL",
-            keyboardType: TextInputType.text,
-            textInputAction: TextInputAction.next,
-            errorKey: null,
-          ),
-          verticalHeight16,
-          MultiSelectProductColors(
-            title: "Colors (Optional)",
-            allHexColors: ProductColorModel.getAllProductColorHexs(),
-            oldHexColors: widget.category?.colorHexs ?? [],
-            onSelectedColors: (List<ProductColorModel> colors) {
-              _colors = colors;
-            },
-          ),
-          verticalHeight16,
-        ],
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            MyInputField(
+              controller: _nameTxtCtrl,
+              focusNode: _nameFn,
+              title: "Category Name",
+              hintText: "Enter Name",
+              keyboardType: TextInputType.text,
+              textInputAction: TextInputAction.next,
+              errorKey: _categoryNameErrorKey,
+            ),
+            verticalHeight16,
+            MyInputField(
+              controller: _sizeTxtCtrl,
+              focusNode: _sizeFn,
+              title: "Sizes (Optional)",
+              hintText: "Eg. S,M,L,XL,XXL",
+              keyboardType: TextInputType.text,
+              textInputAction: TextInputAction.next,
+              errorKey: null,
+            ),
+            verticalHeight16,
+            MultiSelectProductColors(
+              title: "Colors (Optional)",
+              allHexColors: ProductColorModel.getAllProductColorHexs(),
+              oldHexColors: widget.category?.colorHexs ?? [],
+              onSelectedColors: (List<ProductColorModel> colors) {
+                _colors = colors;
+              },
+            ),
+            verticalHeight16,
+          ],
+        ),
       ),
       actions: [
         TextButton(
@@ -171,16 +173,11 @@ class _CategoryDialogState extends State<_CategoryDialog> {
 
             if (state is CategoryDialogStateFail) {
               if (state.error.code == 1) {
+                errorBloc.add(ErrorEventSetError(
+                  errorKey: _categoryNameErrorKey,
+                  error: state.error,
+                ));
                 _nameFn.requestFocus();
-                errorBloc.add(
-                  ErrorEventSetError(
-                      errorKey: _categoryNameErrorKey, error: state.error),
-                );
-                return;
-              }
-
-              if (state.error.code == 2) {
-                // _descFn.requestFocus();
                 return;
               }
             }

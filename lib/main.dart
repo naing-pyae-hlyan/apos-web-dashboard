@@ -28,6 +28,7 @@ Future<void> main() async {
         BlocProvider(create: (_) => CategoryBloc()),
         BlocProvider(create: (_) => ProductBloc()),
         BlocProvider(create: (_) => OrderBloc()),
+        BlocProvider(create: (_) => UsersBloc()),
       ],
       child: const MainApp(),
     ),

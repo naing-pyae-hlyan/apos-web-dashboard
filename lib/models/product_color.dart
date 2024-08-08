@@ -10,6 +10,12 @@ class ProductColor {
     required this.status,
   });
 
+  factory ProductColor.clone(ProductColor pc) => ProductColor(
+        name: pc.name,
+        hex: pc.hex,
+        status: pc.status,
+      );
+
   static List<int> getAllProductColorHexs() {
     return parseProductColorsToHexs(Consts.defaultAllProductColors);
   }

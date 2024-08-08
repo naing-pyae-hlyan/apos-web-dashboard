@@ -77,7 +77,7 @@ class _ProductPageState extends State<ProductPage> {
           ),
         ],
       ),
-      stream: FFirestoreUtils.productCollection.orderBy("name").snapshots(),
+      stream: FFirestoreUtils.productCollection.orderBy("category_name").snapshots(),
       streamBuilder: (QuerySnapshot<Product> data) {
         final List<Product> products = [];
         CacheManager.products.clear();

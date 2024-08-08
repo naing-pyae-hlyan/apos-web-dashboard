@@ -10,6 +10,7 @@ void showProductBlocDialog(
       builder: (_) => MultiBlocProvider(
         providers: [
           BlocProvider(create: (_) => AttachmentsBloc()),
+          BlocProvider(create: (_) => CategoryChangeBloc()),
         ],
         child: _ProductDialog(product: product),
       ),
@@ -29,6 +30,7 @@ class _ProductDialog extends StatefulWidget {
 
 class _ProductDialogState extends State<_ProductDialog> {
   late ProductBloc productBloc;
+  late CategoryChangeBloc categoryChangeBloc;
   late ErrorBloc errorBloc;
   late AttachmentsBloc attachmentsBloc;
 
@@ -39,13 +41,6 @@ class _ProductDialogState extends State<_ProductDialog> {
   final _descFn = FocusNode();
   final _priceFn = FocusNode();
 
-  Category? _selectedCategory;
-
-  final ValueNotifier<bool> _hasSizesListener = ValueNotifier(false);
-  final ValueNotifier<bool> _hasColorsListener = ValueNotifier(false);
-  List<ProductSize> _sizes = [];
-  List<ProductColor> _colors = [];
-
   Future<void> _onSave() async {
     final name = _nameTxtCtrl.text;
     final descriptoin = _descTxtCtrl.text;
@@ -53,9 +48,9 @@ class _ProductDialogState extends State<_ProductDialog> {
     final readableId = widget.product?.readableId ??
         RandomIdGenerator.getnerateProductUniqueId();
     final String? categoryId =
-        _selectedCategory?.id ?? widget.product?.categoryId;
-    final String? categoryName =
-        _selectedCategory?.name ?? widget.product?.categoryName;
+        categoryChangeBloc.selectedCategory?.id ?? widget.product?.categoryId;
+    final String? categoryName = categoryChangeBloc.selectedCategory?.name ??
+        widget.product?.categoryName;
 
     final product = Product(
       id: widget.product?.id,
@@ -64,8 +59,8 @@ class _ProductDialogState extends State<_ProductDialog> {
       base64Images: attachmentsBloc.state.base64Images,
       description: descriptoin,
       price: price,
-      sizes: ProductSize.parseProductSizesToName(_sizes),
-      hexColors: ProductColor.parseProductColorsToHexs(_colors),
+      sizes: categoryChangeBloc.productSizesAsStrings,
+      hexColors: categoryChangeBloc.productColorsAsHexs,
       categoryId: categoryId,
       categoryName: categoryName,
       topSalesCount: widget.product?.topSalesCount ?? 0,
@@ -81,8 +76,25 @@ class _ProductDialogState extends State<_ProductDialog> {
     }
   }
 
+  void _onSelectedSizes(List<ProductSize> sizes) {
+    categoryChangeBloc.add(CategoryChangeEventAddSizes(sizes));
+  }
+
+  void _onSelectedColors(List<ProductColor> colors) {
+    categoryChangeBloc.add(CategoryChangeEventAddColors(colors));
+  }
+
+  void _onSelectedCategory(Category? category) {
+    final selected = categoryChangeBloc.selectedCategory;
+    if (selected?.id != null && selected?.id == category?.id) {
+      return;
+    }
+    categoryChangeBloc.add(CategoryChangeEventSelectCategory(category));
+  }
+
   @override
   void initState() {
+    categoryChangeBloc = context.read<CategoryChangeBloc>();
     productBloc = context.read<ProductBloc>();
     errorBloc = context.read<ErrorBloc>();
     attachmentsBloc = context.read<AttachmentsBloc>();
@@ -90,40 +102,31 @@ class _ProductDialogState extends State<_ProductDialog> {
     super.initState();
 
     _nameTxtCtrl.text = widget.product?.name ?? '';
-    _descTxtCtrl.text = widget.product?.description ?? '';
+    _descTxtCtrl.text =
+        (widget.product?.description ?? '').replaceFirst("-", "");
     _priceTxtCtrl.text =
         widget.product?.price != null ? widget.product!.price.toString() : "";
 
-    // For Edit Product
-    if (widget.product?.categoryId != null) {
-      final categories = CacheManager.categories;
-      for (Category category in categories) {
-        if (category.id == widget.product?.categoryId) {
-          _selectedCategory = category;
-          _selectedCategory?.sizes.removeWhere((size) => size == "-");
-          _sizes = ProductSize.parseSizesToSelectedProductSizes(category.sizes);
-          _colors = ProductColor.parseHexsToProductColors(
-            category.colorHexs,
-          );
-          break;
-        }
-      }
-    }
-
     doAfterBuild(callback: () {
+      categoryChangeBloc.add(CategoryChangeEventInit());
       errorBloc.add(ErrorEventResert());
-      if (widget.product?.base64Images.isNotEmpty == true) {
-        attachmentsBloc.add(AttachmentsEventSetImages(
-          base64Images: widget.product?.base64Images ?? [],
-        ));
-      }
 
-      if (_selectedCategory != null) {
-        if (_selectedCategory!.sizes.isNotEmpty) {
-          _hasSizesListener.value = true;
+      if (widget.product != null) {
+        bool categoryIdIsNotNull = widget.product?.categoryId != null;
+        final categories = CacheManager.categories;
+        for (Category category in categories) {
+          bool categoryIdIsSame = widget.product?.categoryId == category.id;
+          if (categoryIdIsNotNull && categoryIdIsSame) {
+            categoryChangeBloc.add(CategoryChangeEventSelectCategory(category));
+            break;
+          }
         }
-        if (_selectedCategory!.colorHexs.isNotEmpty) {
-          _hasColorsListener.value = true;
+
+        // For images
+        if (widget.product?.base64Images.isNotEmpty == true) {
+          attachmentsBloc.add(AttachmentsEventSetImages(
+            base64Images: widget.product?.base64Images ?? [],
+          ));
         }
       }
       _nameFn.requestFocus();
@@ -169,20 +172,19 @@ class _ProductDialogState extends State<_ProductDialog> {
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              CategoryDropdown(
-                title: "Category",
-                value: _selectedCategory,
-                categories: <Category>[
-                  ...CacheManager.categories,
-                ]..insert(0, Category.selectCategoriesValue),
-                onSelectedCategory: (Category? category) {
-                  if (_selectedCategory?.id == category?.id) return;
-                  _selectedCategory = category;
-                  _sizes.clear();
-                  _colors.clear();
-                  _hasSizesListener.value = (category?.sizes ?? []).isNotEmpty;
-                  _hasColorsListener.value =
-                      (category?.colorHexs ?? []).isNotEmpty;
+              BlocBuilder<CategoryChangeBloc, CategoryChangeState>(
+                buildWhen: (previous, current) =>
+                    current is CategoryChangeStateSelectedCategory,
+                builder: (_, state) {
+                  return CategoryDropdown(
+                    key: UniqueKey(),
+                    title: "Category",
+                    value: categoryChangeBloc.selectedCategory,
+                    categories: <Category>[
+                      ...CacheManager.categories,
+                    ]..insert(0, Category.selectCategoriesValue),
+                    onSelectedCategory: _onSelectedCategory,
+                  );
                 },
               ),
               verticalHeight16,
@@ -246,46 +248,49 @@ class _ProductDialogState extends State<_ProductDialog> {
                   ),
                 ],
               ),
-              ValueListenableBuilder(
-                valueListenable: _hasSizesListener,
-                builder: (_, bool hasSizes, __) {
-                  if (!hasSizes) return emptyUI;
-                  List<String> oldSize = [];
-                  if (widget.product?.categoryId == _selectedCategory?.id) {
-                    oldSize = widget.product?.sizes ?? [];
+              BlocBuilder<CategoryChangeBloc, CategoryChangeState>(
+                builder: (_, state) {
+                  final Category? selected =
+                      categoryChangeBloc.selectedCategory;
+                  final categorySizes = categoryChangeBloc.categorySizes;
+                  final categoryHexColors =
+                      categoryChangeBloc.categoryHexColors;
+                  List<String> oldSizes = [];
+                  List<int> oldHexColors = [];
+                  if (widget.product?.categoryId == selected?.id) {
+                    oldSizes = widget.product?.sizes ?? [];
+                    oldHexColors = widget.product?.hexColors ?? [];
                   }
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 16),
-                    child: MultiSelectProductSizes(
-                      allSizes: _selectedCategory?.sizes ?? [],
-                      oldSizes: oldSize,
-                      onSelectedSizes: (List<ProductSize> sizes) {
-                        _sizes = sizes;
-                      },
-                    ),
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (categorySizes.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 16),
+                          child: MultiSelectProductSizes(
+                            // key: UniqueKey(),
+                            allSizes: categorySizes,
+                            oldSizes: oldSizes,
+                            onSelectedSizes: _onSelectedSizes,
+                          ),
+                        ),
+                      if (categoryHexColors.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 16),
+                          child: MultiSelectProductColors(
+                            // key: UniqueKey(),
+                            allHexColors: categoryHexColors,
+                            oldHexColors: oldHexColors,
+                            onSelectedColors: _onSelectedColors,
+                          ),
+                        ),
+                    ],
                   );
                 },
               ),
-              ValueListenableBuilder(
-                valueListenable: _hasColorsListener,
-                builder: (_, bool hasColors, __) {
-                  if (!hasColors) return emptyUI;
-                  List<int> oldColorHexs = [];
-                  if (widget.product?.categoryId == _selectedCategory?.id) {
-                    oldColorHexs = widget.product?.hexColors ?? [];
-                  }
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 16),
-                    child: MultiSelectProductColors(
-                      allHexColors: _selectedCategory?.colorHexs ?? [],
-                      oldHexColors: oldColorHexs,
-                      onSelectedColors: (List<ProductColor> colors) {
-                        _colors = colors;
-                      },
-                    ),
-                  );
-                },
-              ),
+          
               verticalHeight16,
               BlocBuilder<ProductBloc, ProductState>(
                 builder: (_, state) {

@@ -20,8 +20,8 @@ class ProductSize {
     required List<String> sizes,
     required List<String> oldSizes,
   }) {
-    sizes.removeWhere((String s) => s == "-");
-    oldSizes.removeWhere((String s) => s == "-");
+    sizes.removeWhere((String s) => s == "-" || s.isEmpty);
+    oldSizes.removeWhere((String s) => s == "-" || s.isEmpty);
     final List<ProductSize> result = [];
     for (String size in sizes) {
       bool status = false;

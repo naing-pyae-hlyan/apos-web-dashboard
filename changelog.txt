@@ -1,5 +1,8 @@
 flutter 3.22.0
 
+08/08/2024 (0.2.4)
+1. UPDATE: ProductDialog category chage issue is fixed.
+
 07/08/2024 (0.2.3)
 1. WIP: ProductDialog old size data issue is WIP.
 

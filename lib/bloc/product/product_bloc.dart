@@ -9,6 +9,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     on<ProductEventSearch>(_onSearch);
   }
 
+
   Future<void> _onCreate(
     ProductEventCreateData event,
     Emitter<ProductState> emit,

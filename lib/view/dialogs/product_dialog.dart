@@ -17,8 +17,8 @@ void showProductBlocDialog(
     );
 
 const _productNameErrorKey = "product-name-error-key";
-const _productDescErrorKey = "product-desc-error-key";
 const _productPriceErrorKey = "product-price-error-key";
+const _productCategoryDropdownErrorKey = "product-category-dropdown-error-key";
 
 class _ProductDialog extends StatefulWidget {
   final Product? product;
@@ -179,6 +179,7 @@ class _ProductDialogState extends State<_ProductDialog> {
                   return CategoryDropdown(
                     key: UniqueKey(),
                     title: "Category",
+                    errorKey: _productCategoryDropdownErrorKey,
                     value: categoryChangeBloc.selectedCategory,
                     categories: <CategoryModel>[
                       ...CacheManager.categories,
@@ -239,7 +240,7 @@ class _ProductDialogState extends State<_ProductDialog> {
                       maxLines: 4,
                       keyboardType: TextInputType.text,
                       textInputAction: TextInputAction.next,
-                      errorKey: _productDescErrorKey,
+                      errorKey: null,
                     ),
                   ),
                   horizontalWidth16,
@@ -290,21 +291,6 @@ class _ProductDialogState extends State<_ProductDialog> {
                   );
                 },
               ),
-              verticalHeight16,
-              BlocBuilder<ProductBloc, ProductState>(
-                builder: (_, state) {
-                  if (state is ProductDialogStateFail) {
-                    return Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: errorText(state.error),
-                      ),
-                    );
-                  }
-                  return emptyUI;
-                },
-              ),
             ],
           ),
         ),
@@ -335,12 +321,24 @@ class _ProductDialogState extends State<_ProductDialog> {
             if (state is ProductDialogStateFail) {
               switch (state.error.code) {
                 case 1:
+                  errorBloc.add(ErrorEventSetError(
+                    errorKey: _productNameErrorKey,
+                    error: state.error,
+                  ));
                   _nameFn.requestFocus();
                   break;
                 case 2:
-                  _descFn.requestFocus();
+                  errorBloc.add(ErrorEventSetError(
+                    errorKey: _productPriceErrorKey,
+                    error: state.error,
+                  ));
+                  _priceFn.requestFocus();
                   break;
                 case 3:
+                  errorBloc.add(ErrorEventSetError(
+                    errorKey: _productCategoryDropdownErrorKey,
+                    error: state.error,
+                  ));
                   _priceFn.requestFocus();
                   break;
               }

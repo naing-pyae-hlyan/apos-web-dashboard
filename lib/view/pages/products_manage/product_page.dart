@@ -60,6 +60,7 @@ class _ProductPageState extends State<ProductPage> {
             categories: <CategoryModel>[
               ...CacheManager.categories,
             ]..insert(0, CategoryModel.allCategoriesValue),
+            errorKey: null,
             onSelectedCategory: (CategoryModel? selectedCategory) {
               productBloc.add(
                 ProductEventSearch(query: selectedCategory?.name ?? ""),

@@ -5,12 +5,14 @@ class CategoryDropdown extends StatefulWidget {
   final CategoryModel? value;
   final List<CategoryModel> categories;
   final Function(CategoryModel?) onSelectedCategory;
+  final String? errorKey;
   const CategoryDropdown({
     super.key,
     this.title,
     this.value,
     required this.categories,
     required this.onSelectedCategory,
+    required this.errorKey,
   });
 
   @override
@@ -65,17 +67,30 @@ class _CategoryDropdownState extends State<CategoryDropdown> {
       ),
     );
 
-    if (widget.title != null) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (widget.title != null) ...[
           myText(widget.title, fontWeight: FontWeight.w800),
           verticalHeight8,
-          dropdown,
         ],
-      );
-    }
-    return dropdown;
+        dropdown,
+        if (widget.errorKey != null)
+          BlocBuilder<ErrorBloc, ErrorState>(
+            builder: (_, state) {
+              if (state is ErrorStateHasError) {
+                if (state.errorKey == widget.errorKey) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: errorText(state.error.message),
+                  );
+                }
+              }
+              return emptyUI;
+            },
+          ),
+      ],
+    );
   }
 }

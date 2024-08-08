@@ -9,7 +9,6 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     on<ProductEventSearch>(_onSearch);
   }
 
-
   Future<void> _onCreate(
     ProductEventCreateData event,
     Emitter<ProductState> emit,
@@ -23,14 +22,14 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
     if (event.product.price == 0.0) {
       await Future.delayed(const Duration(milliseconds: 500));
-      emit(_dialogStateFail(message: "Enter price", code: 3));
+      emit(_dialogStateFail(message: "Enter price", code: 2));
       return;
     }
 
     if (event.product.categoryId == null ||
         event.product.categoryName == null) {
       await Future.delayed(const Duration(milliseconds: 500));
-      emit(_dialogStateFail(message: "Select Category"));
+      emit(_dialogStateFail(message: "Select Category", code: 3));
       return;
     }
 

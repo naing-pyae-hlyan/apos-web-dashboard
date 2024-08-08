@@ -10,6 +10,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late HomeBloc homeBloc;
+  late AuthBloc authBloc;
 
   void _onItemTapped(SelectedHome selected) {
     if (homeBloc.selectedHomeItems == selected) return;
@@ -20,10 +21,20 @@ class _HomePageState extends State<HomePage> {
     return selected == homeBloc.selectedHomeItems;
   }
 
+  void _logout() {
+    authBloc.add(AuthEventLogout());
+  }
+
   @override
   void initState() {
     homeBloc = context.read<HomeBloc>();
+    authBloc = context.read<AuthBloc>();
     super.initState();
+    doAfterBuild(callback: () {
+      homeBloc.add(HomeEventDrawerChanged(
+        selectedPage: SelectedHome.dashboard,
+      ));
+    });
   }
 
   @override
@@ -92,16 +103,21 @@ class _HomePageState extends State<HomePage> {
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         const Icon(
                           Icons.account_circle,
                           size: 64,
                           color: Colors.white,
                         ),
+                        verticalHeight8,
                         myText(
-                          "Super Admin",
-                          fontSize: 24,
+                          CacheManager.currentUesr?.username,
+                          fontSize: 18,
+                          color: Colors.white,
+                        ),
+                        myText(
+                          CacheManager.currentUesr?.email,
                           color: Colors.white,
                         ),
                       ],
@@ -178,7 +194,6 @@ class _HomePageState extends State<HomePage> {
                       Navigator.pop(context);
                     },
                   ),
-                  // TODO check userRole
                   ListTile(
                     leading: const Icon(Icons.manage_accounts),
                     title: myText("Users"),
@@ -191,6 +206,19 @@ class _HomePageState extends State<HomePage> {
                     },
                   ),
                 ],
+              ),
+            ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton.icon(
+                onPressed: () {
+                  // Then close the drawer
+                  Navigator.pop(context);
+                  // Logout
+                  _logout();
+                },
+                label: myText('Logout', color: Consts.primaryColor),
+                icon: const Icon(Icons.logout, color: Consts.primaryColor),
               ),
             ),
             const Divider(),

@@ -43,7 +43,7 @@ class RandomIdGenerator {
     bool isUnique = false;
     while (!isUnique) {
       uniqueId = generateUniqueId();
-      var result = CacheManager.products.where((Product product) {
+      var result = CacheManager.products.where((ProductModel product) {
         return product.readableId == uniqueId;
       });
 

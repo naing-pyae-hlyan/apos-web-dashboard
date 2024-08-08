@@ -13,10 +13,10 @@ class FFirestoreUtils {
           );
 
   // Get [product] table
-  static CollectionReference<Product> get productCollection =>
-      _database.collection("product").withConverter<Product>(
+  static CollectionReference<ProductModel> get productCollection =>
+      _database.collection("product").withConverter<ProductModel>(
             fromFirestore: (snapshot, _) =>
-                Product.fromJson(snapshot.data()!, snapshot.id),
+                ProductModel.fromJson(snapshot.data()!, snapshot.id),
             toFirestore: (product, _) => product.toJson(),
           );
 

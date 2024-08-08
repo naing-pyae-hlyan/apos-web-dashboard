@@ -8,14 +8,14 @@ class ProductEventUploadImage extends ProductEvent {
 }
 
 class ProductEventCreateData extends ProductEvent {
-  final Product product;
+  final ProductModel product;
   ProductEventCreateData({required this.product});
 }
 
 class ProductEventReadData extends ProductEvent {}
 
 class ProductEventUpdateData extends ProductEvent {
-  final Product product;
+  final ProductModel product;
   final bool checkTakenName;
   ProductEventUpdateData({
     required this.product,

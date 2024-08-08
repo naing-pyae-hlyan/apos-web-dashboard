@@ -1,4 +1,4 @@
-class Product {
+class ProductModel {
   String? id;
   final String readableId;
   final String name;
@@ -11,7 +11,7 @@ class Product {
   final String? categoryName;
   final int topSalesCount;
 
-  Product.ProductModel({
+  ProductModel({
     this.id,
     required this.readableId,
     required this.name,
@@ -25,8 +25,8 @@ class Product {
     required this.topSalesCount,
   });
 
-  factory Product.fromJson(Map<String, dynamic> json, String docId) {
-    return Product.ProductModel(
+  factory ProductModel.fromJson(Map<String, dynamic> json, String docId) {
+    return ProductModel(
       id: docId,
       readableId: json["id"],
       name: json['name'],
@@ -50,8 +50,8 @@ class Product {
       'images': List.from(base64Images.map((x) => x)),
       'description': description,
       'price': price,
-      'sizes': List.from((sizes ?? []).map((x) => x)),
-      'colors': List.from((hexColors ?? []).map((x) => x)),
+      'sizes': List.from((sizes).map((x) => x)),
+      'colors': List.from((hexColors).map((x) => x)),
       'category_id': categoryId,
       'category_name': categoryName,
       'top_sales_count': topSalesCount,
@@ -60,7 +60,7 @@ class Product {
 
   @override
   bool operator ==(Object other) {
-    return other is Product && id == other.id;
+    return other is ProductModel && id == other.id;
   }
 
   @override

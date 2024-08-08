@@ -10,7 +10,27 @@ class CategoryPage extends StatefulWidget {
 class _CategoryPageState extends State<CategoryPage> {
   late CategoryBloc categoryBloc;
 
+  void _showCategoryDialog({
+    required CategoryModel? category,
+    required bool isNewCategory,
+  }) {
+    if (CacheManager.isNormalUser) {
+      CommonUtils.showCannotAccessDialog(context);
+      return;
+    }
+    showCategoryBlocDialog(
+      context,
+      category: category,
+      isNewCategory: isNewCategory,
+    );
+  }
+
   void _deleteCategory(CategoryModel category) {
+    if (CacheManager.isManager || CacheManager.isNormalUser) {
+      CommonUtils.showCannotAccessDialog(context);
+      return;
+    }
+
     if (category.id != null) {
       showConfirmDialog(
         context,
@@ -52,8 +72,8 @@ class _CategoryPageState extends State<CategoryPage> {
           MyButton(
             label: "New Category",
             icon: Icons.post_add_rounded,
-            onPressed: () => showCategoryBlocDialog(
-              context,
+            onPressed: () => _showCategoryDialog(
+              category: null,
               isNewCategory: true,
             ),
           ),
@@ -140,8 +160,7 @@ class _CategoryPageState extends State<CategoryPage> {
               TableButtonCell(
                 icon: Icons.edit_square,
                 iconColor: Colors.blueGrey,
-                onPressed: () => showCategoryBlocDialog(
-                  context,
+                onPressed: () => _showCategoryDialog(
                   category: category,
                   isNewCategory: false,
                 ),

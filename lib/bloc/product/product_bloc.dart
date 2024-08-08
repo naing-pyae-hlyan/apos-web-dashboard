@@ -31,7 +31,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     }
 
     var same = CacheManager.products.where(
-      (Product product) => product.name == event.product.name,
+      (ProductModel product) => product.name == event.product.name,
     );
     if (same.isNotEmpty) {
       emit(_dialogStateFail(message: "Name is already taken", code: 1));
@@ -69,7 +69,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
     if (event.checkTakenName) {
       var same = CacheManager.products.where(
-        (Product product) => product.name == event.product.name,
+        (ProductModel product) => product.name == event.product.name,
       );
 
       if (same.isNotEmpty) {

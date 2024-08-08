@@ -15,7 +15,7 @@ class _LoginPageState extends State<LoginPage> {
   late ErrorBloc errorBloc;
   late CategoryBloc categoryBloc;
 
-  final usernameTxtCtrl = TextEditingController();
+  final emailTxtCtrl = TextEditingController();
   final passwordTxtCtrl = TextEditingController();
   final usernameFn = FocusNode();
   final passwordFn = FocusNode();
@@ -24,7 +24,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void _login() {
     authBloc.add(AuthEventLogin(
-      username: usernameTxtCtrl.text,
+      email: emailTxtCtrl.text,
       password: passwordTxtCtrl.text,
       rememberMe: _rememberMe,
     ));
@@ -38,6 +38,7 @@ class _LoginPageState extends State<LoginPage> {
     super.initState();
     doAfterBuild(
       callback: () {
+        errorBloc.add(ErrorEventResert());
         usernameFn.requestFocus();
       },
     );
@@ -45,7 +46,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
-    usernameTxtCtrl.dispose();
+    emailTxtCtrl.dispose();
     passwordTxtCtrl.dispose();
     usernameFn.dispose();
     passwordFn.dispose();
@@ -68,9 +69,9 @@ class _LoginPageState extends State<LoginPage> {
                 myText("Welcome", fontSize: 48),
                 verticalHeight64,
                 MyInputField(
-                  controller: usernameTxtCtrl,
+                  controller: emailTxtCtrl,
                   focusNode: usernameFn,
-                  hintText: "Username",
+                  hintText: "Email",
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
                   errorKey: _userNameErrorKey,
@@ -103,7 +104,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 BlocConsumer<AuthBloc, AuthState>(
                   listener: (_, AuthState state) {
-                    if (state is AuthStateSuccess) {
+                    if (state is AuthStateLoginSuccess) {
                       categoryBloc.add(
                         CategoryEventReadData(
                           readSuccess: () {

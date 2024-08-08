@@ -9,12 +9,12 @@ class DashboardTopSellingProductsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot<Product>>(
+    return StreamBuilder<QuerySnapshot<ProductModel>>(
       stream: FFirestoreUtils.productCollection
           .orderBy("top_sales_count", descending: true)
           .limit(5)
           .snapshots(),
-      builder: (_, AsyncSnapshot<QuerySnapshot<Product>> snapshot) {
+      builder: (_, AsyncSnapshot<QuerySnapshot<ProductModel>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const MyCircularIndicator();
         }
@@ -28,8 +28,8 @@ class DashboardTopSellingProductsCard extends StatelessWidget {
           );
         }
 
-        QuerySnapshot<Product> data = snapshot.requireData;
-        final List<Product> products = [];
+        QuerySnapshot<ProductModel> data = snapshot.requireData;
+        final List<ProductModel> products = [];
         for (var doc in data.docs) {
           products.add(doc.data());
         }
@@ -45,7 +45,7 @@ class DashboardTopSellingProductsCard extends StatelessWidget {
 
 class _DashboardTopSellingProductsCard extends StatelessWidget {
   final Function() onPressedViewOrders;
-  final List<Product> products;
+  final List<ProductModel> products;
   const _DashboardTopSellingProductsCard({
     required this.products,
     required this.onPressedViewOrders,
@@ -134,7 +134,7 @@ class _DashboardTopSellingProductsCard extends StatelessWidget {
                 ],
               ),
               ...products.map(
-                (Product product) {
+                (ProductModel product) {
                   return TableRow(
                     decoration: const BoxDecoration(
                       color: Colors.white,

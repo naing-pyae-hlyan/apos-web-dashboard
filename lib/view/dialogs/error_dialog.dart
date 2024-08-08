@@ -1,32 +1,28 @@
 import 'package:apos/lib_exp.dart';
 
-void showConfirmDialog(
+void showErrorDialog(
   BuildContext context, {
   required String title,
   String? description,
-  Function()? onTapCancel,
   required Function() onTapOk,
 }) =>
     showAdaptiveDialog(
       context: context,
       barrierDismissible: true,
-      builder: (_) => _ConfirmDialog(
+      builder: (_) => _ErrorDialog(
         title: title,
         description: description,
-        onTapCancel: onTapCancel,
         onTapOk: onTapOk,
       ),
     );
 
-class _ConfirmDialog extends StatelessWidget {
+class _ErrorDialog extends StatelessWidget {
   final String title;
   final String? description;
-  final Function()? onTapCancel;
   final Function() onTapOk;
-  const _ConfirmDialog({
+  const _ErrorDialog({
     required this.title,
     this.description,
-    this.onTapCancel,
     required this.onTapOk,
   });
   @override
@@ -40,23 +36,9 @@ class _ConfirmDialog extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () {
-            if (onTapCancel != null) {
-              onTapCancel!();
-            }
             Navigator.of(context).pop();
           },
-          child: myText('Cancel'),
-        ),
-        MyButton(
-          label: "Delete",
-          labelColor: Colors.white,
-          borderColor: Colors.red,
-          backgroundColor: Colors.red,
-          icon: Icons.delete,
-          onPressed: () {
-            onTapOk();
-            Navigator.of(context).pop();
-          },
+          child: myText('OK'),
         ),
       ],
     );

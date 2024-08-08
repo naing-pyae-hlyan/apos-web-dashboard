@@ -11,6 +11,10 @@ class _OrdersPageState extends State<OrdersPage> {
   late OrderBloc orderBloc;
 
   void _onPressedStatus(OrderModel order) {
+    if (CacheManager.isNormalUser) {
+      CommonUtils.showCannotAccessDialog(context);
+      return;
+    }
     showOrderStatusChangeDialog(
       context,
       order: order,

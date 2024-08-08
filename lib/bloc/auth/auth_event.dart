@@ -1,12 +1,14 @@
 sealed class AuthEvent {}
 
 class AuthEventLogin extends AuthEvent {
-  String username;
+  String email;
   String password;
   bool rememberMe;
   AuthEventLogin({
-    required this.username,
+    required this.email,
     required this.password,
     required this.rememberMe,
   });
 }
+
+class AuthEventLogout extends AuthEvent {}

@@ -13,19 +13,14 @@ class _SplashPageState extends State<SplashPage> {
   late CategoryBloc categoryBloc;
 
   Future<void> _checkCredentials() async {
-    final username = await SpHelper.username;
+    final email = await SpHelper.email;
     final password = await SpHelper.password;
 
-    if (username.isNotEmpty && password.isNotEmpty) {
-      authBloc.add(AuthEventLogin(
-        username: username,
-        password: password,
-        rememberMe: true,
-      ));
-      return;
-    }
-
-    if (mounted) context.pushAndRemoveUntil(const LoginPage());
+    authBloc.add(AuthEventLogin(
+      email: email,
+      password: password,
+      rememberMe: true,
+    ));
   }
 
   @override
@@ -38,7 +33,6 @@ class _SplashPageState extends State<SplashPage> {
       callback: () async {
         await _checkCredentials();
       },
-      // duration: const Duration(seconds: 1),
     );
   }
 
@@ -69,7 +63,7 @@ class _SplashPageState extends State<SplashPage> {
           );
         },
         listener: (_, AuthState state) {
-          if (state is AuthStateSuccess) {
+          if (state is AuthStateLoginSuccess) {
             categoryBloc.add(
               CategoryEventReadData(
                 readSuccess: () {
@@ -77,6 +71,9 @@ class _SplashPageState extends State<SplashPage> {
                 },
               ),
             );
+          }
+          if (state is AuthStateFail) {
+            context.pushAndRemoveUntil(const LoginPage());
           }
         },
       ),

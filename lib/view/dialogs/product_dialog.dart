@@ -2,7 +2,8 @@ import 'package:apos/lib_exp.dart';
 
 void showProductBlocDialog(
   BuildContext context, {
-  Product? product,
+  ProductModel? product,
+  required bool isNewProduct,
 }) =>
     showAdaptiveDialog(
       context: context,
@@ -12,7 +13,7 @@ void showProductBlocDialog(
           BlocProvider(create: (_) => AttachmentsBloc()),
           BlocProvider(create: (_) => CategoryChangeBloc()),
         ],
-        child: _ProductDialog(product: product),
+        child: _ProductDialog(product: product, isNewProduct: isNewProduct),
       ),
     );
 
@@ -21,8 +22,9 @@ const _productPriceErrorKey = "product-price-error-key";
 const _productCategoryDropdownErrorKey = "product-category-dropdown-error-key";
 
 class _ProductDialog extends StatefulWidget {
-  final Product? product;
-  const _ProductDialog({required this.product});
+  final ProductModel? product;
+  final bool isNewProduct;
+  const _ProductDialog({required this.product, required this.isNewProduct});
 
   @override
   State<_ProductDialog> createState() => _ProductDialogState();
@@ -52,7 +54,7 @@ class _ProductDialogState extends State<_ProductDialog> {
     final String? categoryName = categoryChangeBloc.selectedCategory?.name ??
         widget.product?.categoryName;
 
-    final product = Product.ProductModel(
+    final product = ProductModel(
       id: widget.product?.id,
       readableId: readableId,
       name: name,
@@ -65,7 +67,7 @@ class _ProductDialogState extends State<_ProductDialog> {
       categoryName: categoryName,
       topSalesCount: widget.product?.topSalesCount ?? 0,
     );
-    if (widget.product == null) {
+    if (widget.isNewProduct && widget.product == null) {
       productBloc.add(ProductEventCreateData(product: product));
     } else {
       bool checkTakenName = name != widget.product?.name;
@@ -156,7 +158,7 @@ class _ProductDialogState extends State<_ProductDialog> {
       title: Column(
         children: [
           myTitle(
-            widget.product == null ? 'Add Product' : 'Edit Product',
+            widget.isNewProduct ? 'Add Product' : 'Edit Product',
           ),
           if (widget.product?.id != null) ...[
             verticalHeight4,

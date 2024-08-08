@@ -10,7 +10,20 @@ class UsersPage extends StatefulWidget {
 class _UsersPageState extends State<UsersPage> {
   late UsersBloc usersBloc;
 
+  void _showUserDialog() {
+    if (CacheManager.isManager || CacheManager.isNormalUser) {
+      CommonUtils.showCannotAccessDialog(context);
+      return;
+    }
+
+    showUserDialog(context);
+  }
+
   void _deleteUser(UserModel user) {
+    if (CacheManager.isManager || CacheManager.isNormalUser) {
+      CommonUtils.showCannotAccessDialog(context);
+      return;
+    }
     if (user.id != null) {
       showConfirmDialog(
         context,
@@ -52,7 +65,7 @@ class _UsersPageState extends State<UsersPage> {
           MyButton(
             label: "New User",
             icon: Icons.post_add_rounded,
-            onPressed: () => showUserDialog(context),
+            onPressed: () => _showUserDialog(),
           ),
         ],
       ),

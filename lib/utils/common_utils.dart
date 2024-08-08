@@ -38,6 +38,14 @@ class CommonUtils {
     buffer.write(hexString.replaceFirst('#', ''));
     return Color(int.parse(buffer.toString(), radix: 16));
   }
+
+  static void showCannotAccessDialog(BuildContext context) => showErrorDialog(
+        context,
+        title: "Warning",
+        description:
+            "You cannot access this feature.\nPlease contact to SuperAdmin.",
+        onTapOk: () {},
+      );
 }
 
 void doAfterBuild({

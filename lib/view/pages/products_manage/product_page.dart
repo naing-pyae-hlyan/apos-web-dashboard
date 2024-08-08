@@ -1,4 +1,5 @@
 import 'package:apos/lib_exp.dart';
+import 'package:apos/models/_exp.dart';
 
 class ProductPage extends StatefulWidget {
   const ProductPage({super.key});
@@ -22,7 +23,26 @@ class _ProductPageState extends State<ProductPage> {
     });
   }
 
-  void _deleteProduct(Product product) {
+  void _showProductDialog({
+    required ProductModel? product,
+    required bool isNewProduct,
+  }) {
+    if (CacheManager.isNormalUser) {
+      CommonUtils.showCannotAccessDialog(context);
+      return;
+    }
+    showProductBlocDialog(
+      context,
+      product: product,
+      isNewProduct: isNewProduct,
+    );
+  }
+
+  void _deleteProduct(ProductModel product) {
+    if (CacheManager.isManager || CacheManager.isNormalUser) {
+      CommonUtils.showCannotAccessDialog(context);
+      return;
+    }
     if (product.id != null) {
       showConfirmDialog(
         context,
@@ -37,7 +57,7 @@ class _ProductPageState extends State<ProductPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffoldDataGridView<QuerySnapshot<Product>>(
+    return MyScaffoldDataGridView<QuerySnapshot<ProductModel>>(
       header: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -74,15 +94,18 @@ class _ProductPageState extends State<ProductPage> {
             icon: Icons.post_add_rounded,
             labelColor: Colors.white,
             backgroundColor: Consts.primaryColor,
-            onPressed: () => showProductBlocDialog(context),
+            onPressed: () => _showProductDialog(
+              product: null,
+              isNewProduct: true,
+            ),
           ),
         ],
       ),
       stream: FFirestoreUtils.productCollection
           .orderBy("category_name")
           .snapshots(),
-      streamBuilder: (QuerySnapshot<Product> data) {
-        final List<Product> products = [];
+      streamBuilder: (QuerySnapshot<ProductModel> data) {
+        final List<ProductModel> products = [];
         CacheManager.products.clear();
         for (var doc in data.docs) {
           products.add(doc.data());
@@ -97,10 +120,10 @@ class _ProductPageState extends State<ProductPage> {
             if (state is ProductStateLoading) {
               return const MyCircularIndicator();
             }
-            List<Product> search = [];
+            List<ProductModel> search = [];
 
             if (state is ProductStateSearch) {
-              search = products.where((Product product) {
+              search = products.where((ProductModel product) {
                 return stringCompare(product.name, state.query) ||
                     stringCompare(product.readableId, state.query) ||
                     stringCompare(product.price.toString(), state.query) ||
@@ -156,10 +179,11 @@ class _ProductPageState extends State<ProductPage> {
     );
   }
 
-  List<TableRow> _productTableRowView(List<Product> products) => List.generate(
+  List<TableRow> _productTableRowView(List<ProductModel> products) =>
+      List.generate(
         products.length,
         (index) {
-          final Product product = products[index];
+          final ProductModel product = products[index];
           return TableRow(
             decoration: tableTextDecoration(index),
             children: [
@@ -189,9 +213,9 @@ class _ProductPageState extends State<ProductPage> {
               TableButtonCell(
                 icon: Icons.edit_square,
                 iconColor: Colors.blueGrey,
-                onPressed: () => showProductBlocDialog(
-                  context,
+                onPressed: () => _showProductDialog(
                   product: product,
+                  isNewProduct: false,
                 ),
               ),
               TableButtonCell(

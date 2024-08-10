@@ -5,20 +5,18 @@ class CacheManager {
   static List<ProductModel> products = [];
   static List<OrderModel> orders = [];
 
-  static UserModel? _currentUser;
-  static UserModel? get currentUesr => _currentUser;
-  static set currentUser(UserModel um) => _currentUser = um;
+  static UserModel? currentUser;
 
   static bool get isSuperAdmin {
-    return _currentUser?.userRole == UserRoleEnum.superAdmin;
+    return currentUser?.userRole == UserRoleEnum.superAdmin;
   }
 
   static bool get isManager {
-    return _currentUser?.userRole == UserRoleEnum.manager;
+    return currentUser?.userRole == UserRoleEnum.manager;
   }
 
   static bool get isNormalUser {
-    return _currentUser?.userRole == UserRoleEnum.normalUser;
+    return currentUser?.userRole == UserRoleEnum.normalUser;
   }
 
   static void clear() {

@@ -196,7 +196,7 @@ class _ProductPageState extends State<ProductPage> {
                 textAlign: TextAlign.end,
               ),
               TableTextCell(
-                product.sizes.isEmpty ? "-" : product.sizes.join(", "),
+                product.types.isEmpty ? "-" : product.types.join(", "),
                 textAlign: TextAlign.end,
                 maxLines: 4,
               ),

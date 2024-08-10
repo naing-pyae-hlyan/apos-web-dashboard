@@ -112,12 +112,12 @@ class _HomePageState extends State<HomePage> {
                         ),
                         verticalHeight8,
                         myText(
-                          CacheManager.currentUesr?.username,
+                          CacheManager.currentUser?.username,
                           fontSize: 18,
                           color: Colors.white,
                         ),
                         myText(
-                          CacheManager.currentUesr?.email,
+                          CacheManager.currentUser?.email,
                           color: Colors.white,
                         ),
                       ],

@@ -61,7 +61,7 @@ class _ProductDialogState extends State<_ProductDialog> {
       base64Images: attachmentsBloc.state.base64Images,
       description: descriptoin,
       price: price,
-      sizes: categoryChangeBloc.productSizesAsStrings,
+      types: categoryChangeBloc.productSizesAsStrings,
       hexColors: categoryChangeBloc.productColorsAsHexs,
       categoryId: categoryId,
       categoryName: categoryName,
@@ -261,7 +261,7 @@ class _ProductDialogState extends State<_ProductDialog> {
                   List<String> oldSizes = [];
                   List<int> oldHexColors = [];
                   if (widget.product?.categoryId == selected?.id) {
-                    oldSizes = widget.product?.sizes ?? [];
+                    oldSizes = widget.product?.types ?? [];
                     oldHexColors = widget.product?.hexColors ?? [];
                   }
                   return Column(

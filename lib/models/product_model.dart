@@ -4,8 +4,8 @@ class ProductModel {
   final String name;
   final List<String> base64Images;
   final String? description;
-  final double price;
-  final List<String> sizes;
+  final num price;
+  final List<String> types;
   final List<int> hexColors;
   final String? categoryId;
   final String? categoryName;
@@ -18,7 +18,7 @@ class ProductModel {
     required this.base64Images,
     required this.description,
     required this.price,
-    required this.sizes,
+    required this.types,
     required this.hexColors,
     required this.categoryId,
     required this.categoryName,
@@ -26,14 +26,14 @@ class ProductModel {
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json, String docId) {
-    return ProductModel(
+    var product = ProductModel(
       id: docId,
       readableId: json["id"],
       name: json['name'],
       base64Images: List.from(json["images"].map((x) => x)),
-      description: json['description'],
+      description: (json['description'] ?? "").toString().replaceFirst("-", ""),
       price: json['price'],
-      sizes:
+      types:
           json['sizes'] == null ? [] : List.from(json['sizes'].map((x) => x)),
       hexColors:
           json['colors'] == null ? [] : List.from(json['colors'].map((x) => x)),
@@ -41,6 +41,8 @@ class ProductModel {
       categoryName: json["category_name"],
       topSalesCount: json["top_sales_count"] ?? 0,
     );
+    product.types.removeWhere((String size) => size == "-" || size.isEmpty);
+    return product;
   }
 
   Map<String, dynamic> toJson() {
@@ -50,7 +52,7 @@ class ProductModel {
       'images': List.from(base64Images.map((x) => x)),
       'description': description,
       'price': price,
-      'sizes': List.from((sizes).map((x) => x)),
+      'sizes': List.from((types).map((x) => x)),
       'colors': List.from((hexColors).map((x) => x)),
       'category_id': categoryId,
       'category_name': categoryName,

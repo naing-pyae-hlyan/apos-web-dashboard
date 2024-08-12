@@ -16,7 +16,10 @@ class DashboardTopSellingProductsCard extends StatelessWidget {
           .snapshots(),
       builder: (_, AsyncSnapshot<QuerySnapshot<ProductModel>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const MyCircularIndicator();
+          return _DashboardTopSellingProductsCard(
+            products: const [],
+            onPressedViewOrders: onPressedViewOrders,
+          );
         }
 
         if (snapshot.hasError) {

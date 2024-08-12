@@ -1,10 +1,53 @@
 import 'package:apos/lib_exp.dart';
 
 class DashboardRecentOrdersCard extends StatelessWidget {
-  final List<OrderModel> orders;
   final Function() onPressedViewAll;
   const DashboardRecentOrdersCard({
     super.key,
+    required this.onPressedViewAll,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+      stream: FFirestoreUtils.orderCollection
+          .orderBy("order_date", descending: true)
+          .limit(5)
+          .snapshots(),
+      builder: (_, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return _RecentOrdersCard(
+            orders: const [],
+            onPressedViewAll: onPressedViewAll,
+          );
+        }
+        if (snapshot.hasError) {
+          return Center(
+            child: myText(
+              snapshot.error.toString(),
+              color: Consts.errorColor,
+            ),
+          );
+        }
+        QuerySnapshot<OrderModel> data = snapshot.requireData;
+        final List<OrderModel> orders = [];
+        for (var doc in data.docs) {
+          orders.add(doc.data());
+        }
+
+        return _RecentOrdersCard(
+          orders: orders,
+          onPressedViewAll: onPressedViewAll,
+        );
+      },
+    );
+  }
+}
+
+class _RecentOrdersCard extends StatelessWidget {
+  final List<OrderModel> orders;
+  final Function() onPressedViewAll;
+  const _RecentOrdersCard({
     required this.orders,
     required this.onPressedViewAll,
   });
@@ -48,6 +91,8 @@ class DashboardRecentOrdersCard extends StatelessWidget {
             columnWidths: const {
               0: FlexColumnWidth(2),
               1: FlexColumnWidth(1),
+              2: FlexColumnWidth(1),
+              3: FlexColumnWidth(1),
             },
             children: [
               const TableRow(
@@ -58,6 +103,16 @@ class DashboardRecentOrdersCard extends StatelessWidget {
                   TableTitleCell(
                     "Customers",
                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  ),
+                  TableTitleCell(
+                    "Order Id",
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    textAlign: TextAlign.end,
+                  ),
+                  TableTitleCell(
+                    "Status",
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    textAlign: TextAlign.end,
                   ),
                   TableTitleCell(
                     "Price",
@@ -79,10 +134,21 @@ class DashboardRecentOrdersCard extends StatelessWidget {
                         maxLines: 1,
                       ),
                       TableTextCell(
-                        order.totalAmount.toCurrencyFormat(),
+                        order.readableId,
+                        padding: textCellPadding,
                         textAlign: TextAlign.end,
+                      ),
+                      TableTextCell(
+                        order.status.name,
+                        labelColor: order.status.color,
+                        padding: textCellPadding,
+                        textAlign: TextAlign.end,
+                      ),
+                      TableTextCell(
+                        order.totalAmount.toCurrencyFormat(),
                         padding: textCellPadding,
                         maxLines: 1,
+                        textAlign: TextAlign.end,
                       ),
                     ],
                   );

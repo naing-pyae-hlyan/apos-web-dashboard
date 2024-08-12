@@ -53,16 +53,15 @@ class _DashboardPageState extends State<DashboardPage> {
                       },
                     ),
                   ),
-                  // Flexible(
-                  //   child: DashboardRecentOrdersCard(
-                  //     orders: List.generate(5, (index) => tempOrder(index)),
-                  //     onPressedViewAll: () {
-                  //       homeBloc.add(HomeEventDrawerChanged(
-                  //         selectedPage: SelectedHome.order,
-                  //       ));
-                  //     },
-                  //   ),
-                  // ),
+                  Flexible(
+                    child: DashboardRecentOrdersCard(
+                      onPressedViewAll: () {
+                        homeBloc.add(HomeEventDrawerChanged(
+                          selectedPage: SelectedHome.order,
+                        ));
+                      },
+                    ),
+                  ),
                 ],
               ),
             ],

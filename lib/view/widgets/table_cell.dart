@@ -79,6 +79,7 @@ class TableTextCell extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final TableCellVerticalAlignment verticalAlignment;
   final int maxLines;
+  final Color? labelColor;
   const TableTextCell(
     this.label, {
     super.key,
@@ -87,6 +88,7 @@ class TableTextCell extends StatelessWidget {
     this.textAlign = TextAlign.start,
     this.verticalAlignment = TableCellVerticalAlignment.middle,
     this.maxLines = 2,
+    this.labelColor,
   });
 
   @override
@@ -97,6 +99,7 @@ class TableTextCell extends StatelessWidget {
         padding: padding ?? const EdgeInsets.all(8),
         child: myText(
           label,
+          color: labelColor ?? Consts.primaryFontColor,
           textAlign: textAlign,
           fontWeight: fontWeight,
           maxLines: maxLines,

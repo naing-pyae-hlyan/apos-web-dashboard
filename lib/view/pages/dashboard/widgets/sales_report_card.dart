@@ -2,13 +2,52 @@ import 'package:apos/lib_exp.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 class SalesReportCard extends StatefulWidget {
-  const SalesReportCard({super.key});
+  final List<OrderModel> orders;
+  const SalesReportCard({super.key, required this.orders});
 
   @override
   State<SalesReportCard> createState() => _SalesReportCardState();
 }
 
 class _SalesReportCardState extends State<SalesReportCard> {
+  LineChartBarData get lineChartBarData1_1 {
+    final List<num> monthlyReports = calcByDate(widget.orders);
+    return LineChartBarData(
+      isCurved: true,
+      color: Consts.primaryColor,
+      barWidth: 4,
+      isStrokeCapRound: true,
+      dotData: const FlDotData(show: false),
+      belowBarData: BarAreaData(show: true),
+      spots: List.generate(
+        monthlyReports.length,
+        (index) {
+          return FlSpot(
+            index.toDouble(),
+            (monthlyReports[index] / 100000).toDouble(),
+          );
+        },
+      ),
+    );
+  }
+
+  List<LineTooltipItem> tooltipItem(List<LineBarSpot> touchedSpots) {
+    return touchedSpots.map(
+      (LineBarSpot touchedSpot) {
+        const textStyle = TextStyle(
+          color: Consts.primaryColor,
+          fontWeight: FontWeight.bold,
+          fontSize: 13,
+        );
+        return LineTooltipItem(
+          (touchedSpot.y * 100000).toCurrencyFormat(),
+          textStyle,
+          textAlign: TextAlign.end,
+        );
+      },
+    ).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -52,11 +91,11 @@ class _SalesReportCardState extends State<SalesReportCard> {
                       leftTitles: AxisTitles(
                         sideTitles: SideTitles(
                           showTitles: true,
-                          reservedSize: 32,
+                          reservedSize: 48,
                           interval: 1,
                           getTitlesWidget: (double value, _) {
                             return myText(
-                              "${value.toInt() * 10}k",
+                              "${value.toInt() * 100}k",
                               textAlign: TextAlign.end,
                             );
                           },
@@ -148,41 +187,5 @@ class _SalesReportCardState extends State<SalesReportCard> {
       space: 8,
       child: myText(text),
     );
-  }
-
-  LineChartBarData get lineChartBarData1_1 => LineChartBarData(
-        isCurved: true,
-        color: Consts.primaryColor,
-        barWidth: 4,
-        isStrokeCapRound: true,
-        dotData: const FlDotData(show: false),
-        belowBarData: BarAreaData(show: true),
-        spots: const [
-          FlSpot(0, 0.4),
-          FlSpot(1, 1),
-          FlSpot(2, 1),
-          FlSpot(3, 2.5),
-          FlSpot(4, 3),
-          FlSpot(5, 1.5),
-          FlSpot(6, 4),
-          FlSpot(7, 5),
-          FlSpot(8, 8),
-          FlSpot(9, 6),
-          FlSpot(10, 5.5),
-          FlSpot(11, 6.5),
-        ],
-      );
-
-  List<LineTooltipItem> tooltipItem(List<LineBarSpot> touchedSpots) {
-    return touchedSpots.map(
-      (LineBarSpot touchedSpot) {
-        const textStyle = TextStyle(
-          color: Consts.primaryColor,
-          fontWeight: FontWeight.bold,
-          fontSize: 13,
-        );
-        return LineTooltipItem("${touchedSpot.y * 10}k", textStyle);
-      },
-    ).toList();
   }
 }

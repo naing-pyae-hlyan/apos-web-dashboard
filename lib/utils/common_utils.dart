@@ -1,4 +1,5 @@
 import 'package:apos/lib_exp.dart';
+import 'package:apos/models/_exp.dart';
 
 class CommonUtils {
   static Widget versionLabel({
@@ -86,4 +87,61 @@ String idsGenerator(String prefix, int length) {
 
 String formatToStar(String value) {
   return value.replaceAll(RegExp(r'.'), "*");
+}
+
+List<num> calcByDate(List<OrderModel> orders) {
+  num jan = 0;
+  num feb = 0;
+  num mar = 0;
+  num apr = 0;
+  num may = 0;
+  num jun = 0;
+  num jul = 0;
+  num aug = 0;
+  num sep = 0;
+  num oct = 0;
+  num nov = 0;
+  num dec = 0;
+  final now = DateTime.now();
+  for (OrderModel order in orders) {
+    if (now.year == order.orderDate.year) {
+      if (order.orderDate.month == DateTime.january) {
+        jan += order.totalAmount;
+      }
+      if (order.orderDate.month == DateTime.february) {
+        feb += order.totalAmount;
+      }
+      if (order.orderDate.month == DateTime.march) {
+        mar += order.totalAmount;
+      }
+      if (order.orderDate.month == DateTime.april) {
+        apr += order.totalAmount;
+      }
+      if (order.orderDate.month == DateTime.may) {
+        may += order.totalAmount;
+      }
+      if (order.orderDate.month == DateTime.june) {
+        jun += order.totalAmount;
+      }
+      if (order.orderDate.month == DateTime.july) {
+        jul += order.totalAmount;
+      }
+      if (order.orderDate.month == DateTime.august) {}
+      aug += order.totalAmount;
+      if (order.orderDate.month == DateTime.september) {
+        sep += order.totalAmount;
+      }
+      if (order.orderDate.month == DateTime.october) {
+        oct += order.totalAmount;
+      }
+      if (order.orderDate.month == DateTime.november) {
+        nov += order.totalAmount;
+      }
+      if (order.orderDate.month == DateTime.december) {
+        dec += order.totalAmount;
+      }
+    }
+  }
+
+  return [jan, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec];
 }

@@ -4,7 +4,8 @@ flutter 3.22.0
 1. NEW: CustomerPage is added.
 2. NEW: OrderPage is added.
 3. NEW: TopSellingProdctsCard is updated.
-4. NEW: RecentOrderCard is updated via real data.
+4. NEW: RecentOrderCard is updated by real data.
+5. NEW: SalesReportChart is updated by real data.
 
 08/08/2024 (0.2.4)
 1. UPDATE: ProductDialog category chage issue is fixed.

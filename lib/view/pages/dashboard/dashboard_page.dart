@@ -26,45 +26,67 @@ class _DashboardPageState extends State<DashboardPage> {
         height: context.screenHeight,
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              const Row(
-                children: [
-                  CustomerCommerceCard(),
-                  OrderCommerceCard(),
-                  Flexible(child: SalesReportCard()),
-                ],
-              ),
-              verticalHeight16,
-              Row(
+          child: StreamBuilder<QuerySnapshot<OrderModel>>(
+            stream: FFirestoreUtils.orderCollection
+                .orderBy("order_date", descending: true)
+                .snapshots(),
+            builder: (context, snapshot) {
+              final isLoadingState =
+                  snapshot.connectionState == ConnectionState.waiting;
+              final List<OrderModel> orders = [];
+
+              if (snapshot.hasData) {
+                for (var doc in snapshot.requireData.docs) {
+                  orders.add(doc.data());
+                }
+              }
+
+              return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
                 children: [
-                  SizedBox(
-                    width: context.screenWidth * 0.6,
-                    child: DashboardTopSellingProductsCard(
-                      onPressedViewOrders: () {
-                        homeBloc.add(HomeEventDrawerChanged(
-                          selectedPage: SelectedHome.order,
-                        ));
-                      },
-                    ),
+                  Row(
+                    children: [
+                      const CustomerCommerceCard(),
+                      OrderCommerceCard(
+                        isLoadingState: isLoadingState,
+                        orders: orders,
+                      ),
+                      Flexible(child: SalesReportCard(orders: orders)),
+                    ],
                   ),
-                  Flexible(
-                    child: DashboardRecentOrdersCard(
-                      onPressedViewAll: () {
-                        homeBloc.add(HomeEventDrawerChanged(
-                          selectedPage: SelectedHome.order,
-                        ));
-                      },
-                    ),
+                  verticalHeight16,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: context.screenWidth * 0.6,
+                        child: DashboardTopSellingProductsCard(
+                          onPressedViewOrders: () {
+                            homeBloc.add(HomeEventDrawerChanged(
+                              selectedPage: SelectedHome.order,
+                            ));
+                          },
+                        ),
+                      ),
+                      Flexible(
+                        child: DashboardRecentOrdersCard(
+                          orders:
+                              orders.length > 5 ? orders.sublist(0, 5) : orders,
+                          onPressedViewAll: () {
+                            homeBloc.add(HomeEventDrawerChanged(
+                              selectedPage: SelectedHome.order,
+                            ));
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ],
-              ),
-            ],
+              );
+            },
           ),
         ),
       ),

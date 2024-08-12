@@ -28,7 +28,7 @@ class CustomerModel {
       phone: json['phone'],
       password: json['password'],
       address: json['address'],
-      status: json['status'],
+      status: json['status'] ?? 1,
     );
   }
 

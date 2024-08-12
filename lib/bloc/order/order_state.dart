@@ -1,27 +1,21 @@
 import 'package:apos/lib_exp.dart';
 
-sealed class OrderState {
-  final List<OrderModel> orders;
-  OrderState({required this.orders});
-}
+sealed class OrderState {}
 
 class OrderStateInitial extends OrderState {
-  OrderStateInitial({required super.orders});
+  OrderStateInitial();
 }
 
-class OrderStateLoading extends OrderState {
-  OrderStateLoading({required super.orders});
-}
+class OrderStateLoading extends OrderState {}
 
-class OrderStateFail extends OrderState {
+class OrderStateFailed extends OrderState {
   final ErrorModel error;
-  OrderStateFail({required this.error, required super.orders});
+  OrderStateFailed({required this.error});
 }
 
-class OrderStateGetOrdersSuccess extends OrderState {
-  OrderStateGetOrdersSuccess({required super.orders});
+class OrderStateSearched extends OrderState {
+  final String query;
+  OrderStateSearched(this.query);
 }
 
-class OrderStateChangeSuccess extends OrderState {
-  OrderStateChangeSuccess({required super.orders});
-}
+class OrderStateChangeSuccess extends OrderState {}

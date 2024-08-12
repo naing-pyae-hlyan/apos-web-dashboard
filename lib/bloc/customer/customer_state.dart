@@ -8,9 +8,9 @@ class CustomerStateLoading extends CustomerState {}
 
 class CustomerStateUpdateStatusSuccess extends CustomerState {}
 
-class CustomerStateSearch extends CustomerState {
+class CustomerStateSearched extends CustomerState {
   final String query;
-  CustomerStateSearch(this.query);
+  CustomerStateSearched(this.query);
 }
 
 class CustomerStateFailed extends CustomerState {

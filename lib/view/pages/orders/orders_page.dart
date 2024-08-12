@@ -15,10 +15,16 @@ class _OrdersPageState extends State<OrdersPage> {
       CommonUtils.showCannotAccessDialog(context);
       return;
     }
+    if (order.id == null) return;
     showOrderStatusChangeDialog(
       context,
       order: order,
-      onStatusIdChanged: (int id) {},
+      onStatusIdChanged: (int id) {
+        orderBloc.add(OrderEventStatusChange(
+          orderId: order.id!,
+          status: id,
+        ));
+      },
     );
   }
 
@@ -26,10 +32,6 @@ class _OrdersPageState extends State<OrdersPage> {
   void initState() {
     orderBloc = context.read<OrderBloc>();
     super.initState();
-
-    doAfterBuild(callback: () {
-      orderBloc.add(OrderEventGetOrders());
-    });
   }
 
   @override
@@ -47,21 +49,42 @@ class _OrdersPageState extends State<OrdersPage> {
             ),
             child: MyInputField(
               controller: TextEditingController(),
-              hintText: "Search",
+              hintText: "Search order id, customer name, email, phone",
               errorKey: null,
+              onChanged: (String query) {
+                orderBloc.add(OrderEventSearch(query));
+              },
             ),
           ),
         ],
       ),
       stream: FFirestoreUtils.orderCollection.snapshots(),
       streamBuilder: (QuerySnapshot<OrderModel> data) {
+        final List<OrderModel> orders = [];
+        for (var doc in data.docs) {
+          orders.add(doc.data());
+        }
+
         return BlocBuilder<OrderBloc, OrderState>(
           builder: (_, state) {
             if (state is OrderStateLoading) {
               return const MyCircularIndicator();
             }
 
-            final List<OrderModel> orders = state.orders;
+            List<OrderModel> search = [];
+            if (state is OrderStateSearched) {
+              search = orders.where(
+                (OrderModel order) {
+                  return stringCompare(order.id, state.query) ||
+                      stringCompare(order.customer.name, state.query) ||
+                      stringCompare(order.customer.email, state.query) ||
+                      stringCompare(order.customer.phone, state.query);
+                },
+              ).toList();
+            } else {
+              search = orders;
+            }
+
             return Table(
               columnWidths: const {
                 0: FlexColumnWidth(0.7),
@@ -87,39 +110,39 @@ class _OrdersPageState extends State<OrdersPage> {
                   ],
                 ),
                 ...List.generate(
-                  orders.length,
+                  search.length,
                   (index) {
+                    final OrderModel order = search[index];
                     return TableRow(
                       decoration: tableTextDecoration(index),
                       children: [
                         // TableSNCell(index),
-                        TableTextCell(orders[index].id),
+                        TableTextCell(order.readableId),
                         TableProductItemsCell(
-                          items: orders[index].items,
+                          items: order.items,
                         ),
                         TableTextCell(
-                          orders[index].totalAmount.toCurrencyFormat(),
+                          order.totalAmount.toCurrencyFormat(),
                           textAlign: TextAlign.end,
                           fontWeight: FontWeight.bold,
                         ),
                         TableTextCell(
-                          orders[index].orderDate.toDDmmYYYYHHmm(),
+                          order.orderDate.toDDmmYYYYHHmm(),
                           textAlign: TextAlign.end,
                         ),
                         TableCustomerCell(
-                          id: orders[index].customer.readableId,
-                          name: orders[index].customer.name,
+                          id: order.customer.readableId,
+                          name: order.customer.name,
                         ),
                         TableStatusCell(
-                          status: orders[index].status,
-                          onPressed: () => _onPressedStatus(orders[index]),
+                          status: order.status,
+                          onPressed: () => _onPressedStatus(order),
                         ),
                         TableButtonCell(
                           icon: Icons.info_outline_rounded,
                           iconColor: Consts.primaryColor,
                           onPressed: () {
-                            showOrderDetailsDialog(context,
-                                order: orders[index]);
+                            showOrderDetailsDialog(context, order: order);
                           },
                         ),
                       ],

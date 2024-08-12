@@ -29,7 +29,7 @@ class _OrderDetailsDialogState extends State<_OrderDetailsDialog> {
       shadowColor: Consts.secondaryColor,
       title: Column(
         children: [
-          myTitle("Order Details (ID:${widget.order.id})"),
+          myTitle("Order Details (ID:${widget.order.readableId})"),
           const SizedBox(
             width: 164,
             child: Divider(color: Consts.primaryFontColor),

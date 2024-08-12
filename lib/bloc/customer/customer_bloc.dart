@@ -24,7 +24,7 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
     CustomerEventSearch event,
     Emitter<CustomerState> emit,
   ) async {
-    emit(CustomerStateSearch(event.query));
+    emit(CustomerStateSearched(event.query));
   }
 
   CustomerStateFailed _stateFail({required String message, int code = 1}) =>

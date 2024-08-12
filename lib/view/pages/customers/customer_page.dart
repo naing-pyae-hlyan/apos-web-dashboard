@@ -77,7 +77,7 @@ class _CustomerPageState extends State<CustomerPage> {
 
             List<CustomerModel> search = [];
 
-            if (state is CustomerStateSearch) {
+            if (state is CustomerStateSearched) {
               search = customers.where(
                 (CustomerModel cm) {
                   return stringCompare(cm.name, state.query) ||

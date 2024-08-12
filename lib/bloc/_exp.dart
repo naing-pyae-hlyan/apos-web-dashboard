@@ -44,3 +44,8 @@ export 'category_change/category_change_state.dart';
 export 'users/users_bloc.dart';
 export 'users/users_event.dart';
 export 'users/users_state.dart';
+
+//
+export 'customer/customer_bloc.dart';
+export 'customer/customer_event.dart';
+export 'customer/customer_state.dart';

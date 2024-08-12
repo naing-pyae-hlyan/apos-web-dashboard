@@ -318,10 +318,10 @@ class TableProductItemsDialogCell extends StatelessWidget {
             (ItemModel item) {
               return TableRow(
                 children: [
-                  TableTextCell("${item.quantity}"),
+                  TableTextCell("${item.qty}"),
                   TableTextCell(item.name),
                   TableTextCell(
-                    item.amount.toCurrencyFormat(),
+                    item.price.toCurrencyFormat(),
                     textAlign: TextAlign.end,
                   ),
                 ],

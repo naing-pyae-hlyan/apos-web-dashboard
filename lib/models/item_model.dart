@@ -1,47 +1,48 @@
-import 'dart:math';
-
 import 'package:apos/lib_exp.dart';
 
 class ItemModel {
-  String? id;
-  final String readableId;
+  final String id; // product_id
   final String name;
-  final double amount;
-  final double discount;
-  final int quantity;
+  final num price;
+  List<String> types;
+  List<int> colors;
+  int qty;
+  num totalAmount;
+  ProductModel? product;
 
   ItemModel({
-    this.id,
-    required this.readableId,
+    required this.id,
     required this.name,
-    required this.amount,
-    required this.discount,
-    required this.quantity,
+    required this.price,
+    required this.types,
+    required this.colors,
+    required this.qty,
+    required this.totalAmount,
+    required this.product,
   });
 
-  factory ItemModel.fromJson(Map<String, dynamic> json, String id) => ItemModel(
-        id: id,
-        readableId: json['id'],
-        name: json["name"],
-        amount: json["amount"],
-        discount: json["discount"],
-        quantity: json["quantity"],
-      );
+  factory ItemModel.fromJson(Map<String, dynamic> json) {
+    return ItemModel(
+      id: json["id"],
+      name: json["name"],
+      price: json["price"],
+      types:
+          json["sizes"] == null ? [] : List.from(json["sizes"].map((x) => x)),
+      colors:
+          json["colors"] == null ? [] : List.from(json["colors"].map((x) => x)),
+      qty: json["qty"],
+      totalAmount: json["total_amount"],
+      product: null,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
-        "id": readableId,
+        "id": id,
         "name": name,
-        "amount": amount,
-        "discount": discount,
-        "quantity": quantity,
+        "price": price,
+        "sizes": List.from(types.map((x) => x)),
+        "colors": List.from(colors.map((x) => x)),
+        "qty": qty,
+        "total_amount": totalAmount,
       };
 }
-
-ItemModel tempItem(int index) => ItemModel(
-      id: "#$index",
-      readableId: "",
-      name: "Item ${Consts.aToz[index]}",
-      amount: Random().nextInt(1000) + 10000,
-      discount: 0.0,
-      quantity: Random().nextInt(1000),
-    );

@@ -1,12 +1,12 @@
-import 'package:apos/lib_exp.dart';
-
 class CustomerModel {
   String? id;
   final String readableId;
   final String name;
   final String email;
   final String phone;
+  final String? password;
   final String address;
+  final int status;
 
   CustomerModel({
     this.id,
@@ -14,17 +14,21 @@ class CustomerModel {
     required this.name,
     required this.email,
     required this.phone,
+    required this.password,
     required this.address,
+    required this.status,
   });
 
-  factory CustomerModel.fromJson(Map<String, dynamic> json, String id) {
+  factory CustomerModel.fromJson(Map<String, dynamic> json, String? id) {
     return CustomerModel(
       id: id,
       readableId: json['id'],
       name: json['name'],
       email: json['email'],
       phone: json['phone'],
+      password: json['password'],
       address: json['address'],
+      status: json['status'],
     );
   }
 
@@ -34,16 +38,9 @@ class CustomerModel {
       'name': name,
       'email': email,
       'phone': phone,
+      'password': password,
       'address': address,
+      'status': status,
     };
   }
 }
-
-CustomerModel tempCustomer(int index) => CustomerModel(
-      id: "#$index",
-      readableId: "",
-      name: "Client ${Consts.aToz[index]}",
-      email: "mail@example.com",
-      phone: "09123456789",
-      address: "Enim excepteur anim nostrud consequat.",
-    );

@@ -8,6 +8,36 @@ class CustomerPage extends StatefulWidget {
 }
 
 class _CustomerPageState extends State<CustomerPage> {
+  late CustomerBloc customerBloc;
+
+  void _onUpdateStatus(CustomerModel customer) {
+    if (CacheManager.isManager || CacheManager.isNormalUser) {
+      CommonUtils.showCannotAccessDialog(context);
+      return;
+    }
+
+    if (customer.id == null) return;
+    String title = customer.status == 1 ? "Disable" : "Activate";
+
+    showConfirmDialog(
+      context,
+      title: title,
+      description: "Are you sure want to ${title.toLowerCase()} this account?",
+      onTapOk: () {
+        customerBloc.add(CustomerEventUpdateStatus(
+          customerId: customer.id!,
+          status: customer.status == 1 ? 0 : 1,
+        ));
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    customerBloc = context.read<CustomerBloc>();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MyScaffoldDataGridView<QuerySnapshot<CustomerModel>>(
@@ -24,17 +54,41 @@ class _CustomerPageState extends State<CustomerPage> {
               controller: TextEditingController(),
               hintText: "Search by name, phone, email, id",
               errorKey: null,
+              onChanged: (String query) {
+                customerBloc.add(CustomerEventSearch(query));
+              },
             ),
           ),
         ],
       ),
-      stream: FFirestoreUtils.customerCollection.snapshots(),
+      stream: FFirestoreUtils.customerCollection.orderBy("name").snapshots(),
       streamBuilder: (QuerySnapshot<CustomerModel> data) {
-        return BlocBuilder<ProductBloc, ProductState>(
+        final List<CustomerModel> customers = [];
+
+        for (var doc in data.docs) {
+          customers.add(doc.data());
+        }
+
+        return BlocBuilder<CustomerBloc, CustomerState>(
           builder: (_, state) {
-            if (state is ProductStateLoading) {
+            if (state is CustomerStateLoading) {
               return const MyCircularIndicator();
             }
+
+            List<CustomerModel> search = [];
+
+            if (state is CustomerStateSearch) {
+              search = customers.where(
+                (CustomerModel cm) {
+                  return stringCompare(cm.name, state.query) ||
+                      stringCompare(cm.email, state.query) ||
+                      stringCompare(cm.phone, state.query);
+                },
+              ).toList();
+            } else {
+              search = customers;
+            }
+
             return Table(
               columnWidths: const {
                 0: FlexColumnWidth(0.5),
@@ -43,7 +97,7 @@ class _CustomerPageState extends State<CustomerPage> {
                 3: FlexColumnWidth(2),
                 4: FlexColumnWidth(2),
                 5: FlexColumnWidth(1),
-                // 6: FlexColumnWidth(0.5),
+                6: FlexColumnWidth(0.5),
                 // 7: FlexColumnWidth(0.5),
               },
               children: <TableRow>[
@@ -59,12 +113,13 @@ class _CustomerPageState extends State<CustomerPage> {
                       "Customer ID",
                       textAlign: TextAlign.end,
                     ),
+                    TableTitleCell("Status"),
                   ],
                 ),
                 ...List.generate(
-                  4,
+                  search.length,
                   (index) {
-                    final CustomerModel customer = tempCustomer(index);
+                    final CustomerModel customer = search[index];
                     return TableRow(
                       decoration: tableTextDecoration(index),
                       children: [
@@ -76,6 +131,15 @@ class _CustomerPageState extends State<CustomerPage> {
                         TableTextCell(
                           customer.readableId,
                           textAlign: TextAlign.end,
+                        ),
+                        TableButtonCell(
+                          icon: customer.status == 1
+                              ? Icons.check_box
+                              : Icons.disabled_by_default,
+                          iconColor: customer.status == 1
+                              ? Consts.currencyGreen
+                              : Consts.currencyRed,
+                          onPressed: () => _onUpdateStatus(customer),
                         ),
                       ],
                     );

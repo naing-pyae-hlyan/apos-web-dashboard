@@ -1,5 +1,8 @@
 flutter 3.22.0
 
+12/08/2024 (0.2.5)
+1. NEW: CustomerPage is added.
+
 08/08/2024 (0.2.4)
 1. UPDATE: ProductDialog category chage issue is fixed.
 2. NEW: UserPage and User Table is implemented.

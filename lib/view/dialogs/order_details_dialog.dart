@@ -124,7 +124,7 @@ class _OrderDetailsDialogState extends State<_OrderDetailsDialog> {
                             ),
                           ),
                           TableTextCell(
-                            "${item.quantity}",
+                            "${item.qty}",
                             textAlign: TextAlign.end,
                             padding: const EdgeInsets.symmetric(
                               horizontal: 8,
@@ -132,7 +132,7 @@ class _OrderDetailsDialogState extends State<_OrderDetailsDialog> {
                             ),
                           ),
                           TableTextCell(
-                            item.amount.toCurrencyFormat(),
+                            item.price.toCurrencyFormat(),
                             textAlign: TextAlign.end,
                             padding: const EdgeInsets.symmetric(
                               horizontal: 8,

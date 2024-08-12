@@ -33,24 +33,8 @@ class _DashboardPageState extends State<DashboardPage> {
             children: [
               const Row(
                 children: [
-                  DashboardCommerceCard(
-                    title: "CUSTOMERS",
-                    count: 1027.0,
-                    icon: Icons.groups_2_outlined,
-                    lblTodayRecord: "TODAY CUSTOMERS",
-                    lblMonthlyRecord: "MONTHLY CUSTOMERS",
-                    todayRecord: 8,
-                    monthlyRecord: 286,
-                  ),
-                  DashboardCommerceCard(
-                    title: "ORDERS",
-                    count: 208799.0,
-                    icon: Icons.shopping_cart_outlined,
-                    lblTodayRecord: "TODAY ORDERS",
-                    lblMonthlyRecord: "MONTHLY ORDERS",
-                    todayRecord: 36,
-                    monthlyRecord: 577,
-                  ),
+                  CustomerCommerceCard(),
+                  OrderCommerceCard(),
                   Flexible(child: SalesReportCard()),
                 ],
               ),

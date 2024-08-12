@@ -58,7 +58,9 @@ class _OrdersPageState extends State<OrdersPage> {
           ),
         ],
       ),
-      stream: FFirestoreUtils.orderCollection.snapshots(),
+      stream: FFirestoreUtils.orderCollection
+          .orderBy("order_date", descending: true)
+          .snapshots(),
       streamBuilder: (QuerySnapshot<OrderModel> data) {
         final List<OrderModel> orders = [];
         for (var doc in data.docs) {

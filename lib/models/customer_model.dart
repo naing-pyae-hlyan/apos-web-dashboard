@@ -1,3 +1,5 @@
+import 'package:apos/lib_exp.dart';
+
 class CustomerModel {
   String? id;
   final String readableId;
@@ -7,6 +9,7 @@ class CustomerModel {
   final String? password;
   final String address;
   final int status;
+  final DateTime createdDate;
 
   CustomerModel({
     this.id,
@@ -17,9 +20,13 @@ class CustomerModel {
     required this.password,
     required this.address,
     required this.status,
+    required this.createdDate,
   });
 
   factory CustomerModel.fromJson(Map<String, dynamic> json, String? id) {
+    final Timestamp timestamp = json["created_date"] ??
+        Timestamp.fromMillisecondsSinceEpoch(
+            DateTime.now().millisecondsSinceEpoch);
     return CustomerModel(
       id: id,
       readableId: json['id'],
@@ -29,6 +36,7 @@ class CustomerModel {
       password: json['password'],
       address: json['address'],
       status: json['status'] ?? 1,
+      createdDate: timestamp.toDate(),
     );
   }
 
@@ -41,6 +49,7 @@ class CustomerModel {
       'password': password,
       'address': address,
       'status': status,
+      'created_date': createdDate,
     };
   }
 }

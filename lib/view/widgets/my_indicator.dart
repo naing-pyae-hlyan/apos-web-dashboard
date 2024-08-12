@@ -25,10 +25,17 @@ class MyCircularIndicator extends StatelessWidget {
       color: Consts.primaryColor,
       size: 24,
     );
-    //   return CircularProgressIndicator.adaptive(
-    //     backgroundColor: Consts.primaryColor.withOpacity(1),
+  }
+}
 
-    //     // color: Consts.primaryColor,
-    //   );
+class MyLoadingIndicator extends StatelessWidget {
+  const MyLoadingIndicator({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return LoadingAnimationWidget.staggeredDotsWave(
+      color: Consts.primaryColor,
+      size: 24,
+    );
   }
 }

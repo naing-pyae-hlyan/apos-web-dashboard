@@ -2,12 +2,13 @@ import 'package:apos/lib_exp.dart';
 
 class DashboardCommerceCard extends StatelessWidget {
   final String title;
-  final double count;
+  final int count;
   final IconData icon;
   final String lblTodayRecord;
   final String lblMonthlyRecord;
   final int todayRecord;
   final int monthlyRecord;
+  final bool isLoadingState;
   const DashboardCommerceCard({
     super.key,
     required this.title,
@@ -17,6 +18,7 @@ class DashboardCommerceCard extends StatelessWidget {
     required this.lblMonthlyRecord,
     required this.todayRecord,
     required this.monthlyRecord,
+    required this.isLoadingState,
   });
 
   @override
@@ -43,12 +45,15 @@ class DashboardCommerceCard extends StatelessWidget {
                     maxLines: 1,
                   ),
                   verticalHeight4,
-                  myTitle(
-                    count.toCurrencyFormat(),
-                    color: Consts.primaryColor,
-                    fontSize: 21,
-                    maxLines: 1,
-                  ),
+                  if (isLoadingState)
+                    const MyLoadingIndicator()
+                  else
+                    myTitle(
+                      count.toCurrencyFormat(),
+                      color: Consts.primaryColor,
+                      fontSize: 21,
+                      maxLines: 1,
+                    ),
                   verticalHeight16,
                   const Divider(thickness: 0.5),
                   verticalHeight16,
@@ -58,7 +63,7 @@ class DashboardCommerceCard extends StatelessWidget {
                     children: [
                       Flexible(
                         child: myText(
-                          lblTodayRecord,
+                          lblTodayRecord.toCurrencyFormat(),
                           color: Consts.primaryColor,
                           maxLines: 1,
                         ),
@@ -66,7 +71,7 @@ class DashboardCommerceCard extends StatelessWidget {
                       horizontalWidth16,
                       Flexible(
                         child: myText(
-                          lblMonthlyRecord,
+                          lblMonthlyRecord.toCurrencyFormat(),
                           color: Consts.primaryColor,
                           maxLines: 1,
                         ),
@@ -79,21 +84,25 @@ class DashboardCommerceCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Flexible(
-                        child: myTitle(
-                          todayRecord.toCurrencyFormat(),
-                          fontWeight: FontWeight.bold,
-                          color: Consts.primaryColor,
-                          maxLines: 1,
-                        ),
+                        child: (isLoadingState)
+                            ? const MyLoadingIndicator()
+                            : myTitle(
+                                todayRecord.toCurrencyFormat(),
+                                fontWeight: FontWeight.bold,
+                                color: Consts.primaryColor,
+                                maxLines: 1,
+                              ),
                       ),
                       horizontalWidth16,
                       Flexible(
-                        child: myTitle(
-                          monthlyRecord.toCurrencyFormat(),
-                          fontWeight: FontWeight.bold,
-                          color: Consts.primaryColor,
-                          maxLines: 1,
-                        ),
+                        child: (isLoadingState)
+                            ? const MyLoadingIndicator()
+                            : myTitle(
+                                monthlyRecord.toCurrencyFormat(),
+                                fontWeight: FontWeight.bold,
+                                color: Consts.primaryColor,
+                                maxLines: 1,
+                              ),
                       ),
                     ],
                   ),

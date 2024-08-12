@@ -18,4 +18,13 @@ class OrderStateSearched extends OrderState {
   OrderStateSearched(this.query);
 }
 
+class OrderStateStatusChangedUpdateProductModelSuccess extends OrderState {
+  final OrderModel order;
+  final int status;
+  OrderStateStatusChangedUpdateProductModelSuccess({
+    required this.order,
+    required this.status,
+  });
+}
+
 class OrderStateChangeSuccess extends OrderState {}

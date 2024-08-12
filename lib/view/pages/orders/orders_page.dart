@@ -20,8 +20,8 @@ class _OrdersPageState extends State<OrdersPage> {
       context,
       order: order,
       onStatusIdChanged: (int id) {
-        orderBloc.add(OrderEventStatusChange(
-          orderId: order.id!,
+        orderBloc.add(OrderEventStatusChangedUpdateProductModel(
+          order: order,
           status: id,
         ));
       },
@@ -67,7 +67,15 @@ class _OrdersPageState extends State<OrdersPage> {
           orders.add(doc.data());
         }
 
-        return BlocBuilder<OrderBloc, OrderState>(
+        return BlocConsumer<OrderBloc, OrderState>(
+          listener: (_, state) {
+            if (state is OrderStateStatusChangedUpdateProductModelSuccess) {
+              orderBloc.add(OrderEventStatusChange(
+                order: state.order,
+                status: state.status,
+              ));
+            }
+          },
           builder: (_, state) {
             if (state is OrderStateLoading) {
               return const MyCircularIndicator();

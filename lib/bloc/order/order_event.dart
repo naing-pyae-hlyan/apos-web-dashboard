@@ -1,9 +1,20 @@
+import 'package:apos/lib_exp.dart';
+
 sealed class OrderEvent {}
 
-class OrderEventStatusChange extends OrderEvent {
-  final String orderId;
+class OrderEventStatusChangedUpdateProductModel extends OrderEvent {
+  final OrderModel order;
   final int status;
-  OrderEventStatusChange({required this.orderId, required this.status});
+  OrderEventStatusChangedUpdateProductModel({
+    required this.order,
+    required this.status,
+  });
+}
+
+class OrderEventStatusChange extends OrderEvent {
+  final OrderModel order;
+  final int status;
+  OrderEventStatusChange({required this.order, required this.status});
 }
 
 class OrderEventSearch extends OrderEvent {

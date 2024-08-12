@@ -48,6 +48,11 @@ class _OrderStatusChangeDialogState extends State<_OrderStatusChangeDialog> {
         ]);
         break;
       case OrderStatus.delivered:
+        tiles.addAll([
+          _getTile(OrderStatus.cancelled),
+          _getTile(OrderStatus.processing),
+        ]);
+        // TODO remove
         break;
     }
     return tiles;

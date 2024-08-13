@@ -1,6 +1,4 @@
 import 'package:apos/lib_exp.dart';
-import 'package:apos/models/_exp.dart';
-
 class CommonUtils {
   static Widget versionLabel({
     String? prefix,

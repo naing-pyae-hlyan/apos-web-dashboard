@@ -129,7 +129,7 @@ class _CategoryDialogState extends State<_CategoryDialog> {
             MyInputField(
               controller: _sizeTxtCtrl,
               focusNode: _sizeFn,
-              title: "Sizes (Optional)",
+              title: "Types (Optional)",
               hintText: "Eg. S,M,L,XL,XXL",
               keyboardType: TextInputType.text,
               textInputAction: TextInputAction.next,

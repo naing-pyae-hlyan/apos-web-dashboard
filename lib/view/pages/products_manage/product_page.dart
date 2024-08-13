@@ -161,7 +161,7 @@ class _ProductPageState extends State<ProductPage> {
                       "Price",
                       textAlign: TextAlign.end,
                     ),
-                    TableTitleCell("Sizes", textAlign: TextAlign.end),
+                    TableTitleCell("Types", textAlign: TextAlign.end),
                     TableTitleCell("Colors", textAlign: TextAlign.end),
                     TableTitleCell("Product Id", textAlign: TextAlign.end),
                     TableTitleCell("Category", textAlign: TextAlign.end),

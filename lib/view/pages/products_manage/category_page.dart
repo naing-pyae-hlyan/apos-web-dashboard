@@ -122,7 +122,7 @@ class _CategoryPageState extends State<CategoryPage> {
                   children: const [
                     TableTitleCell("S/N", textAlign: TextAlign.center),
                     TableTitleCell("Name"),
-                    TableTitleCell("Sizes", textAlign: TextAlign.end),
+                    TableTitleCell("Types", textAlign: TextAlign.end),
                     TableTitleCell("Colors", textAlign: TextAlign.end),
                     TableTitleCell("Category Id", textAlign: TextAlign.end),
                     TableTitleCell("Edit", textAlign: TextAlign.center),

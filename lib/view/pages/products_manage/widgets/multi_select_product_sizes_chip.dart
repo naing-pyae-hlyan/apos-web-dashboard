@@ -76,7 +76,7 @@ class _MultiSelectProductSizesState extends State<MultiSelectProductSizes> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         verticalHeight16,
-        myText("Avaliable Sizes", fontWeight: FontWeight.w800),
+        myText("Avaliable Types", fontWeight: FontWeight.w800),
         verticalHeight8,
         Wrap(
           spacing: 8,

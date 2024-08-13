@@ -126,7 +126,7 @@ class _DashboardTopSellingProductsCard extends StatelessWidget {
                     textAlign: TextAlign.end,
                   ),
                   TableTitleCell(
-                    "Amount",
+                    "Total Amount",
                     textAlign: TextAlign.end,
                   ),
                   TableTitleCell(

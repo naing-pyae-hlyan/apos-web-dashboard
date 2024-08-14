@@ -64,6 +64,8 @@ class Consts {
   ];
 }
 
+const appLogo = "assets/icons/apos_icon.jpg";
+
 const verticalHeight2 = SizedBox(height: 2.0);
 const verticalHeight4 = SizedBox(height: 4.0);
 const verticalHeight6 = SizedBox(height: 6.0);

@@ -1,11 +1,11 @@
 {
-    "name": "apos",
-    "short_name": "apos",
+    "name": "Flutter E-commerce",
+    "short_name": "Flutter E-commerce",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Flutter E-commerce",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

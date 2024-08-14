@@ -44,6 +44,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         backgroundColor: Consts.scaffoldBackgroundColor,
         surfaceTintColor: Consts.scaffoldBackgroundColor,
+        centerTitle: false,
         title: BlocBuilder<HomeBloc, HomeState>(
           builder: (_, state) => switch (state.selectedPage) {
             SelectedHome.dashboard => myTitle(SelectedHome.dashboard.title),
@@ -64,17 +65,17 @@ class _HomePageState extends State<HomePage> {
             );
           },
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              _onItemTapped(SelectedHome.order);
-            },
-            icon: const Icon(
-              Icons.notifications_on,
-              color: Consts.primaryColor,
-            ),
-          ),
-          horizontalWidth12,
+        actions: const [
+          // IconButton(
+          //   onPressed: () {
+          //     _onItemTapped(SelectedHome.order);
+          //   },
+          //   icon: const Icon(
+          //     Icons.notifications_on,
+          //     color: Consts.primaryColor,
+          //   ),
+          // ),
+          // horizontalWidth12,
         ],
       ),
       body: BlocBuilder<HomeBloc, HomeState>(

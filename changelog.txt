@@ -1,4 +1,6 @@
 flutter 3.22.0
+14/08/2024 (0.2.7)
+1. UPDATE: app name.
 
 13/08/2024 (0.2.6)
 1. UPDATE: CodeRefactored.

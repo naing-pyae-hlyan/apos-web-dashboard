@@ -44,6 +44,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       navigatorKey: navigatorKey,
+      title: Consts.appName,
       theme: ThemeData(
         useMaterial3: true,
         primaryColor: Consts.primaryColor,

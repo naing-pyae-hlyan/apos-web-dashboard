@@ -1,4 +1,9 @@
 flutter 3.22.0
+
+18/08/2024 (0.2.8)
+1. UPDATE: fl_chart.
+2. UPDATE: app icon.
+
 14/08/2024 (0.2.7)
 1. UPDATE: app name.
 2. UPDATE: Web launcher icon.

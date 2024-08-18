@@ -17,14 +17,21 @@ class _SalesReportCardState extends State<SalesReportCard> {
       color: Consts.primaryColor,
       barWidth: 4,
       isStrokeCapRound: true,
+      // preventCurveOverShooting: true,
       dotData: const FlDotData(show: false),
       belowBarData: BarAreaData(show: true),
       spots: List.generate(
         monthlyReports.length,
         (index) {
+          if (monthlyReports[index] > 5000000) {
+            return FlSpot(
+              index.toDouble(),
+              (monthlyReports[index] / 1000000).toDouble(),
+            );
+          }
           return FlSpot(
             index.toDouble(),
-            (monthlyReports[index] / 100000).toDouble(),
+            (monthlyReports[index] / 500000).toDouble(),
           );
         },
       ),
@@ -39,8 +46,15 @@ class _SalesReportCardState extends State<SalesReportCard> {
           fontWeight: FontWeight.bold,
           fontSize: 13,
         );
+        if (touchedSpot.y >= 5) {
+          return LineTooltipItem(
+            (touchedSpot.y * 1000000).toCurrencyFormat(),
+            textStyle,
+            textAlign: TextAlign.end,
+          );
+        }
         return LineTooltipItem(
-          (touchedSpot.y * 100000).toCurrencyFormat(),
+          (touchedSpot.y * 500000).toCurrencyFormat(),
           textStyle,
           textAlign: TextAlign.end,
         );
@@ -71,7 +85,6 @@ class _SalesReportCardState extends State<SalesReportCard> {
                 child: LineChart(
                   LineChartData(
                     maxX: 11,
-                    maxY: 10,
                     lineTouchData: LineTouchData(
                       handleBuiltInTouches: true,
                       touchTooltipData: LineTouchTooltipData(
@@ -93,9 +106,14 @@ class _SalesReportCardState extends State<SalesReportCard> {
                           showTitles: true,
                           reservedSize: 48,
                           interval: 1,
-                          getTitlesWidget: (double value, _) {
+                          getTitlesWidget: (double value, TitleMeta meta) {
+                            if (value == meta.max) {
+                              return emptyUI;
+                            }
                             return myText(
-                              "${value.toInt() * 100}k",
+                              value == 0
+                                  ? "0"
+                                  : "${(value.toInt() * 0.5).toStringAsFixed(1)} M",
                               textAlign: TextAlign.end,
                             );
                           },

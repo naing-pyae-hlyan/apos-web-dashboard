@@ -1,4 +1,5 @@
 import 'package:apos/lib_exp.dart';
+
 class CommonUtils {
   static Widget versionLabel({
     String? prefix,
@@ -124,8 +125,9 @@ List<num> calcByDate(List<OrderModel> orders) {
       if (order.orderDate.month == DateTime.july) {
         jul += order.totalAmount;
       }
-      if (order.orderDate.month == DateTime.august) {}
-      aug += order.totalAmount;
+      if (order.orderDate.month == DateTime.august) {
+        aug += order.totalAmount;
+      }
       if (order.orderDate.month == DateTime.september) {
         sep += order.totalAmount;
       }

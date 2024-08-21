@@ -1,5 +1,8 @@
 flutter 3.22.0
 
+21/08/2024 (0.2.9)
+1. UPDATE: OrderPage updated Pay By.
+
 18/08/2024 (0.2.8)
 1. UPDATE: fl_chart.
 2. UPDATE: app icon.

@@ -73,6 +73,10 @@ class _OrderDetailsDialogState extends State<_OrderDetailsDialog> {
                     label: "Address:",
                     value: widget.order.customer.address,
                   ),
+                  orderDetailsTableRow(
+                    label: "Pay By:",
+                    value: widget.order.payment,
+                  ),
                 ],
               ),
               verticalHeight24,

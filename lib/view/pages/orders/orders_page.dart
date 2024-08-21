@@ -103,7 +103,8 @@ class _OrdersPageState extends State<OrdersPage> {
                 3: FlexColumnWidth(1),
                 4: FlexColumnWidth(1),
                 5: FlexColumnWidth(1),
-                6: FlexColumnWidth(0.5),
+                6: FlexColumnWidth(1),
+                7: FlexColumnWidth(0.5),
               },
               children: <TableRow>[
                 TableRow(
@@ -114,6 +115,7 @@ class _OrdersPageState extends State<OrdersPage> {
                     TableTitleCell("Items"),
                     TableTitleCell("Total Amount", textAlign: TextAlign.end),
                     TableTitleCell("Order Date", textAlign: TextAlign.end),
+                    TableTitleCell("Pay By", textAlign: TextAlign.end),
                     TableTitleCell("Customer", textAlign: TextAlign.end),
                     TableTitleCell("Status", textAlign: TextAlign.center),
                     TableTitleCell("Details", textAlign: TextAlign.center),
@@ -138,6 +140,10 @@ class _OrdersPageState extends State<OrdersPage> {
                         ),
                         TableTextCell(
                           order.orderDate.toDDmmYYYYHHmm(),
+                          textAlign: TextAlign.end,
+                        ),
+                        TableTextCell(
+                          order.payment,
                           textAlign: TextAlign.end,
                         ),
                         TableCustomerCell(

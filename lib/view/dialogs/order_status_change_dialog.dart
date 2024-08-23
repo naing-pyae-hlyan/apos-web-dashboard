@@ -85,7 +85,7 @@ class _OrderStatusChangeDialogState extends State<_OrderStatusChangeDialog> {
       shadowColor: Consts.secondaryColor,
       title: Column(
         children: [
-          myTitle("Order ID : ${widget.order.id}"),
+          myTitle("Order ID : ${widget.order.readableId}"),
           verticalHeight4,
           myText(widget.order.status.name),
         ],

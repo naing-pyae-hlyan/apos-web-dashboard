@@ -1,4 +1,5 @@
 import 'package:apos/lib_exp.dart';
+import 'package:elegant_notification/elegant_notification.dart';
 
 class FFirestoreUtils {
   static final _database = FirebaseFirestore.instance;
@@ -43,4 +44,37 @@ class FFirestoreUtils {
                 UserModel.fromJson(snapshot.data()!, snapshot.id),
             toFirestore: (user, _) => user.toJson(),
           );
+
+  static void listenNewOrder(BuildContext context) {
+    orderCollection.snapshots().listen(
+      (event) {
+        for (var change in event.docChanges) {
+          if (change.type == DocumentChangeType.added) {
+            final data = change.doc.data();
+            String? message;
+            if (data?.statusId == 0) {
+              message = "You got a new order.";
+            }
+            if (message != null) {
+              ElegantNotification(
+                title: myTitle("Notification", color: Colors.white),
+                description:
+                    myText("You got a new order.", color: Colors.white),
+                showProgressIndicator: false,
+                width: context.screenWidth * 0.3,
+                background: Consts.primaryColor,
+                icon: const Icon(
+                  Icons.notifications_active_sharp,
+                  color: Colors.white,
+                  size: 48,
+                ),
+              ).show(context);
+
+              break;
+            }
+          }
+        }
+      },
+    );
+  }
 }

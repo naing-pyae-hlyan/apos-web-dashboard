@@ -1,5 +1,4 @@
 import 'package:apos/lib_exp.dart';
-import 'package:apos/view/pages/users/_exp.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -34,6 +33,7 @@ class _HomePageState extends State<HomePage> {
       homeBloc.add(HomeEventDrawerChanged(
         selectedPage: SelectedHome.dashboard,
       ));
+      FFirestoreUtils.listenNewOrder(context);
     });
   }
 
@@ -70,7 +70,7 @@ class _HomePageState extends State<HomePage> {
       body: BlocBuilder<HomeBloc, HomeState>(
         builder: (_, state) {
           return switch (state.selectedPage) {
-            SelectedHome.dashboard => const OrdersPage(),
+            SelectedHome.dashboard => const DashboardPage(),
             SelectedHome.category => const CategoryPage(),
             SelectedHome.product => const ProductPage(),
             SelectedHome.order => const OrdersPage(),

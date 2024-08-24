@@ -65,23 +65,12 @@ class _HomePageState extends State<HomePage> {
             );
           },
         ),
-        actions: const [
-          // IconButton(
-          //   onPressed: () {
-          //     _onItemTapped(SelectedHome.order);
-          //   },
-          //   icon: const Icon(
-          //     Icons.notifications_on,
-          //     color: Consts.primaryColor,
-          //   ),
-          // ),
-          // horizontalWidth12,
-        ],
+        // actions: const [],
       ),
       body: BlocBuilder<HomeBloc, HomeState>(
         builder: (_, state) {
           return switch (state.selectedPage) {
-            SelectedHome.dashboard => const DashboardPage(),
+            SelectedHome.dashboard => const OrdersPage(),
             SelectedHome.category => const CategoryPage(),
             SelectedHome.product => const ProductPage(),
             SelectedHome.order => const OrdersPage(),

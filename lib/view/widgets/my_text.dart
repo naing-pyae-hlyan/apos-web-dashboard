@@ -8,6 +8,7 @@ Text myText(
   FontWeight? fontWeight,
   TextAlign textAlign = TextAlign.start,
   double? letterSpacing,
+  TextDecoration? decoration,
 }) =>
     Text(
       text ?? '',
@@ -16,6 +17,7 @@ Text myText(
         fontSize: fontSize,
         fontWeight: fontWeight ?? FontWeight.w500,
         letterSpacing: letterSpacing,
+        decoration: decoration,
       ),
       textScaler: TextScaler.noScaling,
       softWrap: true,

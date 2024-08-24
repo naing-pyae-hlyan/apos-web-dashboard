@@ -1,5 +1,8 @@
 flutter 3.22.0
 
+24/08/2024 (1.0.0)
+1. NEW: PayBy and payment SS is added on order tab.
+
 21/08/2024 (0.2.9)
 1. UPDATE: OrderPage updated Pay By.
 

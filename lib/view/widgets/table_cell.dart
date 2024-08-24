@@ -80,6 +80,8 @@ class TableTextCell extends StatelessWidget {
   final TableCellVerticalAlignment verticalAlignment;
   final int maxLines;
   final Color? labelColor;
+  final TextDecoration? decoration;
+  final Function()? onTap;
   const TableTextCell(
     this.label, {
     super.key,
@@ -89,22 +91,28 @@ class TableTextCell extends StatelessWidget {
     this.verticalAlignment = TableCellVerticalAlignment.middle,
     this.maxLines = 2,
     this.labelColor,
+    this.decoration,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
+    final child = myText(
+      label,
+      color: labelColor ?? Consts.primaryFontColor,
+      textAlign: textAlign,
+      fontWeight: fontWeight,
+      maxLines: maxLines,
+      decoration: decoration,
+    );
     return TableCell(
       verticalAlignment: verticalAlignment,
-      child: Padding(
-        padding: padding ?? const EdgeInsets.all(8),
-        child: myText(
-          label,
-          color: labelColor ?? Consts.primaryFontColor,
-          textAlign: textAlign,
-          fontWeight: fontWeight,
-          maxLines: maxLines,
-        ),
-      ),
+      child: onTap != null
+          ? Clickable(onTap: onTap!, child: child)
+          : Padding(
+              padding: padding ?? const EdgeInsets.all(8),
+              child: child,
+            ),
     );
   }
 }

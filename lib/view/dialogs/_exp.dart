@@ -1,3 +1,4 @@
+export 'bank_payment_dialog.dart';
 export 'category_dialog.dart';
 export 'confirm_dialog.dart';
 export 'error_dialog.dart';

@@ -28,6 +28,15 @@ class _OrdersPageState extends State<OrdersPage> {
     );
   }
 
+  void _onPressedBank(OrderModel order) {
+    if (CacheManager.isNormalUser) {
+      CommonUtils.showCannotAccessDialog(context);
+      return;
+    }
+    if (order.id == null) return;
+    showBankPaymentDialog(context, order: order);
+  }
+
   @override
   void initState() {
     orderBloc = context.read<OrderBloc>();
@@ -42,7 +51,6 @@ class _OrdersPageState extends State<OrdersPage> {
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // TODO add status filter
           Container(
             constraints: BoxConstraints(
               maxWidth: context.screenWidth * 0.3,
@@ -145,6 +153,8 @@ class _OrdersPageState extends State<OrdersPage> {
                         TableTextCell(
                           order.payment,
                           textAlign: TextAlign.end,
+                          decoration: TextDecoration.underline,
+                          onTap: () => _onPressedBank(order),
                         ),
                         TableCustomerCell(
                           id: order.customer.readableId,
